@@ -1,0 +1,145 @@
+"""Starfleet's worker for saving an account inventory JSON to S3: the utility functions
+
+This is a worker ship that will periodically save an inventory of AWS accounts from the organizations API. These are the utility functions that the worker ship uses.
+
+:Module: starfleet.worker_ships.plugins.account_index_generator.utils
+:Copyright: (c) 2023 by Gemini Trust Company, LLC., see AUTHORS for more info
+:License: See the LICENSE file for details
+:Author: Mike Grima <michael.grima@gemini.com>
+"""
+import asyncio
+from asyncio import AbstractEventLoop
+from concurrent.futures import ThreadPoolExecutor
+from typing import Any, Dict, List, Tuple
+
+import boto3
+from retry import retry
+from botocore.client import BaseClient
+from cloudaux import sts_conn
+from cloudaux.aws.decorators import paginated
+
+from starfleet.utils.logging import LOGGER
+
+
+class AccountIndexerProcessError(Exception):
+    """Exception raised if there were issues pulling additional account details from the process pool."""
+
+
+@sts_conn("organizations")
+@paginated("Accounts", request_pagination_marker="NextToken", response_pagination_marker="NextToken")
+def list_accounts(client: BaseClient, **kwargs) -> List[Dict[str, Any]]:
+    """This will query organizations to list all accounts -- calls are wrapped by CloudAux"""
+    return client.list_accounts(**kwargs)
+
+
+@paginated("Tags", request_pagination_marker="NextToken", response_pagination_marker="NextToken")
+def list_tags_for_resource(client: BaseClient, **kwargs) -> List[Dict[str, Any]]:
+    """This will query organizations to list all tags for a given account -- calls are wrapped by CloudAux"""
+    return client.list_tags_for_resource(**kwargs)
+
+
+def get_account_map(account_list: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    """Returns a map of Account ID -> Account Blob."""
+    account_map = {}
+    for account in account_list:
+        # Convert the datetimes into strings:
+        account["JoinedTimestamp"] = str(account["JoinedTimestamp"])
+
+        # Add it to our ID -> Account Map:
+        account_map[account["Id"]] = account
+
+    return account_map
+
+
+@retry(tries=3, jitter=(0, 3), delay=1, backoff=2, max_delay=3, logger=LOGGER)
+def fetch_tags(account_id: str, creds: Dict[str, str], deployment_region: str) -> Tuple[str, Dict[str, str]]:
+    """Fetch the tags from each individual account"""
+    LOGGER.debug(f"[🏷️] Fetching tags for account id: {account_id}...")
+    client = boto3.client(
+        "organizations",
+        region_name=deployment_region,
+        aws_access_key_id=creds["AccessKeyId"],
+        aws_secret_access_key=creds["SecretAccessKey"],
+        aws_session_token=creds["SessionToken"],
+    )
+    returned_tags = list_tags_for_resource(client, ResourceId=account_id)
+    extracted_tags = {tag["Key"]: tag["Value"] for tag in returned_tags}
+
+    return account_id, extracted_tags
+
+
+@retry(tries=3, jitter=(0, 3), delay=1, backoff=2, max_delay=3, logger=LOGGER)
+def fetch_regions(account_id: str, assume_role: str, deployment_region: str) -> Tuple[str, List[str]]:
+    """Fetch the list of enabled regions in the given account."""
+    # First, we need to assume the role to the target account:
+    LOGGER.debug(f"[🌍️] Fetching enabled regions for account id: {account_id}...")
+    sts_client = boto3.client("sts", region_name=deployment_region)
+    creds = sts_client.assume_role(RoleArn=f"arn:aws:iam::{account_id}:role/{assume_role}", RoleSessionName="StarfleetAccountIndexer")["Credentials"]
+
+    # Now query EC2 for the regions:
+    ec2_client = boto3.client(
+        "ec2",
+        region_name=deployment_region,
+        aws_access_key_id=creds["AccessKeyId"],
+        aws_secret_access_key=creds["SecretAccessKey"],
+        aws_session_token=creds["SessionToken"],
+    )
+
+    response = ec2_client.describe_regions()["Regions"]
+    enabled_regions = sorted([item["RegionName"] for item in response])
+
+    return account_id, enabled_regions
+
+
+TagResults = List[Tuple[str, Dict[str, str]]]
+RegionsResults = List[Tuple[str, List[str]]]
+
+
+# pylint: disable=too-many-locals
+async def fetch_additional_async(
+    loop: AbstractEventLoop, all_accounts: Dict[str, Any], org_id: str, org_role: str, region_role: str, deployment_region: str
+) -> Tuple[TagResults, RegionsResults]:
+    """This is an async that will task on the event loop the task to pull out both the tags for each account and also the enabled regions"""
+    # Unfortunately ProcessPoolExecutors are not supported on Lambda 😭, so we need to use the inferior ThreadPoolExecutor instead 😒
+    with ThreadPoolExecutor(max_workers=20) as executor:
+        # Create the STS client for tag collection:
+        sts_client = boto3.client("sts", region_name=deployment_region)
+        creds = sts_client.assume_role(RoleArn=f"arn:aws:iam::{org_id}:role/{org_role}", RoleSessionName="StarfleetAccountIndexer")["Credentials"]
+        creds.pop("Expiration")
+
+        # Task the tag and region fetching:
+        tag_tasks = []
+        regions_tasks = []
+
+        for account_id in all_accounts.keys():
+            tag_tasks.append(loop.run_in_executor(executor, fetch_tags, account_id, creds, deployment_region))
+            regions_tasks.append(loop.run_in_executor(executor, fetch_regions, account_id, region_role, deployment_region))
+
+        try:
+            tag_results = await asyncio.gather(*tag_tasks)
+            region_results = await asyncio.gather(*regions_tasks)
+        except Exception as err:
+            LOGGER.error(f"[💥] Encountered an error fetching tags and regions. Details: {str(err)}")
+            LOGGER.exception(err)
+            raise AccountIndexerProcessError("Fetching tags and regions", err) from err
+
+    return tag_results, region_results  # noqa
+
+
+def fetch_additional_details(all_accounts: Dict[str, Any], org_id: str, org_role: str, region_role: str, deployment_region: str) -> None:
+    """This is the function that will go out and fetch all the additional details asynchronously with multiple spun processes. This wraps everything
+    in the event loop."""
+    loop = asyncio.new_event_loop()
+    try:
+        tag_results, region_results = loop.run_until_complete(fetch_additional_async(loop, all_accounts, org_id, org_role, region_role, deployment_region))
+    finally:
+        loop.close()
+
+    # Merge in the tag details:
+    for result in tag_results:
+        all_accounts[result[0]]["Tags"] = result[1]
+
+    for result in region_results:
+        all_accounts[result[0]]["Regions"] = result[1]
+
+    # Nothing to return because the Dictionary contents are updated by reference.

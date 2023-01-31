@@ -1,0 +1,31 @@
+TestingStarfleetWorkerPlugin:
+  Enabled: True
+  TemplatePrefix: TestingStarfleetWorkerPlugin/
+  InvocationQueueUrl: https://us-east-2.queue.amazonaws.com/123456789012/WorkerQueue1
+  FanOutStrategy: SINGLE_INVOCATION
+  InvocationSources:
+      - S3
+      - EVENTBRIDGE_TIMED_EVENT
+  EventBridgeTimedFrequency: HOURLY
+
+
+TestingStarfleetWorkerPluginTwo:
+  Enabled: True
+  TemplatePrefix: TestingStarfleetWorkerPluginTwo/
+  InvocationQueueUrl: https://us-east-2.queue.amazonaws.com/123456789012/WorkerQueue2
+  FanOutStrategy: SINGLE_INVOCATION
+  InvocationSources:
+      - S3
+      - EVENTBRIDGE_TIMED_EVENT
+  EventBridgeTimedFrequency: HOURLY
+
+
+TestingStarfleetWorkerPluginThree:
+  Enabled: True
+  TemplatePrefix: TestingStarfleetWorkerPluginThree/
+  InvocationQueueUrl: https://us-east-2.queue.amazonaws.com/123456789012/WorkerQueue3
+  FanOutStrategy: SINGLE_INVOCATION
+  InvocationSources:
+      - S3
+      - EVENTBRIDGE_TIMED_EVENT
+  EventBridgeTimedFrequency: DAILY

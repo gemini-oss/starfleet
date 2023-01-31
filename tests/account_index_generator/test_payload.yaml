@@ -1,0 +1,4 @@
+TemplateName: AccountIndexGeneratorShip
+TemplateDescription: This is a template for Account Index Generator Worker ship
+AccountInventoryBucket: account-inventory-s3-bucket
+InventoryBucketRegion: us-east-2

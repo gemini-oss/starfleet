@@ -1,0 +1,5 @@
+cloudaux @ git+https://github.com/mikegrima/cloudaux@TwoPointZero
+click
+PyYAML
+marshmallow
+retry

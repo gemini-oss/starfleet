@@ -1,0 +1,250 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  starfleet
+
+  This is a Sample SAM Template for starfleet -- please replace this with your own and add your own values in.
+
+# Replace these with your own:
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: TEST
+    AllowedValues:
+      - TEST
+      - PROD
+    Description: Informs the Lambda functions which configuration to use, either TEST or PROD
+
+# Environment specific configuration can go in here:
+Mappings:
+  EnvMap:
+    TEST:
+      AccountInventoryBucket: replace-me
+      BaseRoleName: replace-me
+
+    PROD:
+      AccountInventoryBucket: replace-me
+      BaseRoleName: replace-me
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 300
+
+Resources:
+  # The Starbase Components
+  StarbaseFanoutDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: starbase-fanout-dlq
+      RedriveAllowPolicy:
+        redrivePermission: allowAll
+
+  StarbaseFanoutQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: starbase-fanout-queue
+      VisibilityTimeout: 300  # This needs to be the same as the Lambda function timeout.
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt StarbaseFanoutDLQ.Arn
+        maxReceiveCount: 4
+
+  StarfleetTemplateBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub
+        - 'starfleet-templates-${AccountId}'
+        - AccountId: !Ref "AWS::AccountId"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+  # The Starbase EventBridge listener:
+  StarbaseEventBridgeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src
+      Handler: starfleet.starbase.entrypoints.eventbridge_timed_lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - arm64
+      Events:
+        # Make one for each timed event:  -- Don't forget to set these to Enabled when you are ready to use them!
+        EventBridgeThirtyMin:
+          Type: Schedule
+          Properties:
+            Name: StarfleetThirtyMin
+            Description: Invokes Starfleet 30-minute worker ship tasks
+            Enabled: False
+            Schedule: rate(30 minutes)
+            Input: '{"name": "THIRTY_MIN"}'
+        EventBridgeHourly:
+          Type: Schedule
+          Properties:
+            Name: StarfleetHourly
+            Description: Invokes Starfleet hourly worker ship tasks
+            Enabled: True
+            Schedule: rate(1 hour)
+            Input: '{"name": "HOURLY"}'
+        EventBridgeSixHourly:
+          Type: Schedule
+          Properties:
+            Name: StarfleetSixHourly
+            Description: Invokes Starfleet six-hourly worker ship tasks
+            Enabled: False
+            Schedule: rate(6 hours)
+            Input: '{"name": "SIX_HOURLY"}'
+        EventBridgeTwelveHourly:
+          Type: Schedule
+          Properties:
+            Name: StarfleetTwelveHourly
+            Description: Invokes Starfleet twelve-hourly worker ship tasks
+            Enabled: False
+            Schedule: rate(12 hours)
+            Input: '{"name": "TWELVE_HOURLY"}'
+        EventBridgeDaily:
+          Type: Schedule
+          Properties:
+            Name: StarfleetDaily
+            Description: Invokes Starfleet daily worker ship tasks
+            Enabled: False
+            Schedule: rate(1 day)
+            Input: '{"name": "DAILY"}'
+      Policies:
+        # Grant permissions to read from the Template S3 bucket:
+        - S3ReadPolicy:
+            BucketName: !Ref StarfleetTemplateBucket
+        # Write out to the fan out queue:
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt StarbaseFanoutQueue.QueueName
+
+  # Define the worker ships here:
+  AccountIndexGeneratorDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: starfleet-account-index-generator-dlq
+      RedriveAllowPolicy:
+        redrivePermission: allowAll
+
+  AccountIndexGeneratorQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: starfleet-account-index-generator
+      VisibilityTimeout: 300  # This needs to be the same as the Lambda function timeout.
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt StarbaseFanoutDLQ.Arn
+        maxReceiveCount: 4
+
+  AccountIndexGenerator:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src
+      Handler: starfleet.worker_ships.plugins.account_index_generator.ship.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - arm64
+      MemorySize: 256
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt AccountIndexGeneratorQueue.Arn
+            BatchSize: 2
+      Environment:
+        Variables:
+          STARFLEET_COMMIT: True
+      Policies:
+        # Grant permissions to read from the inventory S3 bucket:
+        - S3ReadPolicy:
+            BucketName: !FindInMap
+              - EnvMap
+              - !Ref 'EnvironmentName'
+              - AccountInventoryBucket
+        - S3WritePolicy:
+            BucketName: !FindInMap
+              - EnvMap
+              - !Ref 'EnvironmentName'
+              - AccountInventoryBucket
+
+  # Finally, the Starbase Fanout Function:
+  StarbaseFanoutFunction:
+    Type: AWS::Serverless::Function
+    DependsOn:
+      - AccountIndexGeneratorQueue
+    Properties:
+      CodeUri: ./src
+      Handler: starfleet.starbase.entrypoints.fanout_payload_lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - arm64
+      Events:
+        # Make one for each timed event:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt StarbaseFanoutQueue.Arn
+            BatchSize: 1  # Important! We only want 1 to ensure we don't hit timeouts.
+      Policies:
+        # Grant permissions to read from the Template S3 bucket:
+        - S3ReadPolicy:
+            BucketName: !Ref StarfleetTemplateBucket
+        - SQSSendMessagePolicy:
+            QueueName: !GetAtt AccountIndexGeneratorQueue.QueueName
+
+  # Common worker ship components here:
+  AssumeRoleManagedPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    DependsOn:
+      - AccountIndexGenerator
+    Properties:
+      Description: Grants Starfleet workers assume role permissions to common Starfleet worker IAM roles
+      ManagedPolicyName: StarfleetWorkerAssumeRoles
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: 'sts:AssumeRole'
+            Resource:
+              - !Sub
+                - 'arn:aws:iam::*:role/${RoleName}'
+                - RoleName: !FindInMap
+                    - EnvMap
+                    - !Ref 'EnvironmentName'
+                    - BaseRoleName
+      Roles:
+        - !Ref AccountIndexGeneratorRole  # AccountIndexGeneratorRole is created automatically by SAM and can be referenced
+
+Outputs:
+  StarbaseFanoutQueue:
+    Description: The Queue URL for the Starbase fan out queue
+    Value: !GetAtt StarbaseFanoutQueue.QueueUrl
+  StarbaseFanoutDLQ:
+    Description: The Queue URL for the Starbase fan out DLQ
+    Value: !GetAtt StarbaseFanoutDLQ.QueueUrl
+  StarfleetTemplateBucket:
+    Description: The Starfleet S3 bucket that holds all the worker ship templates
+    Value: !Ref StarfleetTemplateBucket
+  StarbaseEventBridgeFunction:
+    Description: The primary entrypoint for the Starbase timed EventBridge invocations
+    Value: !GetAtt StarbaseEventBridgeFunction.Arn
+  StarbaseFanoutFunction:
+    Description: The Starbase function that fans out the tasks to the worker ships
+    Value: !GetAtt StarbaseFanoutFunction.Arn
+  AssumeRoleManagedPolicy:
+    Description: The Assume Role managed policy that can be attached to worker roles that need it
+    Value: !Ref AssumeRoleManagedPolicy
+  AccountIndexGeneratorQueue:
+    Description: The Queue URL for the Account Index Generator invocation queue
+    Value: !GetAtt AccountIndexGeneratorQueue.QueueUrl
+  AccountIndexGeneratorDLQ:
+    Description: The Queue URL for the Account Index Generator invocation DLQ
+    Value: !GetAtt AccountIndexGeneratorDLQ.QueueUrl
+  AccountIndexGeneratorFunction:
+    Description: The Account Index Generator worker ship function that generates an account index
+    Value: !GetAtt AccountIndexGenerator.Arn

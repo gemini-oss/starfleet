@@ -1,0 +1,11 @@
+AccountIndexGeneratorShip:
+  Enabled: True
+  TemplatePrefix: AccountIndexGenerator/REPLACE-ME.YAML
+  InvocationQueueUrl: https://replace.me.sqs.amazonaws.com/REPLACE-ME
+  FanOutStrategy: SINGLE_INVOCATION
+  InvocationSources:
+      - EVENTBRIDGE_TIMED_EVENT
+  EventBridgeTimedFrequency: HOURLY
+  OrgAccountAssumeRole: starfleet-worker-role
+  OrgAccountId: "REPLACEME"
+  DescribeRegionsAssumeRole: starfleet-worker-role

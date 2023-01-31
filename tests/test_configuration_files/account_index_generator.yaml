@@ -1,0 +1,11 @@
+AccountIndexGeneratorShip:
+  Enabled: True
+  TemplatePrefix: sample_worker/
+  InvocationQueueUrl: https://sqs.amazonaws.com/replace-me
+  FanOutStrategy: SINGLE_INVOCATION
+  InvocationSources:
+      - EVENTBRIDGE_TIMED_EVENT
+  EventBridgeTimedFrequency: HOURLY
+  OrgAccountAssumeRole: starfleet-worker-basic-test-role
+  OrgAccountId: "123456789012"
+  DescribeRegionsAssumeRole: starfleet-worker-basic-test-role

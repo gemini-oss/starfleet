@@ -1,0 +1,11 @@
+STARFLEET:
+    DeploymentRegion: us-east-2
+    TemplateBucket: template-bucket
+    FanOutQueueUrl: https://sqs.amazonaws.com/fanout-queue
+    LogLevel: DEBUG
+    ThirdPartyLoggerLevels:
+        botocore: CRITICAL
+        'urllib3.connectionpool': CRITICAL
+
+TESTING:
+    ThisIs: A Test

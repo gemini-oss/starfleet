@@ -1,0 +1,8 @@
+STARFLEET:
+    DeploymentRegion: REPLACE-ME
+    TemplateBucket: REPLACE-ME
+    FanOutQueueUrl: https://some.url.amazonaws.com/replace-me
+    LogLevel: DEBUG
+    ThirdPartyLoggerLevels:
+        botocore: CRITICAL
+        'urllib3.connectionpool': CRITICAL
