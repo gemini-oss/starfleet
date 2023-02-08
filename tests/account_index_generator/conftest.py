@@ -10,7 +10,7 @@ This defines the PyTest fixtures exclusively for the Account Indexer worker
 # pylint: disable=redefined-outer-name,unused-argument,duplicate-code
 import json
 from datetime import datetime
-from typing import Any, Dict, Generator, Optional
+from typing import Any, Dict, Generator, List, Optional
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -56,6 +56,7 @@ def good_configuration() -> Dict[str, Any]:
         EventBridgeTimedFrequency: HOURLY
         OrgAccountAssumeRole: starfleet-worker-basic-test-role
         OrgAccountId: "123456789012"
+        OrgRootId: r-123456
         DescribeRegionsAssumeRole: starfleet-worker-basic-test-role
     """
 
@@ -138,6 +139,14 @@ def mock_direct_boto_clients() -> MagicMock:
         """This is the mocked out function that will just return a few tags out."""
         return {"Tags": [{"Key": f"Key{x}", "Value": f"Value{x}"} for x in range(1, 4)]}
 
+    def fetch_parent_ous(*args, **kwargs) -> Dict[str, Any]:  # noqa
+        """This is the mocked out function that will just return a few Org OUs back out."""
+        # If the root is passed in (000000000020), then return the Root org ID:
+        if kwargs["ChildId"] == "000000000020":
+            return {"Parents": [{"Id": "r-123456", "Type": "ROOT"}]}
+
+        return {"Parents": [{"Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT"}]}
+
     class MockedBoto3:
         """This is a mocked Boto3 package that will return a normal boto3 client for everything except organizations. Moto handles the other mocked boto calls."""
 
@@ -146,6 +155,7 @@ def mock_direct_boto_clients() -> MagicMock:
             if service == "organizations":
                 mocked_client = MagicMock()
                 mocked_client.list_tags_for_resource = MagicMock(side_effect=fetch_tags)
+                mocked_client.list_parents = MagicMock(side_effect=fetch_parent_ous)
 
                 return mocked_client
 
@@ -157,6 +167,21 @@ def mock_direct_boto_clients() -> MagicMock:
     with mock.patch("moto.iam.models.get_account_id_from", lambda x: "123456789012"):
         with mock.patch("starfleet.worker_ships.plugins.account_index_generator.utils.boto3", MockedBoto3()) as mocked_boto:
             yield mocked_boto
+
+
+@pytest.fixture
+def mock_list_parent_ous() -> Generator[None, None, None]:
+    """
+    This very specifically mocks out the boto3 call for listing the parent OUs. Not using Moto for this. The original function is wrapped by CloudAux's STS wrapper,
+    and it's easier to just mock out what we need vs. test the boto3 stuff itself.
+    """
+
+    def mocked_func(*args, **kwargs) -> List[Dict[str, Any]]:  # noqa
+        """This is the mocked out function that will just list all the OUs that are not Root back out."""
+        return [{"Id": "ou-1234-5678910", "Arn": "arn:aws:organizations::000000000020:ou/o-000000000020/ou-1234-5678910", "Name": "SomeOU"}]
+
+    with mock.patch("starfleet.worker_ships.plugins.account_index_generator.ship.list_organizational_units_for_parent", mocked_func):
+        yield
 
 
 @pytest.fixture

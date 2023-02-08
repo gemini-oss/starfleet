@@ -8,4 +8,5 @@ AccountIndexGeneratorShip:
   EventBridgeTimedFrequency: HOURLY
   OrgAccountAssumeRole: starfleet-worker-basic-test-role
   OrgAccountId: "123456789012"
+  OrgRootId: r-123456
   DescribeRegionsAssumeRole: starfleet-worker-basic-test-role

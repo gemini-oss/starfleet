@@ -19,7 +19,12 @@ from starfleet.utils.configuration import STARFLEET_CONFIGURATION
 from starfleet.utils.logging import LOGGER
 from starfleet.worker_ships.cli_utils import load_payload
 from starfleet.worker_ships.lambda_utils import worker_lambda
-from starfleet.worker_ships.plugins.account_index_generator.utils import fetch_additional_details, list_accounts, get_account_map
+from starfleet.worker_ships.plugins.account_index_generator.utils import (
+    fetch_additional_details,
+    list_accounts,
+    get_account_map,
+    list_organizational_units_for_parent,
+)
 from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip, WorkerShipBaseConfigurationTemplate, WorkerShipPayloadBaseTemplate
 
 
@@ -28,6 +33,7 @@ class AccountIndexGeneratorShipConfigurationTemplate(WorkerShipBaseConfiguration
 
     org_account_assume_role = fields.String(required=True, data_key="OrgAccountAssumeRole")
     org_account_id = fields.String(required=True, data_key="OrgAccountId")
+    org_root_id = fields.String(required=True, data_key="OrgRootId")  # Needed to list all the OUs. Get from the AWS Orgs console. Starts with `r-...`
     describe_regions_assume_role = fields.String(required=True, data_key="DescribeRegionsAssumeRole")
 
 
@@ -53,14 +59,22 @@ class AccountIndexGeneratorShip(StarfleetWorkerShip):
         all_accounts = list_accounts(  # pylint: disable=no-value-for-parameter
             account_number=config["OrgAccountId"], assume_role=config["OrgAccountAssumeRole"]
         )
+        account_map = get_account_map(all_accounts)  # Reformat the data
 
-        # Reformat the data:
-        account_map = get_account_map(all_accounts)
+        # Fetch the list of org OUs:
+        LOGGER.info("[📡] Reaching out to the Orgs API to get the list of all OUs in the org...")
+        all_ous = list_organizational_units_for_parent(  # pylint: disable=no-value-for-parameter
+            ParentId=config["OrgRootId"], account_number=config["OrgAccountId"], assume_role=config["OrgAccountAssumeRole"]
+        )
+        ou_map = {ou["Id"]: ou["Name"] for ou in all_ous}  # noqa  # Reformat the data into a nice map
+        ou_map[config["OrgRootId"]] = "ROOT"  # Add the root in
 
         # Fetch the tags and enabled regions:
         LOGGER.info("[🚚] Fetching tags and enabled regions for each account...")
         fetch_additional_details(
             account_map,
+            ou_map,
+            config["OrgRootId"],
             config["OrgAccountId"],
             config["OrgAccountAssumeRole"],
             config["DescribeRegionsAssumeRole"],

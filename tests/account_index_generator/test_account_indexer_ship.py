@@ -88,7 +88,9 @@ def test_fetch_additional_details(
     """This is a test to ensure that we can fetch all the additional details about"""
     from starfleet.worker_ships.plugins.account_index_generator.utils import fetch_additional_details
 
-    fetch_additional_details(account_map, "000000000020", "testing", "testing", "us-east-2")
+    ous = {"ou-1234-5678910": "SomeOU", "r-123456": "ROOT"}
+
+    fetch_additional_details(account_map, ous, "r-123456", "000000000020", "testing", "testing", "us-east-2")
 
     # Verify that everything is there:
     tag_value = {f"Key{x}": f"Value{x}" for x in range(1, 4)}
@@ -99,6 +101,15 @@ def test_fetch_additional_details(
         assert account["Tags"] == tag_value
         assert account["Regions"] == regions
 
+        # And the parent OUs:
+        if account["Id"] != "000000000020":
+            assert account["Parents"] == [
+                {"Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeOU"},
+                {"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"},
+            ]
+        else:
+            assert account["Parents"] == [{"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"}]
+
 
 def test_async_exceptions(aws_sts: BaseClient, mock_retry: None) -> None:
     """This tests that we can handle exceptions right if there are async issues."""
@@ -106,13 +117,13 @@ def test_async_exceptions(aws_sts: BaseClient, mock_retry: None) -> None:
 
     def raise_exception(*args, **kwargs) -> None:  # noqa
         """Just a function that will raise an exception to test that we properly catch AccountIndexerProcessErrors"""
-        raise Exception("Testing")
+        raise Exception("Testing")  # pylint: disable=broad-exception-raised
 
     # Just mock with lambda functions. These can't be pickled and cause an exception.
     with pytest.raises(AccountIndexerProcessError) as exc:
-        with mock.patch("starfleet.worker_ships.plugins.account_index_generator.utils.fetch_tags", raise_exception):
+        with mock.patch("starfleet.worker_ships.plugins.account_index_generator.utils.fetch_tags_and_parents", raise_exception):
             with mock.patch("starfleet.worker_ships.plugins.account_index_generator.utils.fetch_regions", raise_exception):
-                fetch_additional_details({"000000000000": {}}, "000000000020", "testing", "testing", "us-east-2")
+                fetch_additional_details({"000000000000": {}}, {"r-123456": "ROOT"}, "r-123456", "000000000020", "testing", "testing", "us-east-2")
 
     assert "Fetching tags and regions" in str(exc.value)
 
@@ -126,6 +137,7 @@ def test_full_run(
     aws_s3: BaseClient,
     aws_sts: BaseClient,
     inventory_bucket: str,
+    mock_list_parent_ous: None,
     mock_retry: None,
     account_map: Dict[str, Any],
     mock_direct_boto_clients: MagicMock,
@@ -137,7 +149,8 @@ def test_full_run(
     from starfleet.worker_ships.plugins.account_index_generator.utils import fetch_additional_details
 
     # We need to get the proper account map so we can verify that we generated the proper thing:
-    fetch_additional_details(account_map, "000000000020", "testing", "testing", "us-east-2")
+    ou_map = {"ou-1234-5678910": "SomeOU", "r-123456": "ROOT"}
+    fetch_additional_details(account_map, ou_map, "r-123456", "000000000020", "testing", "testing", "us-east-2")
 
     with mock.patch("starfleet.worker_ships.plugins.account_index_generator.ship.LOGGER") as mocked_logger:
         if cli:
