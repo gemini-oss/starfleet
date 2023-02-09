@@ -11,6 +11,12 @@ authors = [
 version = "0.0.1"
 dynamic = ["dependencies"]
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [tool.setuptools.dynamic]
 dependencies = {file = ["src/requirements.txt"]}
 
@@ -30,10 +36,10 @@ tests = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = [
-    ".",
-    "src"
-]
+#pythonpath = [
+#    ".",
+#    "src"
+#]
 log_cli = true
 
 [tool.black]

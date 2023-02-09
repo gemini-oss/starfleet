@@ -197,3 +197,6 @@ cython_debug/
 .aws-sam/
 samconfig.toml
 # ^^ You will want this to be in an internal repo
+
+# By default ignore configuration file changes. If this needs to be changed, you need to force add in git:
+src/starfleet/configuration_files/

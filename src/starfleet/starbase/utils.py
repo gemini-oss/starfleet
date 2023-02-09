@@ -87,5 +87,5 @@ def task_starbase_fanout(templates: List[str], queue_url: str, sqs_client: BaseC
     """This will task the starbase fanout by placing batches of the templates to the Starbase Fan Out SQS queue."""
     batch_num = 1
     for batch in get_template_batch(templates, worker_ship_name):
-        LOGGER.debug(f"[ℹ️] Processing SQS batch number: {batch_num}...")
+        LOGGER.debug(f"[ℹ️] Processing SQS batch number: {batch_num} to queue: {queue_url}...")
         sqs_client.send_message_batch(QueueUrl=queue_url, Entries=batch)

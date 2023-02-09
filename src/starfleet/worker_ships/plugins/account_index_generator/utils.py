@@ -27,15 +27,28 @@ class AccountIndexerProcessError(Exception):
 
 @sts_conn("organizations")
 @paginated("Accounts", request_pagination_marker="NextToken", response_pagination_marker="NextToken")
-def list_accounts(client: BaseClient, **kwargs) -> List[Dict[str, Any]]:
+def list_accounts(client: BaseClient, **kwargs) -> Dict[str, Any]:
     """This will query organizations to list all accounts -- calls are wrapped by CloudAux"""
     return client.list_accounts(**kwargs)
 
 
+@sts_conn("organizations")
+@paginated("OrganizationalUnits", request_pagination_marker="NextToken", response_pagination_marker="NextToken")
+def list_organizational_units_for_parent(client: BaseClient, **kwargs) -> Dict[str, Any]:
+    """This will list all the OUs for the given parent -- calls are wrapped by CloudAux"""
+    return client.list_organizational_units_for_parent(**kwargs)  # pragma: no cover
+
+
 @paginated("Tags", request_pagination_marker="NextToken", response_pagination_marker="NextToken")
-def list_tags_for_resource(client: BaseClient, **kwargs) -> List[Dict[str, Any]]:
+def list_tags_for_resource(client: BaseClient, **kwargs) -> Dict[str, Any]:
     """This will query organizations to list all tags for a given account -- calls are wrapped by CloudAux"""
     return client.list_tags_for_resource(**kwargs)
+
+
+@paginated("Parents", request_pagination_marker="NextToken", response_pagination_marker="NextToken")
+def list_parents(client: BaseClient, **kwargs) -> Dict[str, Any]:
+    """This will query organizations to list all the parent OUs and Root for a given account -- calls are wrapped by CloudAux"""
+    return client.list_parents(**kwargs)
 
 
 def get_account_map(account_list: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
@@ -52,8 +65,8 @@ def get_account_map(account_list: List[Dict[str, Any]]) -> Dict[str, Dict[str, A
 
 
 @retry(tries=3, jitter=(0, 3), delay=1, backoff=2, max_delay=3, logger=LOGGER)
-def fetch_tags(account_id: str, creds: Dict[str, str], deployment_region: str) -> Tuple[str, Dict[str, str]]:
-    """Fetch the tags from each individual account"""
+def fetch_tags_and_parents(account_id: str, creds: Dict[str, str], deployment_region: str) -> Tuple[str, Dict[str, str], List[Dict[str, str]]]:
+    """Fetch the tags and parent OUs for each individual account"""
     LOGGER.debug(f"[🏷️] Fetching tags for account id: {account_id}...")
     client = boto3.client(
         "organizations",
@@ -65,7 +78,10 @@ def fetch_tags(account_id: str, creds: Dict[str, str], deployment_region: str) -
     returned_tags = list_tags_for_resource(client, ResourceId=account_id)
     extracted_tags = {tag["Key"]: tag["Value"] for tag in returned_tags}
 
-    return account_id, extracted_tags
+    LOGGER.debug(f"[👪] Fetching parents for account id: {account_id}...")
+    returned_parents = list_parents(client, ChildId=account_id)
+
+    return account_id, extracted_tags, returned_parents
 
 
 @retry(tries=3, jitter=(0, 3), delay=1, backoff=2, max_delay=3, logger=LOGGER)
@@ -91,14 +107,14 @@ def fetch_regions(account_id: str, assume_role: str, deployment_region: str) -> 
     return account_id, enabled_regions
 
 
-TagResults = List[Tuple[str, Dict[str, str]]]
+TagAndParentResults = List[Tuple[str, Dict[str, str], List[Dict[str, str]]]]
 RegionsResults = List[Tuple[str, List[str]]]
 
 
 # pylint: disable=too-many-locals
 async def fetch_additional_async(
     loop: AbstractEventLoop, all_accounts: Dict[str, Any], org_id: str, org_role: str, region_role: str, deployment_region: str
-) -> Tuple[TagResults, RegionsResults]:
+) -> Tuple[TagAndParentResults, RegionsResults]:
     """This is an async that will task on the event loop the task to pull out both the tags for each account and also the enabled regions"""
     # Unfortunately ProcessPoolExecutors are not supported on Lambda 😭, so we need to use the inferior ThreadPoolExecutor instead 😒
     with ThreadPoolExecutor(max_workers=20) as executor:
@@ -108,36 +124,54 @@ async def fetch_additional_async(
         creds.pop("Expiration")
 
         # Task the tag and region fetching:
-        tag_tasks = []
+        tag_and_parent_tasks = []
         regions_tasks = []
 
         for account_id in all_accounts.keys():
-            tag_tasks.append(loop.run_in_executor(executor, fetch_tags, account_id, creds, deployment_region))
+            tag_and_parent_tasks.append(loop.run_in_executor(executor, fetch_tags_and_parents, account_id, creds, deployment_region))
             regions_tasks.append(loop.run_in_executor(executor, fetch_regions, account_id, region_role, deployment_region))
 
         try:
-            tag_results = await asyncio.gather(*tag_tasks)
+            tag_and_parent_results = await asyncio.gather(*tag_and_parent_tasks)
             region_results = await asyncio.gather(*regions_tasks)
         except Exception as err:
             LOGGER.error(f"[💥] Encountered an error fetching tags and regions. Details: {str(err)}")
             LOGGER.exception(err)
             raise AccountIndexerProcessError("Fetching tags and regions", err) from err
 
-    return tag_results, region_results  # noqa
+    return tag_and_parent_results, region_results  # noqa
 
 
-def fetch_additional_details(all_accounts: Dict[str, Any], org_id: str, org_role: str, region_role: str, deployment_region: str) -> None:
+def fetch_additional_details(
+    all_accounts: Dict[str, Any], all_ous: Dict[str, str], root_id: str, org_id: str, org_role: str, region_role: str, deployment_region: str
+) -> None:
     """This is the function that will go out and fetch all the additional details asynchronously with multiple spun processes. This wraps everything
     in the event loop."""
     loop = asyncio.new_event_loop()
     try:
-        tag_results, region_results = loop.run_until_complete(fetch_additional_async(loop, all_accounts, org_id, org_role, region_role, deployment_region))
+        tag_and_parent_results, region_results = loop.run_until_complete(
+            fetch_additional_async(loop, all_accounts, org_id, org_role, region_role, deployment_region)
+        )
     finally:
         loop.close()
 
-    # Merge in the tag details:
-    for result in tag_results:
+    # Merge in the tag and parent details:
+    for result in tag_and_parent_results:
         all_accounts[result[0]]["Tags"] = result[1]
+
+        parent_ous = []
+        has_root = False  # If the Root wasn't added in, then we will append it so that there is a full chain up to the Root.
+        for parent in result[2]:
+            if parent["Type"] == "ROOT":
+                has_root = True
+
+            parent_ous.append({"Id": parent["Id"], "Type": parent["Type"], "Name": all_ous[parent["Id"]]})
+
+        # If Root wasn't there, then append it:
+        if not has_root:
+            parent_ous.append({"Id": root_id, "Type": "ROOT", "Name": "ROOT"})
+
+        all_accounts[result[0]]["Parents"] = parent_ous
 
     for result in region_results:
         all_accounts[result[0]]["Regions"] = result[1]
