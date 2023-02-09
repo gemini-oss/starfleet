@@ -11,7 +11,7 @@ You can make lambdas to do whatever it is that you want to do with the proper co
 to operate in. Starfleet operates with the following components and concepts:
 
 1. Cloud Account Index (Completed) - This is an index of all AWS accounts that you need to operate over. This provides Starfleet with the context
-   of what worklaods to run in which accounts (workloads assume an IAM role in the target account)
+   of what workloads to run in which accounts (workloads assume an IAM role in the target account)
 2. Worker "ships" - These are Lambda functions that execute a payload in the context of an AWS account. Ships can be tasked to run a workload in any
    variety of AWS accounts, regions, or even just a single invocation for a 1 time task
 3. Template YAMLs - Human readable templates that describe what the state of an infrastructure component should be across your infrastructure.
@@ -28,16 +28,16 @@ All the application's main configuration entries reside in the `STARFLEET` secti
 respective sections.
 
 ## Worker Ships
-Each worker is a "worker ship", or a plugin. Plugins are loaded based on where they are placed in the directory path. All workers needs to reside in the
+Each worker is a "worker ship", or a plugin. Plugins are loaded based on where they are placed in the directory path. All workers need to reside in the
 `worker_ships/plugins/*` path. Each plugin needs to implement (subclass) the `StarfleetWorkerShip` class. This class outlines the configuration templates
-and also the payload templates for each worker. This will also contain a list of `click.group()` wrapped functions that is added to the `clis` list.
+and also the payload templates for each worker. This will also contain a list of `click.group()` wrapped functions that are added to the `clis` list.
 
 Each worker has 2 primary functions:
 1. `load_template`, which loads the payload template, and stores it in the `self.payload` attribute as a Dictionary to be referenced easily by the worker
 2. `execute`, which will perform the work for the plugin
 
 For the worker to function, in addition to the plugin details to be implemented, you also need:
-1. In the plugin's `__init__.py`, a `WORKER_SHIP_PLUGINS` `list` that contains a list the subclassed `StarfleetWorkerShip` classes that the plugin exposes.
+1. In the plugin's `__init__.py`, a `WORKER_SHIP_PLUGINS` `list` that contains a list of the subclassed `StarfleetWorkerShip` classes that the plugin exposes.
 2. The plugin needs a configuration entry (defined in the plugin's `worker_ship_name` attribute), with `Enabled: True` being set for the plugin to be usable.
 
 _TODO: Add details about the entrypoints_
