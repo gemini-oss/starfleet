@@ -3,7 +3,7 @@
 This defines all the tests used by the Account Indexer ship
 
 :Module: starfleet.tests.worker_ship_plugins.account_index_generator.test_account_indexer_ship
-:Copyright: (c) 2022 by Gemini Trust Company, LLC., see AUTHORS for more info
+:Copyright: (c) 2023 by Gemini Trust Company, LLC., see AUTHORS for more info
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """

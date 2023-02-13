@@ -1,11 +1,12 @@
 STARFLEET:
-    DeploymentRegion: REPLACE-ME
-    TemplateBucket: REPLACE-ME
-    FanOutQueueUrl: https://some.url.amazonaws.com/replace-me
-    LogLevel: DEBUG
-    ThirdPartyLoggerLevels:
-        botocore: CRITICAL
-        'urllib3.connectionpool': CRITICAL
+  DeploymentRegion: REPLACE-ME
+  TemplateBucket: REPLACE-ME
+  FanOutQueueUrl: https://some.url.amazonaws.com/replace-me
+  AccountIndexShip: StarfleetDefaultAccountIndex
+  LogLevel: DEBUG
+  ThirdPartyLoggerLevels:
+    botocore: CRITICAL
+    'urllib3.connectionpool': CRITICAL
 
 
 AccountIndexGeneratorShip:
@@ -14,9 +15,15 @@ AccountIndexGeneratorShip:
   InvocationQueueUrl: https://replace.me.sqs.amazonaws.com/REPLACE-ME
   FanOutStrategy: SINGLE_INVOCATION
   InvocationSources:
-      - EVENTBRIDGE_TIMED_EVENT
+    - EVENTBRIDGE_TIMED_EVENT
   EventBridgeTimedFrequency: HOURLY
   OrgAccountAssumeRole: starfleet-worker-role
   OrgAccountId: "REPLACEME"
   OrgRootId: "r-eplaceme"
   DescribeRegionsAssumeRole: starfleet-worker-role
+
+
+StarfleetDefaultAccountIndex:
+  IndexBucket: REPLACE-ME
+  BucketRegion: REPLACE-ME
+  IndexObjectPath: REPLACE-ME
