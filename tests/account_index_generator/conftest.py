@@ -188,3 +188,28 @@ def mock_list_parent_ous() -> Generator[None, None, None]:
 def lambda_payload(good_payload: Dict[str, Any]) -> Dict[str, Any]:
     """This is the payload from SQS encoded in the Body of the dictionary. Not including the rest of the SQS details."""
     return {"Records": [{"body": json.dumps(good_payload)}]}
+
+
+@pytest.fixture
+def account_index_config(inventory_bucket: str, test_configuration: Dict[str, Any]) -> Dict[str, Any]:
+    """This is a fixture that sets the main app's configuration to include the default account indexer's"""
+    test_configuration["StarfleetDefaultAccountIndex"] = {"IndexBucket": inventory_bucket, "BucketRegion": "us-east-2"}
+
+    return test_configuration
+
+
+@pytest.fixture
+def index_obj(account_index_config: Dict[str, Any], aws_s3: BaseClient, inventory_bucket: str) -> Dict[str, Any]:
+    """
+    This will load a pre-generated test Account Index JSON file named generatedIndex.json. This is mock uploaded to S3.
+    This file should be kept up to date with any changes that are made to the AccountIndexGenerator
+    """
+    import tests.account_index_generator
+
+    path = f"{tests.account_index_generator.__path__[0]}/generatedIndex.json"
+
+    with open(path, "r", encoding="utf-8") as file:
+        file_text = file.read()
+    aws_s3.put_object(Bucket=inventory_bucket, Key="accountIndex.json", Body=file_text)
+
+    return json.loads(file_text)
