@@ -20,8 +20,8 @@ class StarfleetSchema(Schema):
     # This is the SQS queue URL that the Starbase will use for getting the worker/template details so that the worker ship can be tasked properly:
     fanout_queue_url = fields.Url(required=True, schemes={"https"}, data_key="FanOutQueueUrl")
 
-    # This is the name for the account index ship plugin. The default should be used if you are using the AccountIndexGenerator worker ship:
-    account_index_ship = fields.String(required=False, data_key="AccountIndexShip", load_default="StarfleetDefaultAccountIndex")
+    # This is the name for the account index ship plugin. The default should be used if you are using the AccountIndexGeneratorShip worker ship:
+    account_index = fields.String(required=False, data_key="AccountIndex", load_default="StarfleetDefaultAccountIndex")
 
     # Optional fields:
     log_level = fields.String(

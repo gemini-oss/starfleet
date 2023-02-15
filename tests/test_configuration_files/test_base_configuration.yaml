@@ -2,6 +2,7 @@ STARFLEET:
     DeploymentRegion: us-east-2
     TemplateBucket: template-bucket
     FanOutQueueUrl: https://sqs.amazonaws.com/fanout-queue
+    AccountIndex: TestingAccountIndexPlugin
     LogLevel: DEBUG
     ThirdPartyLoggerLevels:
         botocore: CRITICAL

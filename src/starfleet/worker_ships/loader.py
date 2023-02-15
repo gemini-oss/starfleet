@@ -35,8 +35,10 @@ class StarfleetWorkerShipLoader:
         self._worker_ships = None
 
     def load_all_plugins(self):
-        """This will load all Starfleet worker ship plugins and verify that they are set up properly. This is code that will mostly be used by both the
-        Starbase and the CLI."""
+        """
+        This will load all Starfleet worker ship plugins and verify that they are set up properly. This is code that will mostly be used by both the
+        Starbase and the CLI.
+        """
         self._worker_ships = {}
 
         LOGGER.debug("[📦] Loading worker ship plugins...")

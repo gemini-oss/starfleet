@@ -23,6 +23,7 @@ def test_load_base_configuration(test_configuration: Dict[str, Any]) -> None:
         "DeploymentRegion": "us-east-2",
         "TemplateBucket": "template-bucket",
         "FanOutQueueUrl": "https://sqs.amazonaws.com/fanout-queue",
+        "AccountIndex": "TestingAccountIndexPlugin",
         "LogLevel": "DEBUG",
         "ThirdPartyLoggerLevels": {
             "botocore": "CRITICAL",

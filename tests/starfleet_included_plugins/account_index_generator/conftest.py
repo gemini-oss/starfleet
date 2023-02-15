@@ -202,11 +202,11 @@ def account_index_config(inventory_bucket: str, test_configuration: Dict[str, An
 def index_obj(account_index_config: Dict[str, Any], aws_s3: BaseClient, inventory_bucket: str) -> Dict[str, Any]:
     """
     This will load a pre-generated test Account Index JSON file named generatedIndex.json. This is mock uploaded to S3.
-    This file should be kept up to date with any changes that are made to the AccountIndexGenerator
+    This file should be kept up to date with any changes that are made to the AccountIndexGeneratorShip
     """
-    import tests.account_index_generator
+    import tests.starfleet_included_plugins.account_index_generator
 
-    path = f"{tests.account_index_generator.__path__[0]}/generatedIndex.json"
+    path = f"{tests.starfleet_included_plugins.account_index_generator.__path__[0]}/generatedIndex.json"
 
     with open(path, "r", encoding="utf-8") as file:
         file_text = file.read()
