@@ -9,7 +9,8 @@ Sample worker plugin for unit testing purposes.
 """
 import click
 
-from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip, WorkerShipBaseConfigurationTemplate, WorkerShipPayloadBaseTemplate
+from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip, WorkerShipBaseConfigurationTemplate
+from starfleet.worker_ships.base_payload_schemas import WorkerShipPayloadBaseTemplate
 
 
 @click.group()

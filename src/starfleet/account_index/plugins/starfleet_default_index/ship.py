@@ -46,6 +46,7 @@ class StarfleetDefaultAccountIndex(AccountIndex):
         This will go out to S3 and load the configuration that is needed. Since this has a dependency on the AccountIndexGeneratorShip worker to generate the files to S3.
         This will need a configuration that tells it where to download the Account Index JSON.
         """
+        self.org_root = ""
         self.account_ids = set()
         self.alias_map: Dict[str, str] = {}
         self.ou_map: Dict[str, Set[str]] = {}
@@ -124,6 +125,14 @@ class StarfleetDefaultAccountIndex(AccountIndex):
                 tag_name_mapping[norm_tag_value] = tag_value_mapping
                 self.tag_map[norm_tag_name] = tag_name_mapping
 
+        # This worker operates in one AWS Org. The Organization root is in the ARN for an account in the Org, and looks like this:
+        # arn:aws:organizations::ORG-ROOT-ACCOUNT-ID:account/ORG-ID/ACCOUNT-ID
+        #                        ^^ We are going to pull this out of the last account in the list.
+
+        # Pull out the first account in the dict and parse out the ARN:
+        some_account = next(iter(account_dict.values()))
+        self.org_root = some_account["Arn"].split("arn:aws:organizations::")[1].split(":")[0]
+
     def get_accounts_by_id(self, ids: Set[str]) -> Set[str]:
         """Return back a Set of account IDs for a given list of IDs present -- this effectively only returns back account IDs that exist in the inventory."""
         return ids.intersection(self.account_ids)
@@ -161,3 +170,13 @@ class StarfleetDefaultAccountIndex(AccountIndex):
     def get_all_accounts(self) -> Set[str]:
         """Return back a set of all account IDs."""
         return self.account_ids
+
+    def get_org_roots(self) -> Set[str]:
+        """
+        Return back the set of account IDs for Organization Root accounts. This is mostly used for the Account and Account/Region worker ships when specifying if the payload
+        in question should operate in an AWS Organization Root account. If the flag in the template is set, then this will check if there is an Organization Root set and task a
+        worker ship with the payload to operate in that corresponding organization root.
+
+        Note: This AccountIndex plugin assumes that there is exactly 1 AWS Organization that is being used.
+        """
+        return {self.org_root}

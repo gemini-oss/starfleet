@@ -10,9 +10,17 @@ This tests all schema things related to worker ships.
 from typing import Any, Dict
 
 import pytest
+import yaml
 from marshmallow import ValidationError
 
-from starfleet.worker_ships.ship_schematics import WorkerShipBaseConfigurationTemplate, WorkerShipPayloadBaseTemplate
+from starfleet.worker_ships.ship_schematics import WorkerShipBaseConfigurationTemplate
+from starfleet.worker_ships.base_payload_schemas import (
+    AccountsSpecificationSchema,
+    AccountTagNameValueSchema,
+    BaseAccountPayloadTemplate,
+    IncludeAccountsSpecificationSchema,
+    WorkerShipPayloadBaseTemplate,
+)
 
 
 def test_base_configuration_template_schema(sample_good_config: Dict[str, Any]) -> None:
@@ -62,3 +70,112 @@ def test_base_payload_template_permits_non_specified_items(sample_payload_templa
 
     payload = WorkerShipPayloadBaseTemplate().load(sample_payload_template)
     assert payload["SomeField"] == "SomeValue"
+
+
+def test_account_tag_schema() -> None:
+    """This test that the payload schema for account tagging is correct."""
+    # Good schema:
+    assert not AccountTagNameValueSchema().validate({"Name": "SomeTagName", "Value": "SomeTagValue"})  # An empty error dict should be returned.
+
+    # Bad schema:
+    errors = AccountTagNameValueSchema().validate({"lol": "no", "Value": "No"})
+    assert errors == {"Name": ["Missing data for required field."], "lol": ["Unknown field."]}
+
+    # Test the validation:
+    errors = AccountTagNameValueSchema().validate({"Name": "", "Value": ""})
+    assert errors == {"Name": ["Length must be between 1 and 128."]}
+    errors = AccountTagNameValueSchema().validate({"Name": "a" * 129, "Value": "b" * 257})
+    assert errors == {"Value": ["Longer than maximum length 256."], "Name": ["Length must be between 1 and 128."]}
+
+
+def test_account_specification_schemas() -> None:
+    """This tests both the include/exclude account specification schemas."""
+    schema = AccountsSpecificationSchema()
+
+    # Good Schema:
+    assert not schema.validate(
+        {
+            "ByNames": ["Account One", "Account Two"],
+            "ByIds": [
+                "000000000001",
+                "000000000002",
+                "000000000003",
+            ],
+            "ByOrgUnits": ["SomeOu", "SomeOtherOu", "ou-1234-12345678"],
+            "ByTags": [{"Name": "Environment", "Value": "Test"}, {"Name": "Environment", "Value": "Prod"}],
+        }
+    )  # There should be no errors dict returned.
+
+    # And for all accounts (IncludeAccounts schema):
+    assert not IncludeAccountsSpecificationSchema().validate({"AllAccounts": True})  # There should be no errors dict returned.
+
+    # With invalid Account Names:
+    errors = schema.validate({"ByNames": ["Account One", "", "bad" * 100]})
+    assert errors == {"ByNames": {1: ["Length must be between 1 and 128."], 2: ["Length must be between 1 and 128."]}}
+
+    # With invalid Account IDs:
+    errors = schema.validate({"ByIds": ["", "000000000001", "0" * 13]})
+    assert errors == {"ByIds": {0: ["Length must be between 1 and 12."], 2: ["Length must be between 1 and 12."]}}
+
+    # With invalid Org Unit IDs and Names:
+    errors = schema.validate({"ByOrgUnits": ["ProperOU", "", "ou-" + "a" * 68, "a" * 200]})
+    assert errors == {
+        "ByOrgUnits": {1: ["Length must be greater than 0."], 2: ["Length must be less than 68 for OU IDs."], 3: ["Length must be less than 128 for OU Names."]}
+    }
+
+    # And for all accounts (IncludeAccounts schema) where AllAccounts is true, and there is another field set:
+    errors = IncludeAccountsSpecificationSchema().validate({"AllAccounts": True, "ByNames": ["WRONG"]})
+    assert errors == {"ByNames": ["Can't specify other parameters when `AllAccounts` is set to `True`."]}
+
+
+def test_base_account_payload_template() -> None:
+    """This tests the schema for the BaseAccountPayloadTemplate."""
+    schema = BaseAccountPayloadTemplate()
+
+    # TODO: Make a fixture?
+    good_payload = """
+    TemplateName: TestingPayload
+    TemplateDescription: A proper payload that should be serialized properly.
+    IncludeAccounts:
+      AllAccounts: True
+    ExcludeAccounts:
+      ByNames:
+        - "Some Test Account"
+    """
+    assert not schema.validate(yaml.safe_load(good_payload))
+
+    good_payload_no_exclusion = """
+    TemplateName: TestingPayload
+    TemplateDescription: A proper payload that should be serialized properly.
+    IncludeAccounts:
+      AllAccounts: True
+    """
+    assert not schema.validate(yaml.safe_load(good_payload_no_exclusion))
+
+    # Bad payload -- can't specify both AllAccounts and also provide an additional field
+    bad_payload = """
+    TemplateName: Bad Payload
+    TemplateDescription: A bad payload that should not be serialized.
+    IncludeAccounts:
+      AllAccounts: True
+      ByOrgUnits:
+        - SomeOrg
+    ExcludeAccounts:
+      ByNames:
+        - "Some Test Account"
+    OperateInOrgRoot: False
+    """
+    errors = schema.validate(yaml.safe_load(bad_payload))
+    assert errors == {"IncludeAccounts": {"ByOrgUnits": ["Can't specify other parameters when `AllAccounts` is set to `True`."]}}
+
+    # Missing the included accounts
+    bad_payload = """
+    TemplateName: Bad Payload
+    TemplateDescription: A bad payload that should not be serialized.
+    ExcludeAccounts:
+      ByNames:
+        - "Some Test Account"
+    OperateInOrgRoot: True
+    """
+    errors = schema.validate(yaml.safe_load(bad_payload))
+    assert errors == {"IncludeAccounts": ["Missing data for required field."]}
