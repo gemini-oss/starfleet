@@ -1,4 +1,4 @@
-"""Tests for the Default Account Index - which uses the AccountIndexGenerator's generated index.
+"""Tests for the Default Account Index - which uses the AccountIndexGeneratorShip's generated index.
 
 This defines all the tests used by the Default Account Index
 

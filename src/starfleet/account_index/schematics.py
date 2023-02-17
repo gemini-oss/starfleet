@@ -8,10 +8,10 @@ This is what allows the Starbase to properly task Account and Account-Region pay
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
-from typing import Set, Dict
+from typing import Set, Dict, TypeVar
 
 
-class BaseAccountIndex:  # pragma: no cover
+class AccountIndex:  # pragma: no cover
     """
     This is the base class that ALL account index plugins in Starfleet need to subclass.
 
@@ -45,3 +45,6 @@ class BaseAccountIndex:  # pragma: no cover
     def get_all_accounts(self) -> Set[str]:
         """Return back a set of all account IDs."""
         raise NotImplementedError("Pew Pew Pew")
+
+
+AccountIndexInstance = TypeVar("AccountIndexInstance", bound=AccountIndex)

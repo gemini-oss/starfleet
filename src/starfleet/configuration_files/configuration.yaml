@@ -2,7 +2,7 @@ STARFLEET:
   DeploymentRegion: REPLACE-ME
   TemplateBucket: REPLACE-ME
   FanOutQueueUrl: https://some.url.amazonaws.com/replace-me
-  AccountIndexShip: StarfleetDefaultAccountIndex
+  AccountIndex: StarfleetDefaultAccountIndex
   LogLevel: DEBUG
   ThirdPartyLoggerLevels:
     botocore: CRITICAL
