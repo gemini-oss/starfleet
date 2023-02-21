@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "starfleet"
 authors = [
-    {name = "Gemini", email = "oss@gemini.com"},
+    {name = "Gemini", email = "careers@gemini.com"},
     {name = "Mike Grima", email = "michael.grima@gemini.com"},
 ]
 version = "0.0.1"
@@ -32,7 +32,8 @@ tests = [
     "flake8",
     "pylint",
     "tox",
-    "moto"
+    "moto",
+    "mkdocs"
 ]
 
 [tool.pytest.ini_options]

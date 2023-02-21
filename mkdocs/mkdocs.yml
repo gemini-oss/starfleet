@@ -1,0 +1,59 @@
+site_name: ✨Starfleet✨
+# Replace this once launched somewhere...
+site_url: https://github.com/gemini-oss/starfleet
+repo_url: https://github.com/gemini-oss/starfleet
+copyright: Copyright &copy; 2023 - Gemini
+theme:
+  name: material
+  font:
+    text: Inter
+  logo: logo_files/Logo.png
+  favicon: logo_files/chmmr.png
+  palette:
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      primary: black
+      accent: blue
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      primary: black
+      accent: blue
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+  features:
+    - navigation.sections
+    - navigation.footer
+    - navigation.tabs
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - toc:
+      toc_depth: 3
+      permalink: true
+
+extra_css:
+  - stylesheets/extra.css
+nav:
+  - Home: index.md
+  - Architecture:
+    - Overview: architecture/Overview.md
+    - Worker Ships: architecture/WorkerShips.md
+    - Configuration: architecture/Configuration.md
+    - Payload Templates: architecture/PayloadTemplates.md
+    - Account Index: architecture/AccountIndex.md
+    - Resident IAM Role: architecture/ResidentIAMRole.md
+    - Starbase: architecture/Starbase.md
+    - CLI: architecture/CLI.md
+  - Installation: Installation.md
+  - User Guide: UserGuide.md
+  - Developer Guide: DeveloperGuide.md
