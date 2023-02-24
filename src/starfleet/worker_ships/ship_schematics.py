@@ -16,6 +16,8 @@ from typing import Any, Dict, Type, TypeVar
 
 from marshmallow import Schema, fields, INCLUDE, post_load, ValidationError
 
+from starfleet.worker_ships.base_payload_schemas import WorkerShipPayloadBaseTemplate
+
 
 class InvocationSources(Enum):
     """This is an Enum that defines the type of invocation for a given Starfleet worker. This defines the
@@ -92,24 +94,6 @@ class WorkerShipBaseConfigurationTemplate(Schema):
                 raise ValidationError("A EventBridgeTimedFrequency is required when specifying an invocation event of EVENTBRIDGE_TIMED_EVENT.")
 
         return in_data
-
-    class Meta:
-        """By default, we will include unknown values without raising an error."""
-
-        unknown = INCLUDE
-
-
-class WorkerShipPayloadBaseTemplate(Schema):
-    """This is the base worker ship payload template schema. All template schemas will need to be subclasses of this.
-    The instantiated object type hint is `WorkerShipPayloadBaseTemplateInstance`.
-
-    Note: All payload YAMLs should be written in UpperCamelCase, but will be programmatically referenced in snake_case. This is intentionally
-    different from the Configuration because this will be programmatically referenced _and_ mutated in Python. The Configuration
-    is just a plan old dictionary which isn't manipulated, hence the difference.
-    """
-
-    template_name = fields.String(required=True, data_key="TemplateName")
-    template_description = fields.String(required=True, data_key="TemplateDescription")
 
     class Meta:
         """By default, we will include unknown values without raising an error."""

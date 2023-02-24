@@ -46,5 +46,16 @@ class AccountIndex:  # pragma: no cover
         """Return back a set of all account IDs."""
         raise NotImplementedError("Pew Pew Pew")
 
+    def get_org_roots(self) -> Set[str]:
+        """
+        Return back the set of account IDs for Organization Root accounts. This is mostly used for the Account and Account/Region worker ships when specifying if the payload
+        in question should operate in an AWS Organization Root account. If the flag in the template is set, then this will check if there is an Organization Root set and task a
+        worker ship with the payload to operate in that corresponding organization root.
+
+        Note: The typical and preferred implementation for Starfleet is to operate on 1 AWS Organization, however, there is no reason why it can't operate over many.
+        If you only have 1 org, just return the one account that is the org root account.
+        """
+        raise NotImplementedError("Pew Pew Pew")
+
 
 AccountIndexInstance = TypeVar("AccountIndexInstance", bound=AccountIndex)

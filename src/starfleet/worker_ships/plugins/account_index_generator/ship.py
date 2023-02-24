@@ -25,7 +25,8 @@ from starfleet.worker_ships.plugins.account_index_generator.utils import (
     get_account_map,
     list_organizational_units_for_parent,
 )
-from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip, WorkerShipBaseConfigurationTemplate, WorkerShipPayloadBaseTemplate
+from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip, WorkerShipBaseConfigurationTemplate
+from starfleet.worker_ships.base_payload_schemas import WorkerShipPayloadBaseTemplate
 
 
 class AccountIndexGeneratorShipConfigurationTemplate(WorkerShipBaseConfigurationTemplate):

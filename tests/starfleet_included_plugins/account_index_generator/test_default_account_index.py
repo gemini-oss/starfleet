@@ -126,3 +126,10 @@ def test_get_all_accounts(index_obj: Dict[str, Any]) -> None:
     index = StarfleetDefaultAccountIndex()
     accounts = index.get_all_accounts()
     assert len(accounts) == len(index_obj.keys())
+
+
+def test_get_org_roots(index_obj: Dict[str, Any]) -> None:
+    """This tests getting the set of Organization Roots."""
+    index = StarfleetDefaultAccountIndex()
+    accounts = index.get_org_roots()
+    assert accounts == {"000000000020"}
