@@ -37,7 +37,7 @@ follows the following philosophy:
 1. There is a time and place for Jinja; just not all of the times in all of the places
 
 The worker ships do all the heavy lifting so that templates are easy to read and parse. Easily readable templates provide context faster and reduce the likelihood of errors.
-This is especially important when operating at scale. We believe complexity should happen in the code; not N times in templates (the concept of Don't Repeat Yourself, only for real).
+This is especially important when operating at scale. We believe complexity should happen in the code; not N times in templates (the concept of _Don't Repeat Yourself_, only for real).
 
 At the end of the day, Starfleet is what you make of it. It provides the platform for running AWS account-aware Lambda functions that can operate anywhere in your infrastructure.
 

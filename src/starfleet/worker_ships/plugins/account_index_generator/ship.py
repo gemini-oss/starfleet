@@ -30,7 +30,7 @@ from starfleet.worker_ships.base_payload_schemas import WorkerShipPayloadBaseTem
 
 
 class AccountIndexGeneratorShipConfigurationTemplate(WorkerShipBaseConfigurationTemplate):
-    """The configuration for the StarfleetAccountIndexerShip. This largely defines where the Organization root is and the role to assume to query for accounts."""
+    """The configuration for the AccountIndexGeneratorShip. This largely defines where the Organization root is and the role to assume to query for accounts."""
 
     org_account_assume_role = fields.String(required=True, data_key="OrgAccountAssumeRole")
     org_account_id = fields.String(required=True, data_key="OrgAccountId")
@@ -124,7 +124,7 @@ AccountIndexGeneratorShipInstance = TypeVar("AccountIndexGeneratorShipInstance",
 
 @worker_lambda(AccountIndexGeneratorShip)
 def lambda_handler(event: Dict[str, Any], context: object, worker: AccountIndexGeneratorShipInstance, commit: bool) -> None:  # noqa pylint: disable=W0613
-    """This is the Lambda entrypoint for the EventBridge timed events."""
+    """This is the Lambda entrypoint for the AccountIndexGeneratorShip event from the Starbase."""
     for record in event["Records"]:
         # Load the payload:
         payload = json.loads(record["body"])
@@ -134,4 +134,4 @@ def lambda_handler(event: Dict[str, Any], context: object, worker: AccountIndexG
         # Process it!
         worker.execute(commit=commit)
 
-    LOGGER.info("[🏁] Completed Starbase EventBridge timed event.")
+    LOGGER.info("[🏁] Completed generating the account index.")

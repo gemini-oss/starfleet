@@ -21,7 +21,7 @@ AccountIndex: StarfleetDefaultAccountIndex
     Starfleet can support any number of accounts and organizations. As long as your account indexer can index it, it can support it!
 
 ## Default Account Indexer
-Starfleet ships with an account index generator worker ship (`AccountIndexGeneratorShip`) that lists all the accounts in AWS Organizations, fetches their enabled regions, tags, and parent OUs, and then saves this as a JSON file to an S3 bucket.
+Starfleet includes with an account index generator worker ship (`AccountIndexGeneratorShip`) that lists all the accounts in AWS Organizations, fetches their enabled regions, tags, and parent OUs, and then saves this as a JSON file to an S3 bucket.
 
 In addition to the worker ship for generating the index, Starfleet also ships with an account index plugin (`StarfleetDefaultAccountIndex`) that leverages the saved JSON from the `AccountIndexGeneratorShip` to provide Starfleet with the account index capabilities.
 

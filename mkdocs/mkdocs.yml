@@ -37,6 +37,11 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
   - toc:
       toc_depth: 3
       permalink: true
@@ -46,7 +51,7 @@ extra_css:
 nav:
   - Home: index.md
   - Architecture:
-    - Overview: architecture/Overview.md
+    - Architecture Overview: architecture/Overview.md
     - Worker Ships: architecture/WorkerShips.md
     - Configuration: architecture/Configuration.md
     - Payload Templates: architecture/PayloadTemplates.md
@@ -54,6 +59,18 @@ nav:
     - Resident IAM Role: architecture/ResidentIAMRole.md
     - Starbase: architecture/Starbase.md
     - CLI: architecture/CLI.md
+  - Developer Guide:
+    - Overview: developerGuide/Overview.md
+    - Primary Components:
+      - Loggers: developerGuide/primaryComponents/Loggers.md
+      - Configuration Manager: developerGuide/primaryComponents/ConfigurationManager.md
+      - Worker Ships:
+        - Overview - Ship Schematics: developerGuide/primaryComponents/workerShips/Overview.md
+        - Lambda Entrypoints: developerGuide/primaryComponents/workerShips/LambdaEntrypoints.md
+        - CLI: developerGuide/primaryComponents/workerShips/CLI.md
+        - Worker Ship Loader: developerGuide/primaryComponents/workerShips/Loader.md
+      - Account Indexer: developerGuide/primaryComponents/AccountIndexer.md
+    - AWS SAM Configuration: developerGuide/SAMConfiguration.md
+    - Check List: developerGuide/CheckList.md
   - Installation: Installation.md
   - User Guide: UserGuide.md
-  - Developer Guide: DeveloperGuide.md
