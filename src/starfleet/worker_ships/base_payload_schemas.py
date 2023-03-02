@@ -49,12 +49,12 @@ class AccountsSpecificationSchema(Schema):
     Validation is largely based on this: https://docs.aws.amazon.com/organizations/latest/APIReference/API_Account.html, but we're not doing regexes.
     """
 
-    by_names = fields.List(fields.String(validate=validate.Length(min=1, max=128)), data_key="ByNames", default=[])  # List of account names  # noqa
-    by_ids = fields.List(fields.String(validate=validate.Length(min=1, max=12)), data_key="ByIds", default=[])  # List of account IDs  # noqa
-    by_org_units = fields.List(fields.String(), data_key="ByOrgUnits", default=[])  # List of Org OU IDs or OU Names  # noqa
+    by_names = fields.List(fields.String(validate=validate.Length(min=1, max=128)), data_key="ByNames", load_default=[])  # List of account names  # noqa
+    by_ids = fields.List(fields.String(validate=validate.Length(min=1, max=12)), data_key="ByIds", load_default=[])  # List of account IDs  # noqa
+    by_org_units = fields.List(fields.String(), data_key="ByOrgUnits", load_default=[])  # List of Org OU IDs or OU Names  # noqa
 
     # List of tag name/value pairs:
-    by_tags = fields.List(fields.Nested(AccountTagNameValueSchema()), data_key="ByTags", default=[])
+    by_tags = fields.List(fields.Nested(AccountTagNameValueSchema()), data_key="ByTags", load_default=[])
 
     @validates("by_org_units")
     def validate_org_units(self, data: List[str], **kwargs) -> None:  # pylint: disable=unused-argument # noqa
@@ -82,7 +82,7 @@ class AccountsSpecificationSchema(Schema):
 class IncludeAccountsSpecificationSchema(AccountsSpecificationSchema):
     """This extends the AccountsSpecificationSchema where it has an additional field for AllAccounts, which isn't used in exclusion."""
 
-    all_accounts = fields.Boolean(data_key="AllAccounts", default=False)
+    all_accounts = fields.Boolean(data_key="AllAccounts", load_default=False)
 
     @validates_schema(pass_original=True)
     def verify_all_accounts_flag(self, data: Dict[str, Any], original_data: Dict[str, Any], **kwargs) -> None:  # pylint: disable=unused-argument  # noqa
@@ -106,14 +106,14 @@ class BaseAccountPayloadTemplate(WorkerShipPayloadBaseTemplate):
     """This is a payload template for worker ships that have an ACCOUNT fan out strategy."""
 
     include_accounts = fields.Nested(IncludeAccountsSpecificationSchema(), data_key="IncludeAccounts", required=True)
-    exclude_accounts = fields.Nested(AccountsSpecificationSchema(), data_key="ExcludeAccounts", default=None)
+    exclude_accounts = fields.Nested(AccountsSpecificationSchema(), data_key="ExcludeAccounts", load_default=None)
 
     # SPECIAL NOTE: The Starbase will _NOT_ task the org root unless BOTH the IncludeAccounts contains the org root
     # account within it, AND OperateInOrgRoot is set to True
-    operate_in_org_root = fields.Boolean(default=False, data_key="OperateInOrgRoot")
+    operate_in_org_root = fields.Boolean(load_default=False, data_key="OperateInOrgRoot")
 
     # This field is populated by the Starbase. The Starbase will raise a fuss if this field is filled out in the template:
-    starbase_assigned_account = fields.String(data_key="StarbaseAssignedAccount", default=None)
+    starbase_assigned_account = fields.String(data_key="StarbaseAssignedAccount", load_default=None)
     # ^^ The worker ship will rely on this field to determine the AWS account to operate in.
 
 
@@ -121,4 +121,4 @@ class BaseAccountPayloadTemplate(WorkerShipPayloadBaseTemplate):
 # class BaseAccountRegionPayloadTemplate(BaseAccountPayloadTemplate):
 #     """This is a payload template for worker ships that have an ACCOUNT/REGION fan out strategy."""
 #     include_regions = fields.List(fields.String(), data_key="IncludeRegions", required=True)
-#     exclude_regions = fields.List(fields.String(), data_key="ExcludeRegions", default=[])
+#     exclude_regions = fields.List(fields.String(), data_key="ExcludeRegions", load_default=[])
