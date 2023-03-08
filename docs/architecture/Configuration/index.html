@@ -1,0 +1,1075 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://github.com/gemini-oss/starfleet/architecture/Configuration/">
+      
+      
+        <link rel="prev" href="../WorkerShips/">
+      
+      
+        <link rel="next" href="../PayloadTemplates/">
+      
+      <link rel="icon" href="../../logo_files/chmmr.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
+    
+    
+      
+        <title>Configuration - ✨Starfleet✨</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0d440cfe.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="✨Starfleet✨" class="md-header__button md-logo" aria-label="✨Starfleet✨" data-md-component="logo">
+      
+  <img src="../../logo_files/Logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ✨Starfleet✨
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gemini-oss/starfleet" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../Overview/" class="md-tabs__link md-tabs__link--active">
+        Architecture
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../developerGuide/Overview/" class="md-tabs__link">
+        Developer Guide
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../Installation/" class="md-tabs__link">
+      Installation
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../UserGuide/" class="md-tabs__link">
+      User Guide
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="✨Starfleet✨" class="md-nav__button md-logo" aria-label="✨Starfleet✨" data-md-component="logo">
+      
+  <img src="../../logo_files/Logo.png" alt="logo">
+
+    </a>
+    ✨Starfleet✨
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gemini-oss/starfleet" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Overview/" class="md-nav__link">
+        Architecture Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../WorkerShips/" class="md-nav__link">
+        Worker Ships
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Configuration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Configuration
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#location" class="md-nav__link">
+    Location
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format-and-schema" class="md-nav__link">
+    Format and Schema
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-sections" class="md-nav__link">
+    Configuration Sections
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration Sections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starfleet-base-configuration-required" class="md-nav__link">
+    Starfleet Base Configuration - Required
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worker-ship-configurations" class="md-nav__link">
+    Worker Ship Configurations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../PayloadTemplates/" class="md-nav__link">
+        Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AccountIndex/" class="md-nav__link">
+        Account Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ResidentIAMRole/" class="md-nav__link">
+        Resident IAM Role
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Starbase/" class="md-nav__link">
+        Starbase
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CLI/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          Developer Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Developer Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developerGuide/Overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+          Primary Components
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Primary Components
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developerGuide/primaryComponents/Loggers/" class="md-nav__link">
+        Loggers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developerGuide/primaryComponents/ConfigurationManager/" class="md-nav__link">
+        Configuration Manager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2_3" id="__nav_3_2_3_label" tabindex="0">
+          Worker Ships
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_2_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          Worker Ships
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developerGuide/primaryComponents/workerShips/Overview/" class="md-nav__link">
+        Overview - Ship Schematics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developerGuide/primaryComponents/workerShips/LambdaEntrypoints/" class="md-nav__link">
+        Lambda Entrypoints
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developerGuide/primaryComponents/workerShips/CLI/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developerGuide/primaryComponents/workerShips/Loader/" class="md-nav__link">
+        Worker Ship Loader
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developerGuide/primaryComponents/AccountIndexer/" class="md-nav__link">
+        Account Indexer
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developerGuide/SAMConfiguration/" class="md-nav__link">
+        AWS SAM Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developerGuide/CheckList/" class="md-nav__link">
+        Check List
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../UserGuide/" class="md-nav__link">
+        User Guide
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#location" class="md-nav__link">
+    Location
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#format-and-schema" class="md-nav__link">
+    Format and Schema
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-sections" class="md-nav__link">
+    Configuration Sections
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration Sections">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starfleet-base-configuration-required" class="md-nav__link">
+    Starfleet Base Configuration - Required
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worker-ship-configurations" class="md-nav__link">
+    Worker Ship Configurations
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+<h1 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h1>
+<p>Starfleet needs a configuration to inform it how to run and where to find foundational components.  The User Guide will have additional details and a TL;DR summary of what you should set to get things going. This section goes into depth about the fields and what they do.</p>
+<h2 id="location">Location<a class="headerlink" href="#location" title="Permanent link">&para;</a></h2>
+<p>The configuration files reside within the Starfleet code tree. Below is a sample of where it's located:</p>
+<div class="highlight"><pre><span></span><code>starfleet
+├── src
+│   ├── starfleet
+│   │   ├── configuration_files  # &lt;-- This is where the configuration YAML files go.
+│   │   │   └── config_file_one.yaml
+│   │   │   └── config_file_two.yaml
+│   │   │   └── ...
+│   │   ├── ...
+│   ├── ...
+├── ...
+</code></pre></div>
+<p>All the configuration files are YAML files that reside in the <code>src/starfleet/configuration_files</code> directory path. The YAML files in this path are packaged into the Lambda function that is deployed to AWS.</p>
+<h2 id="format-and-schema">Format and Schema<a class="headerlink" href="#format-and-schema" title="Permanent link">&para;</a></h2>
+<p>The configuration files are loaded on start up. All of the files are walked through in the directory path and are compiled into one big configuration map (a Python Dictionary). You can have 1 file or many. Choice is yours.</p>
+<p>The configuration is set up in sections. Each section describes a component of Starfleet that needs to reference a configuration. The configurations must conform to a schema (Python Marshmallow) which is validated on startup. It is highly recommended that for consistency, that fields are in UpperCamelCase.</p>
+<h2 id="configuration-sections">Configuration Sections<a class="headerlink" href="#configuration-sections" title="Permanent link">&para;</a></h2>
+<p>There are a number of important sections to the configuration file for key parts of Starfleet.</p>
+<p>Here is an example configuration file, and the sections will be explained below:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">STARFLEET</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">DeploymentRegion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us-east-2</span>
+<span class="w">    </span><span class="nt">TemplateBucket</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">starfleet-templates-YOUR-ACCOUNT-ID</span>
+<span class="w">    </span><span class="nt">FanOutQueueUrl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://sqs.DEPLOYEMENT-REGION.amazonaws.com/ACCOUNT-ID/starbase-fanout-queue</span>
+<span class="w">    </span><span class="nt">LogLevel</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DEBUG</span>
+<span class="w">    </span><span class="nt">ThirdPartyLoggerLevels</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">botocore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
+<span class="w">        </span><span class="s">&#39;urllib3.connectionpool&#39;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CRITICAL</span>
+
+<span class="nt">AccountIndexGeneratorShip</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
+<span class="w">    </span><span class="nt">TemplatePrefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AccountIndexGenerator/us-east-2.yaml</span>
+<span class="w">    </span><span class="nt">InvocationQueueUrl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://sqs.DEPLOYEMENT-REGION.amazonaws.com/ACCOUNT-ID/starfleet-account-index-generator</span>
+<span class="w">    </span><span class="nt">FanOutStrategy</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SINGLE_INVOCATION</span>
+<span class="w">    </span><span class="nt">InvocationSources</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVENTBRIDGE_TIMED_EVENT</span>
+<span class="w">    </span><span class="nt">EventBridgeTimedFrequency</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HOURLY</span>
+<span class="w">    </span><span class="nt">OrgAccountAssumeRole</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">starfleet-worker-role</span>
+<span class="w">    </span><span class="nt">OrgAccountId</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;YOUR-ORGANIZATION-ROOT-ACCOUNT-ID-HERE&quot;</span>
+<span class="w">    </span><span class="nt">OrgRootId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">YOUR-ORG-ROOT-ID</span>
+<span class="w">    </span><span class="nt">DescribeRegionsAssumeRole</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">starfleet-worker-role</span>
+
+<span class="nt">StarfleetDefaultAccountIndex</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">IndexBucket</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-template-s3-bucket-replace-me</span>
+<span class="w">    </span><span class="nt">BucketRegion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-template-s3-bucket-region</span>
+<span class="w">    </span><span class="nt">IndexObjectPath</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">accounts.json</span>
+</code></pre></div>
+<h3 id="starfleet-base-configuration-required">Starfleet Base Configuration - Required<a class="headerlink" href="#starfleet-base-configuration-required" title="Permanent link">&para;</a></h3>
+<p>The base configuration configures the primary Starfleet components. This is in the <code>STARFLEET</code> section, which is <em>required</em>. This section has some very important fields:</p>
+<h4 id="required-fields">Required Fields<a class="headerlink" href="#required-fields" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>DeploymentRegion</code></strong> - This is the AWS region that Starfleet is deployed in. This is used by some foundational components, like the Starbase (described in later sections).</li>
+<li><strong><code>TemplateBucket</code></strong> - This is the S3 bucket that holds all the payload templates that are provided to the worker ships on invocation. The region for this bucket is the <em>same</em> as the <code>DeploymentRegion</code>. If you deploy with the included AWS SAM template, then all you need to do is add in the AWS account ID that Starfleet is deployed in and you are good to go!</li>
+<li><strong><code>FanOutQueueUrl</code></strong> - This is the SQS queue url for the fan out queue. This is used by the Starbase component described in later sections. This is an SQS queue that will be used drive the given worker ship's fan out strategy so that the worker can be tasked accordingly. If you are deploying with the Starfleet AWS SAM template, then all you need to do is add in the account ID and region to this string and you are good to go!</li>
+<li><strong><code>AccountIndex</code></strong> - This is the <em>name</em> of the Account Index plugin that Starfleet will use for getting an inventory of AWS accounts. This is outlined in more detail later, but is required. By default, this will use the <code>StarfleetDefaultAccountIndex</code> plugin which relies on the <code>AccountIndexGeneratorShip</code> worker ship to generate an AWS account inventory for an AWS Organization. That is also described later, but for now just know that Starfleet needs to know which plugin to consult with to obtain an index or inventory of AWS accounts and their enabled regions.</li>
+</ul>
+<h4 id="optional-fields">Optional Fields<a class="headerlink" href="#optional-fields" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>LogLevel</code></strong> - This is the Python log level to make use of. The valid fields are the <a href="https://docs.python.org/3/library/logging.html#levels">Python log level names</a>. The default value is <code>INFO</code>.</li>
+<li><strong><code>ThirdPartyLoggerLevels</code></strong> - This is a dictionary of Python logger name, and the corresponding log level for it. By default we silence the loggers for <code>botocore</code> and <code>urllib3.connectionpool</code>, because they can be noisy when making <code>boto3</code> API calls. Feel free to add or modify this section as you see fit.</li>
+</ul>
+<h3 id="worker-ship-configurations">Worker Ship Configurations<a class="headerlink" href="#worker-ship-configurations" title="Permanent link">&para;</a></h3>
+<p>Each worker ship must have a configuration entry. The configuration entry has a number of required fields that <em><strong>every</strong></em> worker ship needs. But, each worker ship can extend their own schemas as they see fit. You should consult with the documentation for each worker ship to know what it should look like.</p>
+<h4 id="minimum-required-fields">Minimum Required Fields<a class="headerlink" href="#minimum-required-fields" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong><code>Enabled</code></strong> - Each worker ship needs to have this field, which is set to the boolean of <code>True</code> or <code>False</code>. This specifies if the worker ship plugin is enabled or not.</li>
+<li><strong><code>TemplatePrefix</code></strong> - As described in the <a href="../WorkerShips/#the-payload-template">Worker Ship section</a>, this specifies where in the S3 bucket the worker ship's payload templates are located.</li>
+<li><strong><code>InvocationQueueUrl</code></strong> - As described in the <a href="../WorkerShips/#the-sqs-queue">Worker Ship section</a>, this is the SQS queue URL for where the Lambda's invocation will happen. The AWS SAM template has an example of what this should be. If you rely on the SAM template, than simply swap out the account ID and region, and you are good to go!</li>
+<li><strong><code>FanOutStrategy</code></strong> - As described in the <a href="../WorkerShips/#fan-out-strategy">Worker Ship section</a>, this defines the fan out strategy for the given worker. This is used to inform the Starbase component how to task the worker.</li>
+<li><strong><code>InvocationSources</code></strong> - As described in the <a href="../WorkerShips/#invocation-source">Worker Ship section</a>, this defines when the given worker gets invoked. This is used to inform the Starbase component when to task the worker.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Each worker has it's own schema and can define other required and optional components. The fields above are required for all worker ships.</p>
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../WorkerShips/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Worker Ships" rel="prev">
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Previous
+                </span>
+                Worker Ships
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../PayloadTemplates/" class="md-footer__link md-footer__link--next" aria-label="Next: Payload Templates" rel="next">
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Next
+                </span>
+                Payload Templates
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023 - Gemini
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.sections", "navigation.footer", "navigation.tabs"], "search": "../../assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.4b2c34cd.min.js"></script>
+      
+    
+  </body>
+</html>
