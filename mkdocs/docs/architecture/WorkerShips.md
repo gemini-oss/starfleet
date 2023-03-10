@@ -23,7 +23,7 @@ The next section of the documentation goes into more detail about Starfleet's co
 For now, just know that workers require a configuration entry that details what is required for it to execute properly.
 
 ### Fan Out Strategy
-All workers have what is called a "Fan Out Strategy". This describes how a worker should be tasked. This defines whether or not a worker should be tasked to operate as a single invocation, or if there should be a worker dedicated to each AWS account, or a worker dedicated to each AWS account and region pair.
+All workers have what is called a ==Fan Out Strategy==. This describes how a worker should be tasked. This defines whether or not a worker should be tasked to operate as a single invocation, or if there should be a worker dedicated to each AWS account, or a worker dedicated to each AWS account and region pair.
 
 The following are the values that can be set:
 
@@ -54,7 +54,7 @@ A worker can only define 1 fan out strategy.
 Each worker ship has an SQS queue and a corresponding dead-letter queue (DLQ). The SQS queue for the worker is used for invoking the Lambda function. SQS is used for a variety of reasons, namely it scales Lambda invocations very nicely, has great retry-capabilities, and DLQ integration. The DLQ is used to help debug why given payloads have failed.
 
 ### Invocation Source
-A worker also needs an "Invocation Source". This is discussed in much more detail later when the Starbase component is explored. Instead of bouncing you back and forth, we are just going to leave a TL;DR summary of what this is: the Invocation Source is what will determine *when* the worker ship gets invoked. The worker ship can be invoked by a CRON-like event (`EVENT_BRIDGE_TIMED_EVENT`), or by an update to the worker's template in S3 (`S3`).
+A worker also needs an ==Invocation Source==. This is discussed in much more detail later when the Starbase component is explored. Instead of bouncing you back and forth, we are just going to leave a TL;DR summary of what this is: the Invocation Source is what will determine *when* the worker ship gets invoked. The worker ship can be invoked by a CRON-like event (`EVENT_BRIDGE_TIMED_EVENT`), or by an update to the worker's template in S3 (`S3`).
 
 If using a CRON-like syntax, the configuration will need something that looks like this:
 ```yaml
@@ -85,7 +85,7 @@ The `InvocationSources` is a list and thus the worker can be invoked by a variet
 ## The Payload Template
 More information is provided about the payload YAML templates in the next sections, but the key thing to note is that each worker ship has at least 1 YAML payload template. The template is intended to inform the worker what it needs to do in an invocation. Each worker defines it's own template schema (using the Python [Marshmallow](https://marshmallow.readthedocs.io/en/stable/)). A worker can be configured to support many templates. An example would be a worker that synchronizes IAM roles; in this example, there would be 1 template for each IAM role that Starfleet maintains.
 
-All of the templates are stored in an S3 bucket (referred to loosely as the "Template Bucket" or "Template Payload Bucket"). It is *required* that the worker's configuration specify where in the template S3 bucket it's template files exist. This can either be a path to a single file, or to a directory-like prefix where many files reside.
+All of the templates are stored in an S3 bucket (referred to loosely as the ==Template Bucket== or ==Template Payload Bucket==). It is _**required**_ that the worker's configuration specify where in the template S3 bucket it's template files exist. This can either be a path to a single file, or to a directory-like prefix where many files reside.
 
 Here is what that configuration looks like:
 
@@ -99,7 +99,6 @@ TemplatePrefix: NAME-OF-WORKER-SHIP/
 
 !!! note
     All templates must be YAML files that end in `.yaml`. Starfleet relies on S3 object listing to find the templates, so nested directory paths will also be looked at automatically.
-
 
 
 ## Next sections

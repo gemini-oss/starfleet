@@ -10,7 +10,7 @@ We have a general philosophy around how templates should be designed and impleme
 1. Control structures like loops and if statements belong in code, not templates
 1. There is a time and place for Jinja; just not all the times in all the places
 
-Starfleet workers should do the heavy lifting so that templates are easy to read and parse. Human readable templates provide context faster, and reduce the likelihood of errors. This is especially important when operating at scale. This is why we chose YAML and chose sophisticated schema backends so that the complexity happens once; in the code; and not N times in templates (the concept of Don't Repeat Yourself, only for real.)
+Starfleet workers should do the heavy lifting so that templates are easy to read and parse. Human readable templates provide context faster, and reduce the likelihood of errors. This is especially important when operating at scale. This is why we chose YAML and chose sophisticated schema backends so that the complexity happens once; in the code; and not N times in templates (the concept of _Don't Repeat Yourself_, only for real.)
 
 !!! success "Special Note"
     The details below are provided for you _for free_ when making Starfleet workers. You _do not_ need to worry about writing this code. Starfleet's code does all this work for you so you can focus on where the job needs to run and what it needs to do.
@@ -32,11 +32,11 @@ More examples will be provided when those worker ships are developed.
 ## Base Template
 Each template has some fields that must be present in all payloads. There are just 2:
 
-1. `TemplateName` - This is a friendly name for the template.
-1. `TemplateDescription` - This is just a friendly description for what the template does.
+1. **`TemplateName`** - This is a friendly name for the template.
+1. **`TemplateDescription`** - This is just a friendly description for what the template does.
 
 ## Account Worker Templates
-If a worker has an `ACCOUNT` fan out strategy, then it will require the same things mentioned above in the base template, but *requires* you to specify the AWS accounts the template applies for. You can specify AWS accounts to include in the template (`IncludeAccounts`) or accounts to exclude from the template (`ExcludeAccounts`). The account resolution logic will _always_ ensure that the account exclusion takes precedence. Both `IncludeAccounts` and `ExcludeAccounts` are dictionaries. There is also another field called `OperateInOrgRoot`, which is a flag that allows Starfleet to operate in the Organization Root account (it won't by default).
+If a worker has an `ACCOUNT` fan out strategy, then it will require the same things mentioned above in the base template, but **requires** you to specify the AWS accounts the template applies for. You can specify AWS accounts to include in the template (`IncludeAccounts`) or accounts to exclude from the template (`ExcludeAccounts`). The account resolution logic will _**always**_ ensure that the account exclusion takes precedence. Both `IncludeAccounts` and `ExcludeAccounts` are dictionaries. There is also another field called `OperateInOrgRoot`, which is a flag that allows Starfleet to operate in the Organization Root account (it won't by default).
 
 ### Account Inclusion
 To include accounts for the template to operate in, there is a field called `IncludeAccounts`. This field has its own schema. It has nested components to define a combination on AWS accounts to target for a template.

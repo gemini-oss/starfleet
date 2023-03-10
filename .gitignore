@@ -198,5 +198,8 @@ cython_debug/
 samconfig.toml
 # ^^ You will want this to be in an internal repo
 
+# VS Code:
+.vscode/
+
 # By default ignore configuration file changes. If this needs to be changed, you need to force add in git:
 src/starfleet/configuration_files/
