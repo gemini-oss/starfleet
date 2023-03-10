@@ -72,14 +72,14 @@ def test_loading(account_index_config: Dict[str, Any], aws_s3: BaseClient, inven
 def test_get_accounts_by_id(index_obj: Dict[str, Any]) -> None:
     """This tests getting accounts by account ID."""
     index = StarfleetDefaultAccountIndex()
-    accounts = index.get_accounts_by_id({"000000000019", "000000000020", "000000000023"})  # Also include an account that doesn't exist (23)
+    accounts = index.get_accounts_by_ids({"000000000019", "000000000020", "000000000023"})  # Also include an account that doesn't exist (23)
     assert accounts == {"000000000019", "000000000020"}
 
 
 def test_get_accounts_by_alias(index_obj: Dict[str, Any]) -> None:
     """This tests getting accounts by account aliases."""
     index = StarfleetDefaultAccountIndex()
-    accounts = index.get_accounts_by_alias(
+    accounts = index.get_accounts_by_aliases(
         {"Account 1", "Account 2", "AcCoUNt 3", "not an account"}
     )  # Also include an accounts that doesn't exist and odd casing
     assert accounts == {"000000000001", "000000000002", "000000000003"}

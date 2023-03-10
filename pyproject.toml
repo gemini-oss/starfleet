@@ -33,7 +33,11 @@ tests = [
     "pylint",
     "tox",
     "moto",
-    "mkdocs"
+    "mkdocs",
+    "mkdocstrings[python]",
+    "mkdocs-gen-files",
+    "mkdocs-literate-nav",
+    "mkdocs-section-index"
 ]
 
 [tool.pytest.ini_options]

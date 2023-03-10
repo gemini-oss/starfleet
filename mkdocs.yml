@@ -2,6 +2,7 @@ site_name: ✨Starfleet✨
 # Replace this once launched somewhere...
 site_url: https://github.com/gemini-oss/starfleet
 repo_url: https://github.com/gemini-oss/starfleet
+docs_dir: mkdocs
 copyright: Copyright &copy; 2023 - Gemini
 theme:
   name: material
@@ -32,6 +33,16 @@ theme:
     - navigation.sections
     - navigation.footer
     - navigation.tabs
+
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - mkdocs/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - section-index
+  - mkdocstrings
 
 markdown_extensions:
   - admonition
@@ -74,3 +85,4 @@ nav:
     - Check List: developerGuide/CheckList.md
   - Installation: Installation.md
   - User Guide: UserGuide.md
+  - Code Reference: reference/

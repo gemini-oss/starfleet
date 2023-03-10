@@ -18,11 +18,11 @@ class AccountIndex:  # pragma: no cover
     Make sure that you put your boostrapping code in the __init__ function. That is where you will want to do things like load the configuration, or load up the index.
     """
 
-    def get_accounts_by_id(self, ids: Set[str]) -> Set[str]:
+    def get_accounts_by_ids(self, ids: Set[str]) -> Set[str]:
         """Return back a Set of account IDs for a given set of IDs present -- this effectively only returns back account IDs that exist in the inventory."""
         raise NotImplementedError("Pew Pew Pew")
 
-    def get_accounts_by_alias(self, aliases: Set[str]) -> Set[str]:
+    def get_accounts_by_aliases(self, aliases: Set[str]) -> Set[str]:
         """Return back a Set of account IDs for a given set of aliases"""
         raise NotImplementedError("Pew Pew Pew")
 
