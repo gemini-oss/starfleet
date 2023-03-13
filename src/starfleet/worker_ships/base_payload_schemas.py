@@ -7,7 +7,7 @@ This defines the base payload schemas that worker ship need to use.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
-from typing import List, Any, Dict
+from typing import List, Any, Dict, TypeVar
 
 from marshmallow import Schema, fields, INCLUDE, validates, ValidationError, validate, validates_schema
 
@@ -115,6 +115,9 @@ class BaseAccountPayloadTemplate(WorkerShipPayloadBaseTemplate):
     # This field is populated by the Starbase. The Starbase will raise a fuss if this field is filled out in the template:
     starbase_assigned_account = fields.String(data_key="StarbaseAssignedAccount", load_default=None)
     # ^^ The worker ship will rely on this field to determine the AWS account to operate in.
+
+
+BaseAccountPayloadTemplateInstance = TypeVar("BaseAccountPayloadTemplateInstance", bound=BaseAccountPayloadTemplate)
 
 
 # TODO: Implement this:

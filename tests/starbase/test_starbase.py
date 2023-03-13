@@ -12,22 +12,23 @@ import json
 
 from typing import Set, Any, Dict
 from unittest import mock
-from unittest.mock import MagicMock
 
+import boto3
 import pytest
 from botocore.client import BaseClient
 
+from starfleet.account_index.schematics import AccountIndexInstance
 from starfleet.worker_ships.loader import StarfleetWorkerShipLoader
 
 
 def test_process_eventbridge_timed_events(
     aws_s3: BaseClient,
     aws_sqs: BaseClient,
-    payload_templates: Set[str],
+    single_payload_templates: Set[str],
     template_bucket: str,
     fanout_queue: str,
     timed_event: Dict[str, Any],
-    worker_ships: MagicMock,
+    worker_ships: StarfleetWorkerShipLoader,
 ) -> None:
     """This tests the full EventBridge timed events tasking."""
     from starfleet.starbase.entrypoints import eventbridge_timed_lambda_handler
@@ -84,11 +85,11 @@ def test_fan_out_single_invocation(
     aws_sqs: BaseClient,
     fanout_lambda_payload: Dict[str, Any],
     template_bucket: str,
-    payload_templates: Set[str],
-    test_worker_ship_loader: StarfleetWorkerShipLoader,
+    single_payload_templates: Set[str],
     test_configuration: Dict[str, Any],
     worker_queue: str,
-    worker_ships: MagicMock,
+    worker_ships: StarfleetWorkerShipLoader,
+    test_index: AccountIndexInstance,
 ) -> None:
     """Tests that we can properly fan out the payload to single invocation workers."""
     from starfleet.starbase.entrypoints import fanout_payload_lambda_handler
@@ -97,18 +98,96 @@ def test_fan_out_single_invocation(
 
     # Confirm that the queue got the correct payload:
     messages = aws_sqs.receive_message(QueueUrl=worker_queue, MaxNumberOfMessages=10).get("Messages")
-    worker = test_worker_ship_loader.get_worker_ships()["TestingStarfleetWorkerPlugin"]
+    worker = worker_ships.get_worker_ships()["TestingStarfleetWorkerPlugin"]
     worker.load_template(json.loads(messages[0]["Body"]))
     assert worker.payload["template_name"] == "TestWorkerTemplate"
 
     with mock.patch("starfleet.starbase.main.LOGGER") as mocked_logger:
         # TODO: Remove this when we add more invocation types:
-        test_configuration["TestingStarfleetWorkerPlugin"]["FanOutStrategy"] = "ACCOUNT"
+        test_configuration["TestingStarfleetWorkerPlugin"]["FanOutStrategy"] = "ACCOUNT_REGION"
         fanout_payload_lambda_handler(fanout_lambda_payload, object())
-        assert mocked_logger.warning.call_args.args[0] == "[🚧] Fan Out Strategy: ACCOUNT is not implemented yet!"
+        assert mocked_logger.warning.call_args.args[0] == "[🚧] Fan Out Strategy: ACCOUNT_REGION is not implemented yet!"
 
 
-def test_fan_out_invalid_worker(worker_ships: MagicMock) -> None:
+def test_fan_out_account(
+    aws_s3: BaseClient,
+    aws_sqs: BaseClient,
+    fanout_lambda_payload: Dict[str, Any],
+    template_bucket: str,
+    account_payload_templates: Set[str],
+    test_configuration: Dict[str, Any],
+    worker_queue: str,
+    account_worker_ships: StarfleetWorkerShipLoader,
+    test_index: AccountIndexInstance,
+) -> None:
+    """Tests that we can properly fan out the payload for account workers. This also tests the utility function."""
+    from starfleet.starbase.entrypoints import fanout_payload_lambda_handler
+
+    fanout_payload_lambda_handler(fanout_lambda_payload, object())
+
+    # Confirm that the queue got the correct payload:
+    all_messages = []
+    while True:
+        messages = aws_sqs.receive_message(QueueUrl=worker_queue, MaxNumberOfMessages=10).get("Messages")
+        if not messages:
+            break
+
+        all_messages += messages
+
+    # There should be 18 messages, because we tasked 18 accounts [20 accounts - the org root (not explicitly set to run on) - Account 1 = 18 accounts total tasked]
+    assert len(all_messages) == 18
+
+    # Iterate through and verify that everything is correct. Also verify and confirm that we are not tasking the org root (Account 20), and Account 1 which is explicitly
+    # excluded in the template by name:
+    worker = account_worker_ships.get_worker_ships()["TestingStarfleetWorkerPlugin"]
+    all_accounts = test_index.get_all_accounts()
+    for message in all_messages:
+        worker.load_template(json.loads(message["Body"]))
+        # Remove the seen accounts. If not found, this will raise an exception. At the end only 2 accounts should remain (20, and 1) which are excluded:
+        all_accounts.remove(worker.payload["starbase_assigned_account"])
+        assert worker.payload["template_name"] == "TestWorkerTemplate"
+
+    assert all_accounts == {"000000000001", "000000000020"}  # The remaining accounts that weren't tasked
+
+
+def test_account_fanout_nothing_to_task(test_index: AccountIndexInstance) -> None:
+    """This tests that we log out that we have no accounts to task if the template fails to resolve to any actual accounts."""
+    from starfleet.starbase.utils import account_fanout
+    from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplate
+
+    template = {
+        "include_accounts": {"all_accounts": False, "by_names": ["fake_account"], "by_ids": ["fake_account"], "by_tags": [], "by_org_units": []},
+        "exclude_accounts": {},
+        "operate_in_org_root": False,
+    }
+
+    with mock.patch("starfleet.starbase.utils.LOGGER") as mocked_logger:
+        account_fanout(template, BaseAccountPayloadTemplate(), "", "", "", boto3.client("sqs", region_name="us-east-1"), "fake_ship")
+
+    assert "has no accounts to task" in mocked_logger.error.call_args[0][0]
+
+
+def test_account_fanout_wrong_subclass(
+    fanout_lambda_payload: Dict[str, Any],
+    template_bucket: str,
+    single_payload_templates: Set[str],
+    test_index: AccountIndexInstance,
+    aws_s3: BaseClient,
+    worker_ships: StarfleetWorkerShipLoader,
+    test_configuration: Dict[str, Any],
+) -> None:
+    """This tests that we check if we have an Account worker with a template that doesn't properly subclass the BaseAccountPayloadTemplate class."""
+    from starfleet.starbase.entrypoints import fanout_payload_lambda_handler
+    from starfleet.starbase.main import InvalidTemplateForFanoutError
+
+    # Update the worker class configuration to be an ACCOUNT worker:
+    test_configuration["TestingStarfleetWorkerPlugin"]["FanOutStrategy"] = "ACCOUNT"
+
+    with pytest.raises(InvalidTemplateForFanoutError):
+        fanout_payload_lambda_handler(fanout_lambda_payload, object())
+
+
+def test_fan_out_invalid_worker(worker_ships: StarfleetWorkerShipLoader) -> None:
     """This tests that an invalid worker specified in the template throws the proper error back out."""
     from starfleet.starbase.main import fan_out_payload, NoShipPluginError
 
@@ -116,7 +195,7 @@ def test_fan_out_invalid_worker(worker_ships: MagicMock) -> None:
         fan_out_payload({"worker_ship": "fake", "template_prefix": "fake"})
 
 
-def test_fan_out_invalid_template(worker_ships: MagicMock) -> None:
+def test_fan_out_invalid_template(worker_ships: StarfleetWorkerShipLoader) -> None:
     """Tests what happens when an invalid template is loaded by the fan out Lambda execution."""
     from starfleet.starbase.main import fan_out_payload, ValidationError
 
@@ -128,7 +207,7 @@ def test_fan_out_invalid_template(worker_ships: MagicMock) -> None:
     assert "TemplateName" in verr.value.messages
 
 
-def test_multiple_records_warning_fanout() -> None:
+def test_multiple_records_warning_fanout(test_index: AccountIndexInstance) -> None:
     """This just tests that the warning is emitted if there are multiple records in the event to the Lambda function."""
     from starfleet.starbase.entrypoints import fanout_payload_lambda_handler
 

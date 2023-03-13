@@ -8,7 +8,6 @@ This tests all the Starbase utility functions
 :Author: Mike Grima <michael.grima@gemini.com>
 """
 # pylint: disable=unused-argument
-from typing import Set
 from unittest import mock
 
 import pytest
@@ -49,7 +48,7 @@ def test_starbase_fanout(aws_sqs: BaseClient, fanout_queue: str) -> None:
         assert '{"worker_ship": "testing", "template_prefix": "templateCOUNT"}'.replace("COUNT", str(template_num)) in messages
 
 
-def test_list_worker_ship_templates(aws_s3: BaseClient, payload_templates: Set[str], template_bucket: str) -> None:
+def test_list_worker_ship_templates(aws_s3: BaseClient, single_payload_templates, template_bucket: str) -> None:
     """This tests the logic for getting a worker ship template -- both from S3 and not S3."""
     from starfleet.starbase.utils import list_worker_ship_templates
 
@@ -70,7 +69,7 @@ def test_list_worker_ship_templates(aws_s3: BaseClient, payload_templates: Set[s
         assert not mocked_boto.client.called  # Verify that client = boto3.client(... was not called.
 
 
-def test_fetch_template(aws_s3: BaseClient, payload_templates: Set[str], template_bucket: str) -> None:
+def test_fetch_template(aws_s3: BaseClient, single_payload_templates, template_bucket: str) -> None:
     """This tests that we are able to properly fetch templates from S3."""
     from starfleet.starbase.utils import fetch_template
 
