@@ -82,7 +82,21 @@ def aws_sts(aws_credentials: None) -> BaseClient:
 
 @pytest.fixture
 def mock_retry() -> None:
-    """This mocks out the retry decorator so things don't block."""
+    """
+    This mocks out the retry decorator so things don't block.
+
+    NOTE: GOTCHA ALERT:
+    This fixture must be run **BEFORE** you import from a file that contains the @retry decorator. This is because this mocks out the original function.
+    When imported AFTER the fixture is set, then you are importing the mocked out @retry decorator. If you import from a file with the @retry decorator in it
+    BEFORE this fixture is set, then the function is decorated with the original @retry decorator. This is due to the way that Python imports work
+    where the Python package stores the reference to the imported item. Mocking out *the original* place does not override the local package's reference
+    to the dependency -- only mocking out the *the local* package import would do that.
+
+    In this case, we want to mock out the original such that we don't have to make N fixtures for each and every place that uses @retry. This means you
+    need to be careful about the imports in conftest.py and other places to ensure that mock_retry is set before the imports are run in the target place.
+
+    ## ALSO NOTE: This runs on *each and every* test -- set in pytest.ini
+    """
 
     def mock_retry_decorator(*args, **kwargs) -> Callable:  # noqa
         """This mocks out the retry decorator."""

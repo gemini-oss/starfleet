@@ -20,7 +20,6 @@ SAMPLE_GOOD_CONFIG = """
 Enabled: False
 TemplatePrefix: somePrefix/
 InvocationQueueUrl: https://sqs.amazonaws.com/SomeQueueUrl
-FanOutStrategy: SINGLE_INVOCATION
 InvocationSources:
     - S3
     - EVENTBRIDGE_TIMED_EVENT

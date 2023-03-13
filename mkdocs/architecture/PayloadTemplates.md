@@ -175,4 +175,64 @@ ExcludeAccounts:
 ```
 
 ## Account-Region Worker Templates
-This is not yet implemented but will be similar to above only with Regional context as well.
+This is very similar to the account worker templates because it _is_ an account worker template but has some additional properties to include and exclude regions to operate in. All of the account worker options are true for account-region worker templates.
+
+The big difference is that account-region worker templates have 2 additional fields:
+
+1. __`IncludeRegions`__ - This is a list of AWS regions to operate on *--OR--* a list where the only entry is the word `ALL` to operate for all regions (See example below).
+1. __`ExcludeRegions`__ - This is a list of AWS regions to *NOT* operate on.
+
+!!! note "Very Important"
+    There is a configuration property in the `STARFLEET` configuration stanza that sets an override for the specific regions that can be operated on named `ScopeToRegions`. This is useful for restricting the regions that Starfleet can operate on if you, for example, have an SCP enabled to disable regions at the organization level.
+
+The Starbase will resolve accounts where the following properties are true:
+
+1. Accounts are specified in the template and are not excluded
+1. There are regions specified to operate over and are not excluded
+1. The account is enabled in the regions specified
+1. If the `ScopeToRegions` configuration field is set, then the regions specified are within the `ScopeToRegions` list
+
+### Some Examples
+
+Here are some examples where everything comes together:
+
+Here is an example of a template that will operate on every single account in every single enabled region (including the root account):
+```yaml
+IncludeAccounts:
+    AllAccounts: True
+IncludeRegions:
+    - ALL
+OperateInOrgRoot: True
+```
+
+Here is an example of only running in 3 regions in 3 specific accounts:
+```yaml
+IncludeAccounts:
+    ByNames:
+        - InfoSec Staging
+        - Marketing Staging
+        - DevOps Staging
+IncludeRegions:
+    - us-east-1
+    - us-east-2
+    - ca-central-1
+```
+
+Here is an example of applying to the `Infsec Staging` account, all accounts in the `DevOps`, `Financial`, and `Marketing` OUs and _excluding_ accounts named `DevOps Prod`, and `Financial Prod`, and all enabled regions _except_ `us-west-1`.
+```yaml
+IncludeAccounts:
+    ByNames:
+        - InfoSec Staging
+    ByOrgUnits:
+        - DevOps
+        - Financial
+        - Marketing
+ExcludeAccounts:
+    ByNames:
+        - DevOps Prod
+        - Financial Prod
+IncludeRegions:
+    - ALL
+ExcludeRegions:
+    - us-west-1
+```
