@@ -106,7 +106,7 @@ class BaseAccountPayloadTemplate(WorkerShipPayloadBaseTemplate):
     """This is a payload template for worker ships that have an ACCOUNT fan out strategy."""
 
     include_accounts = fields.Nested(IncludeAccountsSpecificationSchema(), data_key="IncludeAccounts", required=True)
-    exclude_accounts = fields.Nested(AccountsSpecificationSchema(), data_key="ExcludeAccounts", load_default=None)
+    exclude_accounts = fields.Nested(AccountsSpecificationSchema(), data_key="ExcludeAccounts", load_default={})
 
     # SPECIAL NOTE: The Starbase will _NOT_ task the org root unless BOTH the IncludeAccounts contains the org root
     # account within it, AND OperateInOrgRoot is set to True

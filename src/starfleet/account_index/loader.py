@@ -1,4 +1,4 @@
-"""Account Index Plugin Loader
+"""# Account Index Plugin Loader
 
 This defines the loader for the account index plugin. This uses the same logic as the other loaders. The loader here will locate
 the account index plugins and it will instantiate the plugin that is set by the Starfleet `AccountIndex` configuration field.

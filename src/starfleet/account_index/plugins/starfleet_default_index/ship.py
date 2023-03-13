@@ -133,12 +133,12 @@ class StarfleetDefaultAccountIndex(AccountIndex):
         some_account = next(iter(account_dict.values()))
         self.org_root = some_account["Arn"].split("arn:aws:organizations::")[1].split(":")[0]
 
-    def get_accounts_by_id(self, ids: Set[str]) -> Set[str]:
-        """Return back a Set of account IDs for a given list of IDs present -- this effectively only returns back account IDs that exist in the inventory."""
+    def get_accounts_by_ids(self, ids: Set[str]) -> Set[str]:
+        """Return back a Set of account IDs for a given Set of IDs present -- this effectively only returns back account IDs that exist in the inventory."""
         return ids.intersection(self.account_ids)
 
-    def get_accounts_by_alias(self, aliases: Set[str]) -> Set[str]:
-        """Return back a Set of account IDs for a given list of aliases"""
+    def get_accounts_by_aliases(self, aliases: Set[str]) -> Set[str]:
+        """Return back a Set of account IDs for a given Set of aliases"""
         accounts = set()
         for alias in aliases:
             account = self.alias_map.get(alias.lower(), None)
