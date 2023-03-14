@@ -34,6 +34,7 @@ All of the Worker Ship Schematics reside in `starfleet.worker_ships.ship_schemat
 All Starfleet Worker Ship plugins _**must**_ sub-class the `StarfleetWorkerShip` class. This class is very simple and serves a few main purposes:
 
 1. It's used to define the name of the ship - this is the value that is used to locate the ship's configuration entry
+1. It's used to define the ship's fan out strategy - i.e. does this worker need to run in all AWS accounts or regions?
 1. It's used to define the configuration Marshmallow schema
 1. It's used to define the payload Marshmallow schema
 1. It has a function to load (and verify) the payload template
@@ -42,7 +43,7 @@ All Starfleet Worker Ship plugins _**must**_ sub-class the `StarfleetWorkerShip`
 ### Configuration
 Each worker ship _**must**_ define a configuration Marshmallow schema. The Marshmallow schema _must_ either directly use or sub-class the `WorkerShipBaseConfigurationTemplate` class.
 
-There are fields here that are required for ALL worker ships, like the `Enabled` field, and the `FanOutStrategy` fields to name a few. These are discussed [in detail in](../../../architecture/Configuration.md#worker-ship-configurations) in the configuration architecture section.
+There are fields here that are required for ALL worker ships, like for example the `Enabled` field. These are discussed [in detail in](../../../architecture/Configuration.md#worker-ship-configurations) in the configuration architecture section.
 
 You are able to define whatever fields your worker class needs to have a proper configuration. A great example is with the `AccountIndexGeneratorShip`, which extends the base schema:
 
@@ -67,17 +68,17 @@ In the case of the `AccountIndexGeneratorShip`, we add configuration options to 
 
 The configuration will be validated when the worker ship plugin is loaded. This is discussed later.
 
-#### Which Fan Out Strategy should I use?
-Each worker should set up what the fan out strategy should be. I.e. is this a workload that just needs to run once? Then it should be set for `SINGLE_INVOCATION`. If it needs to be set per-account, then it needs to be set to `ACCOUNT`. If this needs to run on every account/region pair then it should be set to `ACCOUNT_REGION`.
+### Fan Out Strategy
+Each worker must define the [fan out strategy](../../../architecture/WorkerShips.md#the-fan-out-strategy) that it uses. I.e. is this a workload that just needs to run once? Then it should be set for `FanOutStrategy.SINGLE_INVOCATION`. If it needs to be set per-account, then it needs to be set to `FanOutStrategy.ACCOUNT`. If this needs to run on every account/region pair then it should be set to `FanOutStrategy.ACCOUNT_REGION`.
 
-**NOTE:** At this time this is set via the configuration for the worker. We considering making this a property of the worker ship class itself.
+By default the base worker class sets this to `FanOutStrategy.SINGLE_INVOCATION`.
 
 ### Payload Template
 The payload template is used to inform the worker on how to do the actual job in question. This is a necessity when running in multiple accounts or regions where there are unique things to do.
 
 Each worker ship _**must**_ define a payload Marshmallow schema. The Marshmallow schema _must_ either directly use or sub-class one of the ==Base Payload Template== classes, which are located in `starfleet.worker_ships.base_payload_schemas`. All the schemas will ultimately sub-class `WorkerShipPayloadBaseTemplate`.
 
-If you are making a Starfleet worker that needs to have a Fan-Out Strategy of `SINGLE_INVOCATION`, then having your payload template schema sub-class off of `WorkerShipPayloadBaseTemplate` is appropriate. However, if you are using `ACCOUNT`, then your payload template schema _**must**_ sub-class off of `BaseAccountPayloadTemplate`, or (future)`BaseAccountRegionPayloadTemplate` when that's implemented for `ACCOUNT_REGION`.
+If you are making a Starfleet worker that needs to have a Fan-Out Strategy of `SINGLE_INVOCATION`, then having your payload template schema sub-class off of `WorkerShipPayloadBaseTemplate` is appropriate. However, if you are using `ACCOUNT`, then your payload template schema _**must**_ sub-class off of `BaseAccountPayloadTemplate`, or `BaseAccountRegionPayloadTemplate` for `ACCOUNT_REGION`.
 
 Like with the configuration, you can define whichever fields you want for your worker to do the job. A great example is with the `AccountIndexGeneratorShip`, which extends the `WorkerShipPayloadBaseTemplate` schema as it's a `SINGLE_INVOCATION` worker:
 

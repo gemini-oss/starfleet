@@ -1,5 +1,5 @@
 STARFLEET:
-  DeploymentRegion: REPLACE-ME
+  DeploymentRegion: us-east-1  # Replace me
   TemplateBucket: REPLACE-ME
   FanOutQueueUrl: https://some.url.amazonaws.com/replace-me
   AccountIndex: StarfleetDefaultAccountIndex
@@ -13,7 +13,6 @@ AccountIndexGeneratorShip:
   Enabled: True
   TemplatePrefix: AccountIndexGenerator/REPLACE-ME.YAML
   InvocationQueueUrl: https://replace.me.sqs.amazonaws.com/REPLACE-ME
-  FanOutStrategy: SINGLE_INVOCATION
   InvocationSources:
     - EVENTBRIDGE_TIMED_EVENT
   EventBridgeTimedFrequency: HOURLY

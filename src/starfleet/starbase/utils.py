@@ -15,9 +15,8 @@ from botocore.client import BaseClient
 from botocore.exceptions import ClientError
 from cloudaux.aws.decorators import paginated
 import yaml
-from yaml import YAMLError
 
-from starfleet.account_index.resolvers import resolve_worker_template_accounts
+from starfleet.account_index.resolvers import resolve_worker_template_accounts, resolve_worker_template_account_regions
 from starfleet.utils.logging import LOGGER
 from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplateInstance
 
@@ -47,8 +46,8 @@ def fetch_template(client: Type[BaseClient], bucket: str, prefix: str) -> Dict[s
 
         raise
 
-    except YAMLError as exc:
-        LOGGER.error(f"[❌] Invalid YAML in template: {exc}. See stacktrace for more details.")
+    except Exception as exc:
+        LOGGER.error(f"[❌] Invalid YAML in template or some other problem: {exc}. See stacktrace for more details.")
         raise
 
 
@@ -121,6 +120,49 @@ def account_fanout(
             LOGGER.debug(f"[ℹ️] Processing SQS batch to queue: {queue_url}...")
             sqs_client.send_message_batch(QueueUrl=queue_url, Entries=batch)
             batch = []
+
+    # Send over any stragglers:
+    if batch:
+        LOGGER.debug(f"[ℹ️] Processing SQS batch to queue: {queue_url}...")
+        sqs_client.send_message_batch(QueueUrl=queue_url, Entries=batch)
+
+
+def account_region_fanout(
+    verified_template: Dict[str, Any],
+    schema: BaseAccountPayloadTemplateInstance,
+    template_bucket: str,
+    template_prefix: str,
+    queue_url: str,
+    sqs_client: BaseClient,
+    worker_ship_name: str,
+) -> None:
+    """This will perform the fan out logic for an Account/Region worker ship."""
+    accounts_regions_map = resolve_worker_template_account_regions(verified_template)
+
+    # Obtain the count. This could be empty if we got no accounts to task -- or if we got no regions to task!
+    total = 0
+    for account, regions in accounts_regions_map.items():
+        total += len(regions)
+    if not total:
+        LOGGER.error(f"[🤷‍♂️] The worker ship: {worker_ship_name}'s template at {template_bucket}/{template_prefix} has no accounts/regions to task!")
+        return
+
+    LOGGER.info(f"[🔢] Tasking {worker_ship_name} for {total} account/region pairs...")
+    LOGGER.debug(f"[ℹ️] Worker: {worker_ship_name} will operate on account/region pairs: {accounts_regions_map}...")
+
+    # For each account we need to send over the template to SQS:
+    batch = []
+    for account, regions in accounts_regions_map.items():
+        verified_template["starbase_assigned_account"] = account
+
+        for region in regions:
+            verified_template["starbase_assigned_region"] = region
+            batch.append({"Id": f"{account}{region}", "MessageBody": schema.dumps(verified_template)})
+
+            if len(batch) == 10:
+                LOGGER.debug(f"[ℹ️] Processing SQS batch to queue: {queue_url}...")
+                sqs_client.send_message_batch(QueueUrl=queue_url, Entries=batch)
+                batch = []
 
     # Send over any stragglers:
     if batch:

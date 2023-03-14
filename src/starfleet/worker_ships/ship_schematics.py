@@ -73,9 +73,6 @@ class WorkerShipBaseConfigurationTemplate(Schema):
     # This is the SQS queue URL that will be used to invoke this function. This is used by the Starbase to know where to message the ship invocation action:
     invocation_queue_url = fields.Url(required=True, schemes={"https"}, data_key="InvocationQueueUrl")
 
-    # This is the fan-out strategy, and needs to be set to the Enum values above:
-    fan_out_strategy = fields.Enum(FanOutStrategy, required=True, data_key="FanOutStrategy")
-
     # This is the invocation sources. This needs to be specified.
     invocation_sources = fields.List(fields.Enum(InvocationSources), required=True, data_key="InvocationSources")
 
@@ -109,10 +106,10 @@ class StarfleetWorkerShip:
 
     The instantiated object type hint is `StarFleetWorkerShipInstance`."""
 
-    # Need to define the invocation details. This is the InvocationSource and the corresponding InvocationConfiguration
-    # for it. This informs the Starbase on if an invocation event is in fact for this given worker ship.
-    # invocation_details: Dict[InvocationSource, InvocationConfiguration]
-    # TODO: should this be part of the worker itself or part of the configuration? I'm leaning on the former and not the latter (current)
+    # TODO: Should the invocation sources be defined here or the configuration?? (right now it's in the configuration)
+
+    # This is the fan out strategy for the worker. This is very important and defines the type of job the worker is supposed to do (this also influences the template type).
+    fan_out_strategy: FanOutStrategy = FanOutStrategy.SINGLE_INVOCATION
 
     # This is the name for the worker ship plugin (this should be UpperCamelCase). This is also the name of the Configuration section for the given worker ship plugin:
     worker_ship_name: str

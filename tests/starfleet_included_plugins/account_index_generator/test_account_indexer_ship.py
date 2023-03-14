@@ -83,7 +83,11 @@ def test_get_account_map(account_map: Dict[str, Any]) -> None:
 
 
 def test_fetch_additional_details(
-    aws_ec2: BaseClient, aws_sts: BaseClient, mock_retry: None, account_map: Dict[str, Any], mock_direct_boto_clients: MagicMock, test_worker_ship_loader
+    aws_ec2: BaseClient,
+    aws_sts: BaseClient,
+    account_map: Dict[str, Any],
+    mock_direct_boto_clients: MagicMock,
+    test_worker_ship_loader: StarfleetWorkerShipLoader,
 ) -> None:
     """This is a test to ensure that we can fetch all the additional details about"""
     from starfleet.worker_ships.plugins.account_index_generator.utils import fetch_additional_details
@@ -111,7 +115,7 @@ def test_fetch_additional_details(
             assert account["Parents"] == [{"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"}]
 
 
-def test_async_exceptions(aws_sts: BaseClient, mock_retry: None) -> None:
+def test_async_exceptions(aws_sts: BaseClient) -> None:
     """This tests that we can handle exceptions right if there are async issues."""
     from starfleet.worker_ships.plugins.account_index_generator.utils import AccountIndexerProcessError, fetch_additional_details
 
@@ -138,7 +142,6 @@ def test_full_run(
     aws_sts: BaseClient,
     inventory_bucket: str,
     mock_list_parent_ous: None,
-    mock_retry: None,
     account_map: Dict[str, Any],
     mock_direct_boto_clients: MagicMock,
     lambda_payload: Dict[str, Any],

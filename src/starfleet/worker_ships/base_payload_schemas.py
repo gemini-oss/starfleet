@@ -9,6 +9,7 @@ This defines the base payload schemas that worker ship need to use.
 """
 from typing import List, Any, Dict, TypeVar
 
+import boto3
 from marshmallow import Schema, fields, INCLUDE, validates, ValidationError, validate, validates_schema
 
 
@@ -85,11 +86,14 @@ class IncludeAccountsSpecificationSchema(AccountsSpecificationSchema):
     all_accounts = fields.Boolean(data_key="AllAccounts", load_default=False)
 
     @validates_schema(pass_original=True)
-    def verify_all_accounts_flag(self, data: Dict[str, Any], original_data: Dict[str, Any], **kwargs) -> None:  # pylint: disable=unused-argument  # noqa
+    def verify_schema(self, data: Dict[str, Any], original_data: Dict[str, Any], **kwargs) -> None:  # pylint: disable=unused-argument  # noqa
         """
         This validates that the schema is correct by ensuring that if the `AllAccounts: True` flag is set
         that the other fields are not set. You can't set both AllAccounts to True and also have the other fields
         present.
+
+        This will also verify that there is at least 1 field that specifies an account. You can't specify:
+        `IncludeAccounts: {}` -- there must be some value that is set.
         """
         errors = {}
         if data.get("all_accounts"):  # Check the properly parsed.
@@ -97,6 +101,21 @@ class IncludeAccountsSpecificationSchema(AccountsSpecificationSchema):
             for field, value in original_data.items():
                 if field != "AllAccounts" and value:
                     errors[field] = ["Can't specify other parameters when `AllAccounts` is set to `True`."]
+
+        # Verify that something came in:
+        else:
+            missing = True
+            for field in ["by_names", "ByIds", "ByOrgUnits", "ByTags"]:
+                if data.get(field):
+                    missing = False
+                    break
+
+            if missing:
+                error_string = [
+                    "Missing an account field set. Either set `AllAccounts: True`, or specify an account `ByNames`, `ByIds`, `ByTags`, and/or `ByOrgUnits`."
+                ]
+                for field in ["AllAccounts", "ByNames", "ByIds", "ByOrgUnits", "ByTags"]:
+                    errors[field] = error_string
 
         if errors:
             raise ValidationError(errors)
@@ -112,7 +131,7 @@ class BaseAccountPayloadTemplate(WorkerShipPayloadBaseTemplate):
     # account within it, AND OperateInOrgRoot is set to True
     operate_in_org_root = fields.Boolean(load_default=False, data_key="OperateInOrgRoot")
 
-    # This field is populated by the Starbase. The Starbase will raise a fuss if this field is filled out in the template:
+    # This field is populated by the Starbase. This will be overwritten by the Starbase, so don't set it:
     starbase_assigned_account = fields.String(data_key="StarbaseAssignedAccount", load_default=None)
     # ^^ The worker ship will rely on this field to determine the AWS account to operate in.
 
@@ -120,8 +139,87 @@ class BaseAccountPayloadTemplate(WorkerShipPayloadBaseTemplate):
 BaseAccountPayloadTemplateInstance = TypeVar("BaseAccountPayloadTemplateInstance", bound=BaseAccountPayloadTemplate)
 
 
-# TODO: Implement this:
-# class BaseAccountRegionPayloadTemplate(BaseAccountPayloadTemplate):
-#     """This is a payload template for worker ships that have an ACCOUNT/REGION fan out strategy."""
-#     include_regions = fields.List(fields.String(), data_key="IncludeRegions", required=True)
-#     exclude_regions = fields.List(fields.String(), data_key="ExcludeRegions", load_default=[])
+class BaseAccountRegionPayloadTemplate(BaseAccountPayloadTemplate):
+    """
+    This is a payload template for worker ships that have an ACCOUNT/REGION fan out strategy.
+
+    A valid payload looks like this (for all):
+        IncludeAccounts: ...
+        ExcludeAccounts: ...
+        IncludeRegions:
+            - All
+        ExcludeRegions:
+            - us-west-1
+    ^^ In this example, it will operate in any supported region that the account is configured for except us-west-1.
+
+    A valid payload for specific regions looks like this:
+        IncludeAccounts: ...
+        ExcludeAccounts: ...
+        IncludeRegions:
+            - us-east-1
+            - us-east-2
+            - eu-west-1
+    ^^ In this example, it will only operate in us-east-1, us-east-2, and eu-west-1.
+    """
+
+    include_regions = fields.List(fields.String(), validate=validate.Length(min=1), data_key="IncludeRegions", required=True)
+    exclude_regions = fields.List(fields.String(), data_key="ExcludeRegions", load_default=[])
+
+    # This field is populated by the Starbase. This will be overwritten by the Starbase, so don't set it:
+    starbase_assigned_region = fields.String(data_key="StarbaseAssignedRegion", load_default=None)
+    # ^^ The worker ship will rely on this field to determine the AWS account to operate in.
+
+    @validates_schema()
+    def validate_regions(self, data: Dict[str, Any], **kwargs) -> None:  # pylint: disable=unused-argument  # noqa
+        """
+        This is going to validate that the regions entered in are legitimate regions that AWS supports. This works by using the boto3 SDK to list out
+        all the regions that EC2 supports.
+
+        The exception for this is the word "ALL". This is ONLY allowed for include regions!
+
+        **NOTE:** If and when new regions are added, you will need to update the Starfleet dependencies to the latest and greatest boto3 library in order to get that support.
+
+        **Also note:** Regions for each AWS service is different. This validates that a given AWS specified region is a real region. It does not guarantee
+        that the region in question is supported by the AWS service you are interested in using. This uses EC2, since that is the basic foundational AWS service.
+        Please consult with AWS's documentation for the service to know which regions will actually work.
+
+        Another note: After this is run, if `ALL` is supplied for `IncludeRegions`, then it will replace `ALL` with all of the regions that boto3 supports
+        for EC2.
+        """
+        errors = {}
+
+        supported_regions = set(boto3.session.Session().get_available_regions("ec2"))
+
+        # Verify the "ALL" in include regions:
+        if "ALL" in data["include_regions"]:
+            # There should not be anything else:
+            if len(data["include_regions"]) > 1:
+                errors["IncludeRegions"] = ["Can't specify any other regions when `ALL` is specified in the list."]
+
+            # If ALL is in there, then we want to replace ALL with all the regions:
+            data["include_regions"] = set(supported_regions)
+
+        # If not all regions, then verify that all regions specified are recognized as actual AWS supported regions.
+        else:
+            region_set = set(data["include_regions"])
+            remaining = region_set - supported_regions
+            if remaining:
+                errors["IncludeRegions"] = [
+                    f"Invalid regions are specified: {', '.join(remaining)}. Regions must be from this list: {', '.join(supported_regions)}"
+                ]
+            else:
+                data["include_regions"] = region_set
+
+        # Exclude regions:
+        if data.get("exclude_regions"):
+            region_set = set(data["exclude_regions"])
+            remaining = region_set - supported_regions
+            if remaining:
+                errors["ExcludeRegions"] = [
+                    f"Invalid regions are specified: {', '.join(remaining)}. Regions must be from this list: {', '.join(supported_regions)}"
+                ]
+            else:
+                data["exclude_regions"] = region_set
+
+        if errors:
+            raise ValidationError(errors)

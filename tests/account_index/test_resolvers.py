@@ -8,6 +8,9 @@ This tests the account resolution logic where based on the template provided, it
 :Author: Mike Grima <michael.grima@gemini.com>
 """
 # pylint: disable=unused-argument
+from typing import Any, Dict
+
+import boto3
 import yaml
 
 from starfleet.account_index.schematics import AccountIndexInstance
@@ -115,7 +118,7 @@ def test_resolve_include_exclude(test_index: AccountIndexInstance) -> None:
 
 
 def test_resolve_worker_template_accounts(test_index: AccountIndexInstance) -> None:
-    """This tests the worker template logic and verfies that the org root logic works properly."""
+    """This tests the worker template logic for resolving accounts and verifies that the org root logic works properly."""
     from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplate
     from starfleet.account_index.resolvers import resolve_worker_template_accounts
 
@@ -163,3 +166,98 @@ def test_resolve_worker_template_accounts(test_index: AccountIndexInstance) -> N
     result = resolve_worker_template_accounts(template)
     assert "000000000020" in result
     assert result == test_index.get_all_accounts()
+
+
+def test_resolve_worker_templates_disabled_regions(test_index: AccountIndexInstance, test_configuration: Dict[str, Any]) -> None:
+    """This tests if we do not task for an account with a region disabled."""
+    from starfleet.worker_ships.base_payload_schemas import BaseAccountRegionPayloadTemplate
+    from starfleet.account_index.resolvers import resolve_worker_template_account_regions
+
+    all_regions = set(boto3.session.Session().get_available_regions("ec2"))
+
+    # Disable in 2 accounts:
+    test_index.regions_map["ap-east-1"].remove("000000000001")
+    test_index.regions_map["ap-east-1"].remove("000000000002")
+
+    payload = """
+        TemplateName: SomeAccountsAllRegions
+        TemplateDescription: A proper payload that should task for all regions except the ones that are disabled.
+        IncludeAccounts:
+            ByNames:
+                - Account 1
+                - Account 2
+                - Account 3
+                - Account 4
+        IncludeRegions:
+            - ALL
+    """
+    template = BaseAccountRegionPayloadTemplate().load(yaml.safe_load(payload))
+    result = resolve_worker_template_account_regions(template)
+    sans_ap_east_1 = set(boto3.session.Session().get_available_regions("ec2"))
+    sans_ap_east_1.remove("ap-east-1")
+    assert all_regions - sans_ap_east_1 == {"ap-east-1"}
+    assert result == {"000000000001": sans_ap_east_1, "000000000002": sans_ap_east_1, "000000000003": all_regions, "000000000004": all_regions}
+
+
+def test_resolve_worker_templates_account_regions(test_index: AccountIndexInstance, test_configuration: Dict[str, Any]) -> None:
+    """This tests the Account/Region template for account and region resolution."""
+    from starfleet.worker_ships.base_payload_schemas import BaseAccountRegionPayloadTemplate
+    from starfleet.account_index.resolvers import resolve_worker_template_account_regions
+
+    all_regions = set(boto3.session.Session().get_available_regions("ec2"))
+
+    # This will test the "all regions" logic and some account exclusion and org root support:
+    payload = """
+        TemplateName: SomeAccountsAllRegions
+        TemplateDescription: A proper payload that is able to fetch some accounts with some excluded
+        IncludeAccounts:
+            ByNames:
+                - Account 1
+                - Account 2
+                - Account 18
+                - Account 20
+        ExcludeAccounts:
+            ByNames:
+                - Account 1
+        IncludeRegions:
+            - ALL
+        OperateInOrgRoot: True
+    """
+    template = BaseAccountRegionPayloadTemplate().load(yaml.safe_load(payload))
+    result = resolve_worker_template_account_regions(template)
+    assert result == {"000000000002": all_regions, "000000000018": all_regions, "000000000020": all_regions}
+
+    # With some excluded regions:
+    payload = """
+        TemplateName: SomeAccountsAllRegions
+        TemplateDescription: A proper payload that is able to fetch some accounts with some excluded
+        IncludeAccounts:
+            ByNames:
+                - Account 1
+                - Account 2
+        IncludeRegions:
+            - us-east-1
+            - us-east-2
+            - us-west-1
+        ExcludeRegions:
+            - us-west-1
+    """
+    template = BaseAccountRegionPayloadTemplate().load(yaml.safe_load(payload))
+    result = resolve_worker_template_account_regions(template)
+    assert result == {"000000000001": {"us-east-1", "us-east-2"}, "000000000002": {"us-east-1", "us-east-2"}}
+
+    # By scoping the regions:
+    test_configuration["STARFLEET"]["ScopeToRegions"] = ["us-east-2", "eu-west-1"]
+    payload = """
+        TemplateName: SomeAccountsAllRegions
+        TemplateDescription: A proper payload that is able to fetch some accounts with some excluded
+        IncludeAccounts:
+            ByNames:
+                - Account 1
+                - Account 2
+        IncludeRegions:
+            - ALL
+    """
+    template = BaseAccountRegionPayloadTemplate().load(yaml.safe_load(payload))
+    result = resolve_worker_template_account_regions(template)
+    assert result == {"000000000001": {"us-east-2", "eu-west-1"}, "000000000002": {"us-east-2", "eu-west-1"}}
