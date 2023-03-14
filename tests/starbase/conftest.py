@@ -10,19 +10,15 @@ This defines the PyTest fixtures for the Starbase tests
 # pylint: disable=unused-argument,redefined-outer-name
 from typing import Generator, Set, Any, Dict
 from unittest import mock
-from unittest.mock import MagicMock
 
 import boto3
 import pytest
 from botocore.client import BaseClient
 from moto import mock_s3, mock_sqs
 
+from starfleet.account_index.schematics import AccountIndexInstance
+from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplate
 from starfleet.worker_ships.loader import StarfleetWorkerShipLoader
-
-TEST_WORKER_TEMPLATE = """
-TemplateName: TestWorkerTemplate
-TemplateDescription: This is a template used for testing the Starbase
-"""
 
 
 @pytest.fixture
@@ -39,6 +35,23 @@ def aws_sqs(aws_credentials: None) -> Generator[BaseClient, None, None]:
     with mock_sqs():
         client = boto3.client("sqs", "us-east-2")
         yield client
+
+
+@pytest.fixture
+def test_index(test_configuration: Dict[str, Any]) -> Generator[AccountIndexInstance, None, None]:
+    """This returns the StarfleetAccountIndexLoader with a TestingAccountIndexPlugin mocked out for it. This mocks out for the entire app."""
+    from starfleet.account_index.loader import ACCOUNT_INDEX, StarfleetAccountIndexLoader
+    import tests.account_index.testing_plugins
+
+    account_indexer = StarfleetAccountIndexLoader()
+    account_indexer._index_ship_path = tests.account_index.testing_plugins.__path__
+    account_indexer._index_ship_prefix = tests.account_index.testing_plugins.__name__ + "."
+
+    # Just mock out the index. The singleton function will simply return the populated index attribute:
+    ACCOUNT_INDEX._index = account_indexer.index
+    yield ACCOUNT_INDEX.index
+
+    ACCOUNT_INDEX.reset()
 
 
 @pytest.fixture
@@ -61,9 +74,12 @@ def worker_queue(aws_sqs: BaseClient) -> str:
 
 
 @pytest.fixture
-def payload_templates(aws_s3: BaseClient, template_bucket: str) -> Set[str]:
-    """These are the template YAMLs that are uploaded to the mock template bucket for a test worker."""
-    encoded_template = TEST_WORKER_TEMPLATE.encode("utf-8")
+def single_payload_templates(aws_s3: BaseClient, template_bucket: str) -> Set[str]:
+    """These are the single invocation template YAMLs that are uploaded to the mock template bucket for a test worker."""
+    encoded_template = """
+    TemplateName: TestWorkerTemplate
+    TemplateDescription: This is a template used for testing the Starbase
+    """
     templates = set()
     for plugin_prefix in ["TestingStarfleetWorkerPlugin", "TestingStarfleetWorkerPluginTwo", "TestingStarfleetWorkerPluginThree"]:
         for template_count in range(1, 3):
@@ -80,10 +96,46 @@ def timed_event() -> Dict[str, Any]:
 
 
 @pytest.fixture
-def worker_ships(test_worker_ship_loader: StarfleetWorkerShipLoader) -> MagicMock:
-    """This mocks out the worker ship loader for the starbase."""
+def worker_ships(test_worker_ship_loader: StarfleetWorkerShipLoader) -> Generator[StarfleetWorkerShipLoader, None, None]:
+    """This mocks out the worker ship loader for the starbase (for single invocation workers)."""
     with mock.patch("starfleet.starbase.main.STARFLEET_WORKER_SHIPS", test_worker_ship_loader) as mocked_loader:
         yield mocked_loader
+
+
+@pytest.fixture
+def account_worker_ships(test_configuration: Dict[str, Any], worker_ships: StarfleetWorkerShipLoader) -> StarfleetWorkerShipLoader:
+    """This is a fixture that prepares the worker ship loader for account ships and loads them."""
+    # Update the configuration first:
+    test_configuration["TestingStarfleetWorkerPlugin"]["FanOutStrategy"] = "ACCOUNT"
+
+    # Override the template class:
+    ship = worker_ships.get_worker_ships()["TestingStarfleetWorkerPlugin"]
+    ship.payload_template_class = BaseAccountPayloadTemplate
+
+    return worker_ships
+
+
+@pytest.fixture
+def account_payload_templates(aws_s3: BaseClient, template_bucket: str) -> Set[str]:
+    """
+    These are the account invocation template YAMLs that are uploaded to the mock template bucket for a test worker.
+
+    For now this just returns 1 template and also returns a set to be similar to the single_account_payload_templates fixture.
+    """
+    encoded_template = """
+    TemplateName: TestWorkerTemplate
+    TemplateDescription: This is a template used for testing the Starbase for Account workers
+    IncludeAccounts:
+        AllAccounts: True
+    ExcludeAccounts:
+        ByNames:
+            - Account 1
+    """.encode(
+        "utf-8"
+    )
+    aws_s3.put_object(Bucket=template_bucket, Key="TestingStarfleetWorkerPlugin/template1.yaml", Body=encoded_template)
+
+    return {"TestingStarfleetWorkerPlugin/template1.yaml"}
 
 
 @pytest.fixture

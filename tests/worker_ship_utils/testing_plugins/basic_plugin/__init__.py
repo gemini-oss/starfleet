@@ -50,8 +50,6 @@ class TestingStarfleetWorkerPlugin(StarfleetWorkerShip):
     configuration_template_class = WorkerShipBaseConfigurationTemplate
     payload_template_class = WorkerShipPayloadBaseTemplate
 
-    # clis = [testing_plugin, testing_plugin_group_two]
-
     def execute(self, commit: bool = False) -> None:
         """This will execute the job from the payload."""
         raise NotImplementedError("pew pew pew")  # pragma: no cover

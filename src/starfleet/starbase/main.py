@@ -12,15 +12,20 @@ from typing import Any, Dict
 import boto3
 from marshmallow import ValidationError
 
-from starfleet.starbase.utils import list_worker_ship_templates, task_starbase_fanout, fetch_template
+from starfleet.starbase.utils import list_worker_ship_templates, task_starbase_fanout, fetch_template, account_fanout
 from starfleet.utils.configuration import STARFLEET_CONFIGURATION
 from starfleet.utils.logging import LOGGER
+from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplate
 from starfleet.worker_ships.loader import STARFLEET_WORKER_SHIPS
 from starfleet.worker_ships.ship_schematics import EventBridgeFrequency
 
 
 class NoShipPluginError(Exception):
     """Raised if we receive a payload for a ship that doesn't exist."""
+
+
+class InvalidTemplateForFanoutError(Exception):
+    """Raised if the template Marshmallow class is invalid for the worker's fan out strategy."""
 
 
 def process_eventbridge_timed_event(event: Dict[str, Any]) -> None:
@@ -102,10 +107,21 @@ def fan_out_payload(payload: Dict[str, Any]) -> None:
     sqs_client = boto3.client("sqs", region_name=starfleet_config["DeploymentRegion"])
     if ship_config["FanOutStrategy"] == "SINGLE_INVOCATION":
         LOGGER.info(f"[🚀] Tasking worker ship: {ship_name}")
-        # For the single invocation strategy, we just pass on the template without additional modification:
+        # For the single invocation strategy, we just pass on the template (schema dumped from verified) without additional modification:
         sqs_client.send_message(QueueUrl=ship_config["InvocationQueueUrl"], MessageBody=schema.dumps(verified_template))
-        LOGGER.info(f"[🛸] Worker Ship: {ship_name} tasked for SINGLE_INVOCATION")
+        LOGGER.info(f"[🛸] Worker Ship: {ship_name} tasked for the SINGLE_INVOCATION fan out")
 
-    else:
+    elif ship_config["FanOutStrategy"] == "ACCOUNT_REGION":
         # TODO: need to add the logic to task all the other fanout strategies. This is only currently tasking 1 time tasks.
         LOGGER.warning(f"[🚧] Fan Out Strategy: {ship_config['FanOutStrategy']} is not implemented yet!")
+
+    else:
+        if not isinstance(schema, BaseAccountPayloadTemplate):
+            LOGGER.error(
+                f"[❌] The worker ship: {ship_name} template class does not subclass the `BaseAccountPayloadTemplate`, which is required for `ACCOUNT` fan outs."
+            )
+            raise InvalidTemplateForFanoutError()
+
+        LOGGER.info(f"[🚀] Tasking worker ship: {ship_name}")
+        account_fanout(verified_template, schema, starfleet_config["TemplateBucket"], template_prefix, ship_config["InvocationQueueUrl"], sqs_client, ship_name)
+        LOGGER.info(f"[🛸] Worker Ship: {ship_name} tasked for the ACCOUNT fan out")

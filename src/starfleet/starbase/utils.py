@@ -17,7 +17,9 @@ from cloudaux.aws.decorators import paginated
 import yaml
 from yaml import YAMLError
 
+from starfleet.account_index.resolvers import resolve_worker_template_accounts
 from starfleet.utils.logging import LOGGER
+from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplateInstance
 
 
 @paginated("Contents", request_pagination_marker="ContinuationToken", response_pagination_marker="NextContinuationToken")
@@ -88,4 +90,39 @@ def task_starbase_fanout(templates: List[str], queue_url: str, sqs_client: BaseC
     batch_num = 1
     for batch in get_template_batch(templates, worker_ship_name):
         LOGGER.debug(f"[ℹ️] Processing SQS batch number: {batch_num} to queue: {queue_url}...")
+        sqs_client.send_message_batch(QueueUrl=queue_url, Entries=batch)
+
+
+def account_fanout(
+    verified_template: Dict[str, Any],
+    schema: BaseAccountPayloadTemplateInstance,
+    template_bucket: str,
+    template_prefix: str,
+    queue_url: str,
+    sqs_client: BaseClient,
+    worker_ship_name: str,
+) -> None:
+    """This will perform the fan out logic for an Account worker ship."""
+    accounts_to_operate_on = resolve_worker_template_accounts(verified_template)
+    if not accounts_to_operate_on:
+        LOGGER.error(f"[🤷‍♂️] The worker ship: {worker_ship_name}'s template at {template_bucket}/{template_prefix} has no accounts to task!")
+        return
+
+    LOGGER.info(f"[🔢] Tasking {worker_ship_name} for {len(accounts_to_operate_on)}...")
+    LOGGER.debug(f"[ℹ️] Worker: {worker_ship_name} will operate on accounts: {accounts_to_operate_on}...")
+
+    # For each account we need to send over the template to SQS:
+    batch = []
+    for account in accounts_to_operate_on:
+        verified_template["starbase_assigned_account"] = account
+        batch.append({"Id": account, "MessageBody": schema.dumps(verified_template)})
+
+        if len(batch) == 10:
+            LOGGER.debug(f"[ℹ️] Processing SQS batch to queue: {queue_url}...")
+            sqs_client.send_message_batch(QueueUrl=queue_url, Entries=batch)
+            batch = []
+
+    # Send over any stragglers:
+    if batch:
+        LOGGER.debug(f"[ℹ️] Processing SQS batch to queue: {queue_url}...")
         sqs_client.send_message_batch(QueueUrl=queue_url, Entries=batch)

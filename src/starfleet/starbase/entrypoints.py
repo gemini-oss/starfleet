@@ -10,6 +10,7 @@ All of the Lambda entrypoints for the Starbase are here.
 import json
 from typing import Any, Dict
 
+from starfleet.account_index.loader import ACCOUNT_INDEX
 from starfleet.starbase.main import process_eventbridge_timed_event, fan_out_payload
 from starfleet.utils.configuration import STARFLEET_CONFIGURATION
 from starfleet.utils.logging import LOGGER
@@ -28,6 +29,9 @@ def eventbridge_timed_lambda_handler(event: Dict[str, Any], context: object) -> 
 def fanout_payload_lambda_handler(event: Dict[str, Any], context: object) -> None:  # noqa pylint: disable=W0613
     """This is the Lambda entrypoint that will fan out the workload to all worker ships for the given template."""
     LOGGER.info("[🎬] Starting Starbase Worker Ship fanout...")
+
+    # Set up the Account indexer so it's ready to go:
+    ACCOUNT_INDEX.index  # noqa pylint: disable=W0104
 
     # This should not!! be a list, but if it is, just handle it anyway:
     if len(event["Records"]) > 1:

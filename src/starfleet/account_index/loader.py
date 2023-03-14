@@ -30,6 +30,10 @@ class StarfleetAccountIndexLoader:
     def __init__(self):
         self._index: AccountIndexInstance = None  # noqa
 
+    def reset(self):
+        """Used for unit tests. This resets the index."""
+        self._index = None
+
     def load_indexes(self):
         """
         This will load all the account index plugins and add them to a registry. Once in the registry the chosen account index class will be
