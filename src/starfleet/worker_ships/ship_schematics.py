@@ -19,7 +19,7 @@ from marshmallow import Schema, fields, INCLUDE, post_load, ValidationError
 from starfleet.worker_ships.base_payload_schemas import WorkerShipPayloadBaseTemplate
 
 
-class InvocationSources(Enum):
+class InvocationSource(Enum):
     """This is an Enum that defines the type of invocation for a given Starfleet worker. This defines the
     allowable sources that can invoke the worker. This is used by the Starbase to determine if a given
     worker should be tasked.
@@ -74,7 +74,7 @@ class WorkerShipBaseConfigurationTemplate(Schema):
     invocation_queue_url = fields.Url(required=True, schemes={"https"}, data_key="InvocationQueueUrl")
 
     # This is the invocation sources. This needs to be specified.
-    invocation_sources = fields.List(fields.Enum(InvocationSources), required=True, data_key="InvocationSources")
+    invocation_sources = fields.List(fields.Enum(InvocationSource), required=True, data_key="InvocationSources")
 
     # If a EventBridgeTimed event is specified, then you need to add details on the invocation frequency (this manually configured below):
     eventbridge_timed_frequency = fields.Enum(EventBridgeFrequency, required=False, data_key="EventBridgeTimedFrequency")
@@ -86,7 +86,7 @@ class WorkerShipBaseConfigurationTemplate(Schema):
     @post_load
     def validate_eventbridge_timed_frequencies(self, in_data: Dict[str, Any], **kwargs) -> Dict[str, Any]:  # pylint: disable=W0613
         """This will perform the custom validation where if EVENTBRIDGE_TIMED_EVENT is in the InvocationSources, that an accompanying EventBridgeTimedFrequency is provided."""
-        if InvocationSources.EVENTBRIDGE_TIMED_EVENT in in_data["invocation_sources"]:
+        if InvocationSource.EVENTBRIDGE_TIMED_EVENT in in_data["invocation_sources"]:
             if not in_data.get("eventbridge_timed_frequency"):
                 raise ValidationError("A EventBridgeTimedFrequency is required when specifying an invocation event of EVENTBRIDGE_TIMED_EVENT.")
 
@@ -111,8 +111,18 @@ class StarfleetWorkerShip:
     # This is the fan out strategy for the worker. This is very important and defines the type of job the worker is supposed to do (this also influences the template type).
     fan_out_strategy: FanOutStrategy = FanOutStrategy.SINGLE_INVOCATION
 
-    # This is the name for the worker ship plugin (this should be UpperCamelCase). This is also the name of the Configuration section for the given worker ship plugin:
-    worker_ship_name: str
+    @classmethod
+    def get_worker_ship_name(cls: Type["StarfleetWorkerShip"]) -> str:
+        """Static method to return the worker ship name."""
+        return cls.__name__
+
+    # This is the name for the worker ship plugin (this should be UpperCamelCase). This is also the name of the Configuration section for the given worker ship plugin.
+    # You can override this if you want in your own subclass to just be a flat string, but by default this is a property that returns the name of the class.
+    @property
+    def worker_ship_name(self) -> str:
+        """Returns the name of the worker ship, which is by default the name of the class."""
+        return self.get_worker_ship_name()
+
     configuration_template_class: Type[WorkerShipBaseConfigurationTemplate] = WorkerShipBaseConfigurationTemplate  # Default to the base
 
     # This is the template class for the worker ship. All worker ship payload templates need to be defined.

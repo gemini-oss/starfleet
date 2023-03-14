@@ -20,7 +20,7 @@ The Starbase uses a combination of the details above and the account index. The 
 These are the mechanisms that the Starbase is invoked by. This affects how and when the Starbase tasks workers.  The Starbase is invoked 3 ways that you should care about*:
 
 1. EventBridge Timed Events
-1. Template S3 Bucket Events (Not yet implemented)
+1. Template S3 Bucket Events
 1. SNS for a given worker ship (Not yet implemented)
 
 *See the in the weeds section below for the 4th way - this is not something you need to care about.
@@ -54,8 +54,8 @@ DAILY           # Once a day / every 24 hours
 
 A worker can only specify one event frequency.
 
-### Template S3 Bucket Events -- Not yet implemented
-Each worker can be invoked whenever a template in it's configured template path is created or updated. This is useful for CI/CD operations where placing a template in the bucket automatically triggers a payload execution.
+### Template S3 Bucket Events
+Each worker can be invoked whenever it's configured template (or template in path) is created or updated. This is useful for CI/CD operations where placing a template in the bucket automatically triggers a payload execution.
 
 The worker ship configuration specifies this. At a minimum, it needs:
 
@@ -64,7 +64,7 @@ InvocationSources:
   - S3
 ```
 
-The Starbase will receive this event, fetch the template from S3, render it in conjunction with the account index and then task the worker to run.
+The Starbase will receive this event, fetch the template from S3, render it in conjunction with the account index (if applicable) and then task the worker to run.
 
 ### SNS for a given worker ship -- TBD
 This section is still TBD and will be ironed out in the future.

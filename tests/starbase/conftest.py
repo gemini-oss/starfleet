@@ -7,6 +7,8 @@ This defines the PyTest fixtures for the Starbase tests
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+import json
+
 # pylint: disable=unused-argument,redefined-outer-name
 from typing import Generator, Set, Any, Dict
 from unittest import mock
@@ -50,7 +52,6 @@ def test_index(test_configuration: Dict[str, Any]) -> Generator[AccountIndexInst
     # Just mock out the index. The singleton function will simply return the populated index attribute:
     ACCOUNT_INDEX._index = account_indexer.index
     yield ACCOUNT_INDEX.index
-
     ACCOUNT_INDEX.reset()
 
 
@@ -189,3 +190,24 @@ def account_region_payload_templates(aws_s3: BaseClient, template_bucket: str) -
 def fanout_lambda_payload() -> Dict[str, Any]:
     """This is the payload from SQS encoded in the Body of the dictionary. Not including the rest of the SQS details."""
     return {"Records": [{"body": '{"worker_ship": "TestingStarfleetWorkerPlugin", "template_prefix": "TestingStarfleetWorkerPlugin/template1.yaml"}'}]}
+
+
+@pytest.fixture
+def fanout_lambda_s3_payload() -> Dict[str, Any]:
+    """This is the payload from S3 to SQS encoded in the Body of the dictionary. Not including the rest of the S3 and SQS details."""
+    return {
+        "Records": [
+            {
+                "body": json.dumps(
+                    {
+                        "Records": [
+                            {
+                                "eventSource": "aws:s3",
+                                "s3": {"bucket": {"name": "template-bucket"}, "object": {"key": "TestingStarfleetWorkerPlugin/template1.yaml"}},
+                            }
+                        ]
+                    }
+                )
+            }
+        ]
+    }

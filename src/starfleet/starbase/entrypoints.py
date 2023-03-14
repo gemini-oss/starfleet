@@ -10,17 +10,15 @@ All of the Lambda entrypoints for the Starbase are here.
 import json
 from typing import Any, Dict
 
-from starfleet.account_index.loader import ACCOUNT_INDEX
-from starfleet.starbase.main import process_eventbridge_timed_event, fan_out_payload
-from starfleet.utils.configuration import STARFLEET_CONFIGURATION
+from starfleet.startup import starbase_start_up
+from starfleet.starbase.main import fan_out_payload, process_eventbridge_timed_event
 from starfleet.utils.logging import LOGGER
-
-# Set up the configuration now so loggers are properly configured:
-STARFLEET_CONFIGURATION.config  # noqa pylint: disable=W0104
 
 
 def eventbridge_timed_lambda_handler(event: Dict[str, Any], context: object) -> None:  # noqa pylint: disable=W0613
     """This is the Lambda entrypoint for the EventBridge timed events."""
+    starbase_start_up()
+
     LOGGER.info("[🎬] Starting Starbase for EventBridge timed event...")
     process_eventbridge_timed_event(event)
     LOGGER.info("[🏁] Completed Starbase EventBridge timed event.")
@@ -28,10 +26,9 @@ def eventbridge_timed_lambda_handler(event: Dict[str, Any], context: object) -> 
 
 def fanout_payload_lambda_handler(event: Dict[str, Any], context: object) -> None:  # noqa pylint: disable=W0613
     """This is the Lambda entrypoint that will fan out the workload to all worker ships for the given template."""
-    LOGGER.info("[🎬] Starting Starbase Worker Ship fanout...")
+    starbase_start_up()
 
-    # Set up the Account indexer so it's ready to go:
-    ACCOUNT_INDEX.index  # noqa pylint: disable=W0104
+    LOGGER.info("[🎬] Starting Starbase Worker Ship fanout...")
 
     # This should not!! be a list, but if it is, just handle it anyway:
     if len(event["Records"]) > 1:

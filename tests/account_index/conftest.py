@@ -25,7 +25,6 @@ def test_index(test_configuration: Dict[str, Any]) -> Generator[AccountIndexInst
     account_indexer._index_ship_path = tests.account_index.testing_plugins.__path__
     account_indexer._index_ship_prefix = tests.account_index.testing_plugins.__name__ + "."
 
-    # Just mock out the index. The singleton function will simply return the populated index attribute:
     ACCOUNT_INDEX._index = account_indexer.index
     yield ACCOUNT_INDEX.index
 

@@ -49,7 +49,30 @@ Resources:
         deadLetterTargetArn: !GetAtt StarbaseFanoutDLQ.Arn
         maxReceiveCount: 4
 
+  StarbaseFanoutQueuePolicy:  # SQS policy to allow S3 bucket notifications
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !GetAtt StarbaseFanoutQueue.QueueUrl
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Action: SQS:SendMessage
+            Resource:
+              - !GetAtt StarbaseFanoutQueue.Arn
+            Principal:
+              Service: s3.amazonaws.com
+            Condition:
+              ArnLike:
+                "aws:SourceArn": !Sub
+                  - 'arn:aws:s3:::starfleet-templates-${AccountId}'
+                  - AccountId: !Ref "AWS::AccountId"
+              StringEquals:
+                "aws:SourceAccount": !Ref "AWS::AccountId"
+
   StarfleetTemplateBucket:
+    DependsOn:
+      - StarbaseFanoutQueuePolicy
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub
@@ -64,6 +87,10 @@ Resources:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
+      NotificationConfiguration:
+        QueueConfigurations:
+          - Event: "s3:ObjectCreated:*"
+            Queue: !GetAtt StarbaseFanoutQueue.Arn
 
   # The Starbase EventBridge listener:
   StarbaseEventBridgeFunction:
