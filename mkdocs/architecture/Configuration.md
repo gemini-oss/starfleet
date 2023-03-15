@@ -44,7 +44,6 @@ AccountIndexGeneratorShip:
     Enabled: True
     TemplatePrefix: AccountIndexGenerator/us-east-2.yaml
     InvocationQueueUrl: https://sqs.DEPLOYEMENT-REGION.amazonaws.com/ACCOUNT-ID/starfleet-account-index-generator
-    FanOutStrategy: SINGLE_INVOCATION
     InvocationSources:
         - EVENTBRIDGE_TIMED_EVENT
     EventBridgeTimedFrequency: HOURLY
@@ -69,6 +68,7 @@ The base configuration configures the primary Starfleet components. This is in t
 * **`AccountIndex`** - This is the _name_ of the Account Index plugin that Starfleet will use for getting an inventory of AWS accounts. This is outlined in more detail later, but is required. By default, this will use the `StarfleetDefaultAccountIndex` plugin which relies on the `AccountIndexGeneratorShip` worker ship to generate an AWS account inventory for an AWS Organization. That is also described later, but for now just know that Starfleet needs to know which plugin to consult with to obtain an index or inventory of AWS accounts and their enabled regions.
 
 #### Optional Fields
+* **`ScopeToRegions`** - This is a set of AWS regions that should be scoped for `ACCOUNT_REGION` worker templates. This is useful if you have an SCP that restricts the regions that are allowed to be operated in. This ensures that `ACCOUNT_REGION` workers can only operate in those regions specified in this list. By default this is not set.
 * **`LogLevel`** - This is the Python log level to make use of. The valid fields are the [Python log level names](https://docs.python.org/3/library/logging.html#levels). The default value is `INFO`.
 * **`ThirdPartyLoggerLevels`** - This is a dictionary of Python logger name, and the corresponding log level for it. By default we silence the loggers for `botocore` and `urllib3.connectionpool`, because they can be noisy when making `boto3` API calls. Feel free to add or modify this section as you see fit.
 
@@ -79,7 +79,6 @@ Each worker ship must have a configuration entry. The configuration entry has a 
 * **`Enabled`** - Each worker ship needs to have this field, which is set to the boolean of `True` or `False`. This specifies if the worker ship plugin is enabled or not.
 * **`TemplatePrefix`** - As described in the [Worker Ship section](WorkerShips.md#the-payload-template), this specifies where in the S3 bucket the worker ship's payload templates are located.
 * **`InvocationQueueUrl`** - As described in the [Worker Ship section](WorkerShips.md#the-sqs-queue), this is the SQS queue URL for where the Lambda's invocation will happen. The AWS SAM template has an example of what this should be. If you rely on the SAM template, than simply swap out the account ID and region, and you are good to go!
-* **`FanOutStrategy`** - As described in the [Worker Ship section](WorkerShips.md#fan-out-strategy), this defines the fan out strategy for the given worker. This is used to inform the Starbase component how to task the worker.
 * **`InvocationSources`** - As described in the [Worker Ship section](WorkerShips.md#invocation-source), this defines when the given worker gets invoked. This is used to inform the Starbase component when to task the worker.
 
 !!! Note

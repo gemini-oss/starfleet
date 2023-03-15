@@ -9,6 +9,7 @@ This tests all schema things related to worker ships.
 """
 from typing import Any, Dict
 
+import boto3
 import pytest
 import yaml
 from marshmallow import ValidationError
@@ -18,6 +19,7 @@ from starfleet.worker_ships.base_payload_schemas import (
     AccountsSpecificationSchema,
     AccountTagNameValueSchema,
     BaseAccountPayloadTemplate,
+    BaseAccountRegionPayloadTemplate,
     IncludeAccountsSpecificationSchema,
     WorkerShipPayloadBaseTemplate,
 )
@@ -132,7 +134,6 @@ def test_base_account_payload_template() -> None:
     """This tests the schema for the BaseAccountPayloadTemplate."""
     schema = BaseAccountPayloadTemplate()
 
-    # TODO: Make a fixture?
     good_payload = """
     TemplateName: TestingPayload
     TemplateDescription: A proper payload that should be serialized properly.
@@ -179,3 +180,129 @@ def test_base_account_payload_template() -> None:
     """
     errors = schema.validate(yaml.safe_load(bad_payload))
     assert errors == {"IncludeAccounts": ["Missing data for required field."]}
+
+    # Included accounts is an empty dictionary:
+    bad_payload = """
+    TemplateName: Bad Payload
+    TemplateDescription: A bad payload that should not be serialized.
+    IncludeAccounts: {}
+    """
+    errors = schema.validate(yaml.safe_load(bad_payload))
+    assert errors == {
+        "IncludeAccounts": {
+            "AllAccounts": [
+                "Missing an account field set. Either set `AllAccounts: True`, or specify an account `ByNames`, `ByIds`, `ByTags`, and/or `ByOrgUnits`."
+            ],
+            "ByNames": [
+                "Missing an account field set. Either set `AllAccounts: True`, or specify an account `ByNames`, `ByIds`, `ByTags`, and/or `ByOrgUnits`."
+            ],
+            "ByIds": ["Missing an account field set. Either set `AllAccounts: True`, or specify an account `ByNames`, `ByIds`, `ByTags`, and/or `ByOrgUnits`."],
+            "ByOrgUnits": [
+                "Missing an account field set. Either set `AllAccounts: True`, or specify an account `ByNames`, `ByIds`, `ByTags`, and/or `ByOrgUnits`."
+            ],
+            "ByTags": [
+                "Missing an account field set. Either set `AllAccounts: True`, or specify an account `ByNames`, `ByIds`, `ByTags`, and/or `ByOrgUnits`."
+            ],
+        }
+    }
+
+
+def test_base_account_region_payload_template() -> None:
+    """This tests the schema for the BaseAccountRegionPayloadTemplate."""
+    schema = BaseAccountRegionPayloadTemplate()
+
+    all_regions = set(boto3.session.Session().get_available_regions("ec2"))
+    assert len(all_regions) > 26  # As of March 2023
+
+    good_payload_all_regions = """
+    TemplateName: TestingRegionPayload
+    TemplateDescription: A proper payload that should be serialized properly.
+    IncludeAccounts:
+      AllAccounts: True
+    IncludeRegions:
+      - ALL
+    """
+    serialized = schema.load(yaml.safe_load(good_payload_all_regions))
+    assert serialized["include_regions"] == all_regions
+    assert "ALL" not in serialized["include_regions"]
+
+    good_payload_some_regions = """
+    TemplateName: TestingRegionPayload
+    TemplateDescription: A proper payload that should be serialized properly.
+    IncludeAccounts:
+      AllAccounts: True
+    IncludeRegions:
+      - us-east-1
+      - us-east-2
+    """
+    assert schema.load(yaml.safe_load(good_payload_some_regions))["include_regions"] == {"us-east-1", "us-east-2"}
+
+    good_payload_some_exclusion = """
+    TemplateName: TestingPayload
+    TemplateDescription: A proper payload that should be serialized properly.
+    IncludeAccounts:
+      AllAccounts: True
+    IncludeRegions:
+      - ALL
+    ExcludeRegions:
+      - us-west-1
+      - ca-central-1
+    """
+    assert schema.load(yaml.safe_load(good_payload_some_exclusion))["exclude_regions"] == {"us-west-1", "ca-central-1"}
+
+    # Bad payload -- can't specify to run in ALL regions and also note another region:
+    bad_payload = """
+    TemplateName: Bad Payload
+    TemplateDescription: A bad payload that should not be serialized.
+    IncludeAccounts:
+      AllAccounts: True
+    IncludeRegions:
+      - us-west-1
+      - ALL
+      - us-east-1
+    """
+    errors = schema.validate(yaml.safe_load(bad_payload))
+    assert errors == {"IncludeRegions": ["Can't specify any other regions when `ALL` is specified in the list."]}
+
+    # Missing the included regions
+    bad_payload = """
+    TemplateName: Bad Payload
+    TemplateDescription: A bad payload that should not be serialized.
+    IncludeAccounts:
+      AllAccounts: True
+    """
+    errors = schema.validate(yaml.safe_load(bad_payload))
+    assert errors == {"IncludeRegions": ["Missing data for required field."]}
+
+    # An empty list (need at least 1 region)
+    bad_payload = """
+    TemplateName: Bad Payload
+    TemplateDescription: A bad payload that should not be serialized.
+    IncludeAccounts:
+      AllAccounts: True
+    IncludeRegions: []
+    """
+    errors = schema.validate(yaml.safe_load(bad_payload))
+    assert errors == {"IncludeRegions": ["Shorter than minimum length 1."]}
+
+    # With invalid region names:
+    bad_payload = """
+    TemplateName: Bad Payload
+    TemplateDescription: A bad payload that should not be serialized.
+    IncludeAccounts:
+      AllAccounts: True
+    IncludeRegions:
+      - us-east-1
+      - fake-region
+      - us-west-2
+      - another-fake-region
+    ExcludeRegions:
+      - us-east-2
+      - fake-region
+      - us-west-1
+      - another-fake-region
+    """
+    errors = schema.validate(yaml.safe_load(bad_payload))
+    for bad_region in ["fake-region", "another-fake-region"]:
+        assert bad_region in errors["IncludeRegions"][0]
+        assert bad_region in errors["ExcludeRegions"][0]

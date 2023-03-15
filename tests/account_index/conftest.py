@@ -9,20 +9,24 @@ This defines the PyTest fixtures for the Account Indexer tests
 """
 # pylint: disable=unused-argument
 from typing import Generator, Any, Dict
-from unittest import mock
 
 import pytest
 
-from starfleet.account_index.loader import StarfleetAccountIndexLoader, AccountIndexInstance
-import tests.account_index.testing_plugins.basic_plugin
+from starfleet.account_index.loader import AccountIndexInstance
 
 
 @pytest.fixture
 def test_index(test_configuration: Dict[str, Any]) -> Generator[AccountIndexInstance, None, None]:
-    """This returns the StarfleetAccountIndexLoader with a TestingAccountIndexPlugin configured for it."""
+    """This returns the StarfleetAccountIndexLoader with a TestingAccountIndexPlugin mocked out for it. This mocks out for the entire app."""
+    from starfleet.account_index.loader import ACCOUNT_INDEX, StarfleetAccountIndexLoader
+    import tests.account_index.testing_plugins
+
     account_indexer = StarfleetAccountIndexLoader()
     account_indexer._index_ship_path = tests.account_index.testing_plugins.__path__
     account_indexer._index_ship_prefix = tests.account_index.testing_plugins.__name__ + "."
 
-    with mock.patch("starfleet.account_index.loader.ACCOUNT_INDEX", account_indexer):
-        yield account_indexer.index
+    # Just mock out the index. The singleton function will simply return the populated index attribute:
+    ACCOUNT_INDEX._index = account_indexer.index
+    yield ACCOUNT_INDEX.index
+
+    ACCOUNT_INDEX.reset()

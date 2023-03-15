@@ -17,7 +17,7 @@ from botocore.client import BaseClient
 from moto import mock_s3, mock_sqs
 
 from starfleet.account_index.schematics import AccountIndexInstance
-from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplate
+from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplate, BaseAccountRegionPayloadTemplate
 from starfleet.worker_ships.loader import StarfleetWorkerShipLoader
 
 
@@ -103,14 +103,25 @@ def worker_ships(test_worker_ship_loader: StarfleetWorkerShipLoader) -> Generato
 
 
 @pytest.fixture
-def account_worker_ships(test_configuration: Dict[str, Any], worker_ships: StarfleetWorkerShipLoader) -> StarfleetWorkerShipLoader:
+def account_worker_ships(worker_ships: StarfleetWorkerShipLoader) -> StarfleetWorkerShipLoader:
     """This is a fixture that prepares the worker ship loader for account ships and loads them."""
-    # Update the configuration first:
-    test_configuration["TestingStarfleetWorkerPlugin"]["FanOutStrategy"] = "ACCOUNT"
+    from starfleet.worker_ships.ship_schematics import FanOutStrategy
 
-    # Override the template class:
     ship = worker_ships.get_worker_ships()["TestingStarfleetWorkerPlugin"]
+    ship.fan_out_strategy = FanOutStrategy.ACCOUNT
     ship.payload_template_class = BaseAccountPayloadTemplate
+
+    return worker_ships
+
+
+@pytest.fixture
+def account_region_worker_ships(worker_ships: StarfleetWorkerShipLoader) -> StarfleetWorkerShipLoader:
+    """This is a fixture that prepares the worker ship loader for account/region ships and loads them."""
+    from starfleet.worker_ships.ship_schematics import FanOutStrategy
+
+    ship = worker_ships.get_worker_ships()["TestingStarfleetWorkerPlugin"]
+    ship.fan_out_strategy = FanOutStrategy.ACCOUNT_REGION
+    ship.payload_template_class = BaseAccountRegionPayloadTemplate
 
     return worker_ships
 
@@ -130,6 +141,42 @@ def account_payload_templates(aws_s3: BaseClient, template_bucket: str) -> Set[s
     ExcludeAccounts:
         ByNames:
             - Account 1
+    """.encode(
+        "utf-8"
+    )
+    aws_s3.put_object(Bucket=template_bucket, Key="TestingStarfleetWorkerPlugin/template1.yaml", Body=encoded_template)
+
+    return {"TestingStarfleetWorkerPlugin/template1.yaml"}
+
+
+@pytest.fixture
+def account_region_payload_templates(aws_s3: BaseClient, template_bucket: str) -> Set[str]:
+    """
+    These are the account/region invocation template YAMLs that are uploaded to the mock template bucket for a test worker.
+
+    For now this just returns 1 template and also returns a set to be similar to the single_account_payload_templates fixture.
+    """
+    encoded_template = """
+    TemplateName: TestWorkerTemplate
+    TemplateDescription: This is a template used for testing the Starbase for Account workers
+    IncludeAccounts:
+        ByNames:
+            - Account 1
+            - Account 2
+            - Account 3
+            - Account 4
+            - Account 5
+    ExcludeAccounts:
+        ByNames:
+            - Account 1
+    IncludeRegions:
+        - us-west-1
+        - us-east-1
+        - us-east-2
+        - eu-west-1
+        - ca-central-1
+    ExcludeRegions:
+        - us-west-1
     """.encode(
         "utf-8"
     )
