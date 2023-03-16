@@ -42,9 +42,10 @@ STARFLEET:
 
 AccountIndexGeneratorShip:
     Enabled: True
-    TemplatePrefix: AccountIndexGenerator/us-east-2.yaml
+    TemplatePrefix: AccountIndexGenerator/Payload.yaml
     InvocationQueueUrl: https://sqs.DEPLOYEMENT-REGION.amazonaws.com/ACCOUNT-ID/starfleet-account-index-generator
     InvocationSources:
+        - S3
         - EVENTBRIDGE_TIMED_EVENT
     EventBridgeTimedFrequency: HOURLY
     OrgAccountAssumeRole: starfleet-worker-role
@@ -55,7 +56,7 @@ AccountIndexGeneratorShip:
 StarfleetDefaultAccountIndex:
     IndexBucket: your-template-s3-bucket-replace-me
     BucketRegion: your-template-s3-bucket-region
-    IndexObjectPath: accounts.json
+    IndexObjectPath: accountIndex.json
 ```
 
 ### Starfleet Base Configuration - Required

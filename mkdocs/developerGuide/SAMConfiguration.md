@@ -110,7 +110,7 @@ AssumeRoleManagedPolicy:
 
 Some important things to note are:
 
-- We set the `STARFLEET_COMMIT` environment variable to True, which in the case of the `AccountIndexGeneratorShip` will result in it writing to the S3 buckets that are permitted in the policies section (we use a map and define TEST and PROD S3 buckets -- see `sam_template.yaml` in the code for more details)
+- We set the `STARFLEET_COMMIT` environment variable to True, which in the case of the `AccountIndexGeneratorShip` will result in it writing to the S3 buckets that are permitted in the policies section (we use a map and define TEST and PROD S3 buckets -- see `test_sam_template.yaml` in the code for more details)
 - We always have an SQS queue and corresponding DLQ
 - The Starbase fan out Lambda function needs to be able to publish events onto the worker's main event queue
 - We made a sample managed policy for role assumption and we attach it to the worker's IAM role (this is automatically generated; it's the name of the YAML dictionary name, followed by `Role`.
@@ -120,7 +120,7 @@ Some important things to note are:
     The Queue URL of the main event Queue as shown above needs to be in the configuration for the worker.
 
 ## SAM Config
-We strongly recommend that you make a SAM configuration environment (`samconfig.toml`) that sets up the SAM S3 bucket and all the build details required. This is a great example of one:
+We strongly recommend that you make a SAM configuration environment (`samconfig.toml`) that sets up the SAM S3 bucket and all the build details required. We include an example [`samconfig.toml`](https://github.com/gemini-oss/starfleet/blob/main/samconfig.toml), which is pasted below:
 
 ```toml
 version = 0.1
@@ -137,13 +137,13 @@ parameter_overrides = "EnvironmentName=\"TEST\""
 image_repositories = []
 
 [TEST.validate.parameters]
-template_file = "YOUR_TEST_TEMPLATE_HERE.yaml"
+template_file = "test_sam_template.yaml"  # Feel free to replace with your own filename
 region = "REPLACEME"
 lint = true
 
 [TEST.build.parameters]
 use_container = true
-template_file = "YOUR_TEST_TEMPLATE_HERE.yaml"
+template_file = "test_sam_template.yaml"  # Feel free to replace with your own filename
 
 
 [PROD]
@@ -159,13 +159,13 @@ parameter_overrides = "EnvironmentName=\"PROD\""
 image_repositories = []
 
 [PROD.validate.parameters]
-template_file = "YOUR_PROD_TEMPLATE_HERE.yaml"
+template_file = "prod_sam_template.yaml"  # Feel free to replace with your own filename
 region = "REPLACEME"
 lint = true
 
 [PROD.build.parameters]
 use_container = true
-template_file = "YOUR_PROD_TEMPLATE_HERE.yaml"
+template_file = "prod_sam_template.yaml"  # Feel free to replace with your own filename
 ```
 
 With a `samconfig.toml` like that you can then run `sam build --config-env TEST` to build your test Starfleet deployment and `sam deploy --config-env TEST` to deploy it. Swap out `TEST` with `PROD` for your production build and deployment.

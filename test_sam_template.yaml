@@ -4,6 +4,7 @@ Description: >
   starfleet
 
   This is a Sample SAM Template for starfleet -- please replace this with your own and add your own values in.
+  See the Starfleet documentation here for more details: https://gemini-oss.github.io/starfleet/installation/Overview/
 
 # Replace these with your own:
 Parameters:
@@ -19,12 +20,12 @@ Parameters:
 Mappings:
   EnvMap:
     TEST:
-      AccountInventoryBucket: replace-me
-      BaseRoleName: replace-me
+      # Add more values that can be referenced easily here:
+      BaseRoleName: starfleet-worker-basic-test-role
 
     PROD:
-      AccountInventoryBucket: replace-me
-      BaseRoleName: replace-me
+      # Add more values that can be referenced easily here:
+      BaseRoleName: starfleet-worker-basic-prod-role
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -92,6 +93,23 @@ Resources:
           - Event: "s3:ObjectCreated:*"
             Queue: !GetAtt StarbaseFanoutQueue.Arn
 
+  # The S3 bucket that holds the account index:
+  AccountIndexBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub
+        - 'starfleet-account-index-${AccountId}'
+        - AccountId: !Ref "AWS::AccountId"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
   # The Starbase EventBridge listener:
   StarbaseEventBridgeFunction:
     Type: AWS::Serverless::Function
@@ -108,7 +126,7 @@ Resources:
           Properties:
             Name: StarfleetThirtyMin
             Description: Invokes Starfleet 30-minute worker ship tasks
-            Enabled: False
+            Enabled: True
             Schedule: rate(30 minutes)
             Input: '{"name": "THIRTY_MIN"}'
         EventBridgeHourly:
@@ -124,7 +142,7 @@ Resources:
           Properties:
             Name: StarfleetSixHourly
             Description: Invokes Starfleet six-hourly worker ship tasks
-            Enabled: False
+            Enabled: True
             Schedule: rate(6 hours)
             Input: '{"name": "SIX_HOURLY"}'
         EventBridgeTwelveHourly:
@@ -132,7 +150,7 @@ Resources:
           Properties:
             Name: StarfleetTwelveHourly
             Description: Invokes Starfleet twelve-hourly worker ship tasks
-            Enabled: False
+            Enabled: True
             Schedule: rate(12 hours)
             Input: '{"name": "TWELVE_HOURLY"}'
         EventBridgeDaily:
@@ -140,18 +158,24 @@ Resources:
           Properties:
             Name: StarfleetDaily
             Description: Invokes Starfleet daily worker ship tasks
-            Enabled: False
+            Enabled: True
             Schedule: rate(1 day)
             Input: '{"name": "DAILY"}'
       Policies:
-        # Grant permissions to read from the Template S3 bucket:
+        # Grant permissions to read from the Template S3 bucket and also the account index bucket:
         - S3ReadPolicy:
             BucketName: !Ref StarfleetTemplateBucket
+        - S3ReadPolicy:
+            BucketName: !Ref AccountIndexBucket
         # Write out to the fan out queue:
         - SQSSendMessagePolicy:
             QueueName: !GetAtt StarbaseFanoutQueue.QueueName
 
+  # #####
   # Define the worker ships here:
+  # ####
+
+  # Account Index Generator Worker Ship Resources:
   AccountIndexGeneratorDLQ:
     Type: AWS::SQS::Queue
     Properties:
@@ -187,17 +211,11 @@ Resources:
         Variables:
           STARFLEET_COMMIT: True
       Policies:
-        # Grant permissions to read from the inventory S3 bucket:
+        # Grant permissions to read and write to the inventory S3 bucket:
         - S3ReadPolicy:
-            BucketName: !FindInMap
-              - EnvMap
-              - !Ref 'EnvironmentName'
-              - AccountInventoryBucket
+            BucketName: !Ref AccountIndexBucket
         - S3WritePolicy:
-            BucketName: !FindInMap
-              - EnvMap
-              - !Ref 'EnvironmentName'
-              - AccountInventoryBucket
+            BucketName: !Ref AccountIndexBucket
 
   # Finally, the Starbase Fanout Function:
   StarbaseFanoutFunction:
@@ -246,6 +264,7 @@ Resources:
                     - BaseRoleName
       Roles:
         - !Ref AccountIndexGeneratorRole  # AccountIndexGeneratorRole is created automatically by SAM and can be referenced
+        # -!Ref YourWorkerRoleHere # Add your worker roles here to get the policy attached
 
 Outputs:
   StarbaseFanoutQueue:
@@ -266,6 +285,9 @@ Outputs:
   AssumeRoleManagedPolicy:
     Description: The Assume Role managed policy that can be attached to worker roles that need it
     Value: !Ref AssumeRoleManagedPolicy
+  AccountIndexBucket:
+    Description: The Starfleet S3 bucket that holds the account index JSON file
+    Value: !Ref AccountIndexBucket
   AccountIndexGeneratorQueue:
     Description: The Queue URL for the Account Index Generator invocation queue
     Value: !GetAtt AccountIndexGeneratorQueue.QueueUrl
