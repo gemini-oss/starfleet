@@ -7,7 +7,7 @@ This tests the logic for the Starbase
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
-# pylint: disable=unused-argument
+# pylint: disable=unused-argument,too-many-locals
 import json
 
 from typing import Set, Any, Dict
@@ -29,6 +29,7 @@ def test_process_eventbridge_timed_events(
     fanout_queue: str,
     timed_event: Dict[str, Any],
     worker_ships: StarfleetWorkerShipLoader,
+    test_index: AccountIndexInstance,
 ) -> None:
     """This tests the full EventBridge timed events tasking."""
     from starfleet.starbase.entrypoints import eventbridge_timed_lambda_handler
@@ -80,6 +81,36 @@ def test_process_eventbridge_timed_events(
     assert not aws_sqs.receive_message(QueueUrl=fanout_queue, MaxNumberOfMessages=10).get("Messages")
 
 
+def test_bad_s3_fan_out_events(
+    test_configuration: Dict[str, Any], fanout_lambda_s3_payload: Dict[str, Any], test_index: AccountIndexInstance, worker_ships: StarfleetWorkerShipLoader
+) -> None:
+    """This tests the error conditions for S3 fan out events."""
+    from starfleet.starbase.entrypoints import fanout_payload_lambda_handler
+    from starfleet.starbase.main import InvalidBucketError
+
+    # Event that doesn't match the configured S3 bucket.
+    s3_event = json.loads(fanout_lambda_s3_payload["Records"][0]["body"])
+    s3_event["Records"][0]["s3"]["bucket"]["name"] = "wrong-bucket"
+    with pytest.raises(InvalidBucketError):
+        fanout_lambda_s3_payload["Records"][0]["body"] = json.dumps(s3_event)
+        fanout_payload_lambda_handler(fanout_lambda_s3_payload, object())
+    s3_event["Records"][0]["s3"]["bucket"]["name"] = test_configuration["STARFLEET"]["TemplateBucket"]
+
+    # Event is for an object that does not end in .yaml
+    s3_event["Records"][0]["s3"]["object"]["key"] = "pewpewpew.txt"
+    with mock.patch("starfleet.starbase.main.LOGGER") as mocked_logger:
+        fanout_lambda_s3_payload["Records"][0]["body"] = json.dumps(s3_event)
+        fanout_payload_lambda_handler(fanout_lambda_s3_payload, object())
+    assert "[⏭️] Received an object prefix that is not a recognized template: pewpewpew.txt" in mocked_logger.warning.call_args_list[0][0][0]
+
+    # We don't have a ship that can handle this worker:
+    s3_event["Records"][0]["s3"]["object"]["key"] = "NotAWorker/Template1.yaml"
+    with mock.patch("starfleet.starbase.main.LOGGER") as mocked_logger:
+        fanout_lambda_s3_payload["Records"][0]["body"] = json.dumps(s3_event)
+        fanout_payload_lambda_handler(fanout_lambda_s3_payload, object())
+    assert "NotAWorker/Template1.yaml that we can't find a ship to handle. Skipping" in mocked_logger.warning.call_args_list[0][0][0]
+
+
 def test_fan_out_single_invocation(
     aws_s3: BaseClient,
     aws_sqs: BaseClient,
@@ -95,6 +126,50 @@ def test_fan_out_single_invocation(
     from starfleet.starbase.entrypoints import fanout_payload_lambda_handler
 
     fanout_payload_lambda_handler(fanout_lambda_payload, object())
+
+    # Confirm that the queue got the correct payload:
+    messages = aws_sqs.receive_message(QueueUrl=worker_queue, MaxNumberOfMessages=10, WaitTimeSeconds=0).get("Messages")
+    worker = worker_ships.get_worker_ships()["TestingStarfleetWorkerPlugin"]
+    worker.load_template(json.loads(messages[0]["Body"]))
+    assert worker.payload["template_name"] == "TestWorkerTemplate"
+
+
+@pytest.mark.parametrize("prefix", ["TestingStarfleetWorkerPlugin/", "TestingStarfleetWorkerPlugin/template1.yaml"])
+def test_good_s3_fan_out_events(
+    prefix: str,
+    aws_s3: BaseClient,
+    aws_sqs: BaseClient,
+    fanout_lambda_s3_payload: Dict[str, Any],
+    template_bucket: str,
+    single_payload_templates: Set[str],
+    test_configuration: Dict[str, Any],
+    worker_queue: str,
+    worker_ships: StarfleetWorkerShipLoader,
+    test_index: AccountIndexInstance,
+) -> None:
+    """This tests the good conditions for S3 fan out events. This runs twice, once for path matching `/` and once for a hard-coded prefix in the worker configuration."""
+    from starfleet.starbase.entrypoints import fanout_payload_lambda_handler
+
+    test_configuration["TestingStarfleetWorkerPlugin"]["TemplatePrefix"] = prefix
+
+    # This should try to invoke the standard test worker for a single invocation. We don't need to test
+    # account or account-region logic since we just need to verify that a S3 event gets a worker tasked.
+    with mock.patch("starfleet.starbase.main.LOGGER") as mocked_logger:
+        fanout_payload_lambda_handler(fanout_lambda_s3_payload, object())
+
+    # Make sure the log entries show that we tasked via S3 and that it was successful:
+    log_entries = [
+        "[🪣] Starbase received an S3 template modification event. Looking for the worker ship to task...",
+        "[🧑‍🚀] Identified worker ship: TestingStarfleetWorkerPlugin for S3 template: TestingStarfleetWorkerPlugin/template1.yaml.",
+        "[🛸] Worker Ship: TestingStarfleetWorkerPlugin tasked for the SINGLE_INVOCATION fan out",
+    ]
+    for entry in log_entries:
+        found = False
+        for call in mocked_logger.info.call_args_list:
+            if call[0][0] == entry:
+                found = True
+                break
+        assert found
 
     # Confirm that the queue got the correct payload:
     messages = aws_sqs.receive_message(QueueUrl=worker_queue, MaxNumberOfMessages=10, WaitTimeSeconds=0).get("Messages")
@@ -217,8 +292,37 @@ def test_account_fanout_wrong_subclass(
         fanout_payload_lambda_handler(fanout_lambda_payload, object())
 
 
+def test_unknown_fan_out_event(test_index: AccountIndexInstance, fanout_lambda_s3_payload: Dict[str, Any]) -> None:
+    """This tests that we skip fan out events that we don't know about or support and also more than 1 record."""
+    from starfleet.starbase.entrypoints import fanout_payload_lambda_handler
+
+    # Embed more than 1 event and also embed an unrecognized event within the loop:
+    s3_event = json.loads(fanout_lambda_s3_payload["Records"][0]["body"])
+    s3_event["Records"].append({"lol": "aliens"})
+    fanout_lambda_s3_payload["Records"][0]["body"] = json.dumps(s3_event)
+    with mock.patch("starfleet.starbase.main.LOGGER") as mocked_logger:
+        fanout_payload_lambda_handler(fanout_lambda_s3_payload, object())
+    log_entries = [
+        "[🚨] Received 2 nested events! Going to loop over them, but this should really be used to re-invoke the fan out!",
+        "[👽] Received a nested record: `{'lol': 'aliens'}` we don't support! Dropping it.",
+    ]
+    for entry in log_entries:
+        found = False
+        for call in mocked_logger.error.call_args_list:
+            if call[0][0] == entry:
+                found = True
+                break
+        assert found
+
+    # Swap out the full body with something we don't support:
+    fanout_lambda_s3_payload["Records"][0]["body"] = '{"lol": "aliens"}'
+    with mock.patch("starfleet.starbase.main.LOGGER") as mocked_logger:
+        fanout_payload_lambda_handler(fanout_lambda_s3_payload, object())
+    assert mocked_logger.error.call_args[0][0] == "[👽] Received an event: `{'lol': 'aliens'}` we don't support! Dropping it."
+
+
 def test_fan_out_invalid_worker(worker_ships: StarfleetWorkerShipLoader) -> None:
-    """This tests that an invalid worker specified in the template throws the proper error back out."""
+    """This tests that an invalid worker specified in the template throws the proper error back out"""
     from starfleet.starbase.main import fan_out_payload, NoShipPluginError
 
     with pytest.raises(NoShipPluginError):
@@ -226,7 +330,7 @@ def test_fan_out_invalid_worker(worker_ships: StarfleetWorkerShipLoader) -> None
 
 
 def test_fan_out_invalid_template(worker_ships: StarfleetWorkerShipLoader) -> None:
-    """Tests what happens when an invalid template is loaded by the fan out Lambda execution."""
+    """Tests what happens when an invalid template is loaded by the fan out Lambda execution"""
     from starfleet.starbase.main import fan_out_payload, ValidationError
 
     with mock.patch("starfleet.starbase.main.fetch_template", lambda *args: {"not": "conformant with schema"}):
@@ -248,7 +352,6 @@ def test_multiple_records_warning_fanout(test_index: AccountIndexInstance) -> No
     assert mocked_logger.error.call_args.args[0].startswith("[🚨] Received more than 1 event for fan out!")
 
 
-# pylint: disable=too-many-locals
 def test_fan_out_account_regions(
     aws_s3: BaseClient,
     aws_sqs: BaseClient,

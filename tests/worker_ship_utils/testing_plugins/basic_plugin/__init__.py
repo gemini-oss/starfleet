@@ -46,7 +46,6 @@ def group_two_command_two():
 class TestingStarfleetWorkerPlugin(StarfleetWorkerShip):
     """Testing Starfleet worker plugin."""
 
-    worker_ship_name = "TestingStarfleetWorkerPlugin"
     configuration_template_class = WorkerShipBaseConfigurationTemplate
     payload_template_class = WorkerShipPayloadBaseTemplate
 
@@ -62,13 +61,9 @@ class TestingStarfleetWorkerPluginTwo(TestingStarfleetWorkerPlugin):
         """This will execute the job from the payload."""
         raise NotImplementedError("pew pew pew")  # pragma: no cover
 
-    worker_ship_name = "TestingStarfleetWorkerPluginTwo"
-
 
 class TestingStarfleetWorkerPluginThree(TestingStarfleetWorkerPlugin):
     """A second testing Starfleet worker plugin."""
-
-    worker_ship_name = "TestingStarfleetWorkerPluginThree"
 
     def execute(self, commit: bool = False) -> None:
         """This will execute the job from the payload."""

@@ -45,27 +45,27 @@ class StarfleetWorkerShipLoader:
         try:
             for _, plugin_classes in find_plugins(self._worker_ship_path, self._worker_ship_prefix, "WORKER_SHIP_PLUGINS", StarfleetWorkerShip).items():
                 for plugin in plugin_classes:
-                    LOGGER.debug(f"[🔧] Configuring worker ship: {plugin.worker_ship_name}")  # noqa
+                    LOGGER.debug(f"[🔧] Configuring worker ship: {plugin.get_worker_ship_name()}")  # noqa
 
                     # Check if the worker has a configuration entry. If not then skip:
-                    worker_ship_config = STARFLEET_CONFIGURATION.config.get(plugin.worker_ship_name)  # noqa
+                    worker_ship_config = STARFLEET_CONFIGURATION.config.get(plugin.get_worker_ship_name())  # noqa
                     if worker_ship_config:
                         # If there is a configuration entry, then we need to validate the correct configuration:
                         errors = plugin.configuration_template_class().validate(worker_ship_config)  # noqa
                         if errors:
-                            raise BadConfigurationError(f"[💥] Worker ship: {plugin.worker_ship_name} has an invalid configuration. {str(errors)}")  # noqa
+                            raise BadConfigurationError(f"[💥] Worker ship: {plugin.get_worker_ship_name()} has an invalid configuration. {str(errors)}")  # noqa
 
                         # Check that the worker ship is enabled:
                         if not worker_ship_config["Enabled"]:
-                            LOGGER.debug(f"[⏭️] Worker ship: {plugin.worker_ship_name} is DISABLED in it's configuration. Skipping...")  # noqa
+                            LOGGER.debug(f"[⏭️] Worker ship: {plugin.get_worker_ship_name()} is DISABLED in it's configuration. Skipping...")  # noqa
                             continue
 
                         # Instantiate the worker class:
-                        self._worker_ships[plugin.worker_ship_name] = plugin()  # noqa
-                        LOGGER.debug(f"[👍] Worker ship: {plugin.worker_ship_name} is properly configured and ENABLED.")  # noqa
+                        self._worker_ships[plugin.get_worker_ship_name()] = plugin()  # noqa
+                        LOGGER.debug(f"[👍] Worker ship: {plugin.get_worker_ship_name()} is properly configured and ENABLED.")  # noqa
 
                     else:
-                        LOGGER.debug(f"[⏭️] Worker ship: {plugin.worker_ship_name} has no discovered configuration. Skipping... ")  # noqa
+                        LOGGER.debug(f"[⏭️] Worker ship: {plugin.get_worker_ship_name()} has no discovered configuration. Skipping... ")  # noqa
                         continue
 
         except Exception as exc:

@@ -89,13 +89,13 @@ def test_worker_lambda_handler(test_configuration: Dict[str, Any]) -> None:
     assert mocked_logger.error.call_args.args[0] == "[💥] Encountered major problem processing the payload. See the stacktrace for details!"
 
     # Test with an invalid configuration:
-    test_configuration[TestingStarfleetWorkerPlugin.worker_ship_name].pop("Enabled")
+    test_configuration[TestingStarfleetWorkerPlugin.get_worker_ship_name()].pop("Enabled")
     with pytest.raises(BadConfigurationError) as err:
         normal_func(event, object())  # pylint: disable=no-value-for-parameter
     assert "Missing data for required field." in str(err.value)
 
     # Test with a missing configuration:
-    test_configuration.pop(TestingStarfleetWorkerPlugin.worker_ship_name)
+    test_configuration.pop(TestingStarfleetWorkerPlugin.get_worker_ship_name())
     with pytest.raises(BadConfigurationError) as err:
         normal_func(event, object())  # pylint: disable=no-value-for-parameter
     assert str(err.value) == "[💥] No configuration found for the worker"
