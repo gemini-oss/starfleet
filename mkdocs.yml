@@ -53,12 +53,15 @@ markdown_extensions:
   - pymdownx.keys
   - pymdownx.mark
   - pymdownx.tilde
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - toc:
       toc_depth: 3
       permalink: true
 
 extra_css:
   - stylesheets/extra.css
+
 nav:
   - Home: index.md
   - Architecture:
@@ -70,8 +73,16 @@ nav:
     - Resident IAM Role: architecture/ResidentIAMRole.md
     - Starbase: architecture/Starbase.md
     - CLI: architecture/CLI.md
+  - Installation Guide:
+    - Installation Overview: installation/Overview.md
+    - Set up IAM: installation/IAM.md
+    - Prepare Configuration: installation/PrepareConfiguration.md
+    - Prepare Payload Templates: installation/PreparePayload.md
+    - Run AWS SAM: installation/RunSAM.md
+    - Make the Account Index: installation/MakeAccountIndex.md
+    - Wrapping Up: installation/WrapUp.md
   - Developer Guide:
-    - Overview: developerGuide/Overview.md
+    - Developer Overview: developerGuide/Overview.md
     - Primary Components:
       - Loggers: developerGuide/primaryComponents/Loggers.md
       - Configuration Manager: developerGuide/primaryComponents/ConfigurationManager.md
@@ -83,6 +94,5 @@ nav:
       - Account Indexer: developerGuide/primaryComponents/AccountIndexer.md
     - AWS SAM Configuration: developerGuide/SAMConfiguration.md
     - Check List: developerGuide/CheckList.md
-  - Installation: Installation.md
   - User Guide: UserGuide.md
   - Code Reference: reference/
