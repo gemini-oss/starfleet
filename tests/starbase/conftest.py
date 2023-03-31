@@ -188,7 +188,7 @@ def account_region_payload_templates(aws_s3: BaseClient, template_bucket: str) -
 
 @pytest.fixture
 def fanout_lambda_payload() -> Dict[str, Any]:
-    """This is the payload from SQS encoded in the Body of the dictionary. Not including the rest of the SQS details."""
+    """This is the payload from SQS encoded in the Body of the dictionary (fan out payload from the timed events). Not including the rest of the SQS details."""
     return {"Records": [{"body": '{"worker_ship": "TestingStarfleetWorkerPlugin", "template_prefix": "TestingStarfleetWorkerPlugin/template1.yaml"}'}]}
 
 

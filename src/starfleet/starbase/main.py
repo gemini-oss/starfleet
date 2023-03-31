@@ -7,6 +7,7 @@ This defines all the major components and logic of the starbase
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+import json
 from typing import Any, Dict, Tuple, Optional
 from urllib.parse import unquote_plus
 
@@ -211,8 +212,8 @@ def _fan_out_payload_logic(ship: StarfleetWorkerShipInstance, template_prefix: s
     sqs_client = boto3.client("sqs", region_name=starfleet_config["DeploymentRegion"])
     if ship.fan_out_strategy == FanOutStrategy.SINGLE_INVOCATION:
         LOGGER.info(f"[🚀] Tasking worker ship: {ship.worker_ship_name}")
-        # For the single fan out strategy, we just pass on the template (schema dumped from verified) without additional modification:
-        sqs_client.send_message(QueueUrl=ship_config["InvocationQueueUrl"], MessageBody=schema.dumps(verified_template))
+        # For the single fan out strategy, we just pass on the template without additional modification:
+        sqs_client.send_message(QueueUrl=ship_config["InvocationQueueUrl"], MessageBody=json.dumps(template))
         LOGGER.info(f"[🛸] Worker Ship: {ship.worker_ship_name} tasked for the SINGLE_INVOCATION fan out")
 
     elif ship.fan_out_strategy == FanOutStrategy.ACCOUNT:
@@ -224,19 +225,32 @@ def _fan_out_payload_logic(ship: StarfleetWorkerShipInstance, template_prefix: s
 
         LOGGER.info(f"[🚀] Tasking worker ship: {ship.worker_ship_name}")
         account_fanout(
-            verified_template, schema, starfleet_config["TemplateBucket"], template_prefix, ship_config["InvocationQueueUrl"], sqs_client, ship.worker_ship_name
+            verified_template,
+            template,
+            starfleet_config["TemplateBucket"],
+            template_prefix,
+            ship_config["InvocationQueueUrl"],
+            sqs_client,
+            ship.worker_ship_name,
         )
         LOGGER.info(f"[🛸] Worker Ship: {ship.worker_ship_name} tasked for the ACCOUNT fan out")
 
     else:
         if not isinstance(schema, BaseAccountRegionPayloadTemplate):
             LOGGER.error(
-                f"[❌] The worker ship: {ship.worker_ship_name} template class does not subclass the `BaseAccountRegionPayloadTemplate`, which is required for `ACCOUNT_REGION` fan outs."
+                f"[❌] The worker ship: {ship.worker_ship_name} template class does not subclass the `BaseAccountRegionPayloadTemplate`, "
+                "which is required for `ACCOUNT_REGION` fan outs."
             )
             raise InvalidTemplateForFanoutError()
 
         LOGGER.info(f"[🚀] Tasking worker ship: {ship.worker_ship_name}")
         account_region_fanout(
-            verified_template, schema, starfleet_config["TemplateBucket"], template_prefix, ship_config["InvocationQueueUrl"], sqs_client, ship.worker_ship_name
+            verified_template,
+            template,
+            starfleet_config["TemplateBucket"],
+            template_prefix,
+            ship_config["InvocationQueueUrl"],
+            sqs_client,
+            ship.worker_ship_name,
         )
         LOGGER.info(f"[🛸] Worker Ship: {ship.worker_ship_name} tasked for the ACCOUNT_REGION fan out")
