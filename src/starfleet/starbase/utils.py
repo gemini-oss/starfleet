@@ -18,7 +18,6 @@ import yaml
 
 from starfleet.account_index.resolvers import resolve_worker_template_accounts, resolve_worker_template_account_regions
 from starfleet.utils.logging import LOGGER
-from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplateInstance
 
 
 @paginated("Contents", request_pagination_marker="ContinuationToken", response_pagination_marker="NextContinuationToken")
@@ -94,7 +93,7 @@ def task_starbase_fanout(templates: List[str], queue_url: str, sqs_client: BaseC
 
 def account_fanout(
     verified_template: Dict[str, Any],
-    schema: BaseAccountPayloadTemplateInstance,
+    original_template: Dict[str, Any],
     template_bucket: str,
     template_prefix: str,
     queue_url: str,
@@ -113,8 +112,8 @@ def account_fanout(
     # For each account we need to send over the template to SQS:
     batch = []
     for account in accounts_to_operate_on:
-        verified_template["starbase_assigned_account"] = account
-        batch.append({"Id": account, "MessageBody": schema.dumps(verified_template)})
+        original_template["StarbaseAssignedAccount"] = account
+        batch.append({"Id": account, "MessageBody": json.dumps(original_template)})
 
         if len(batch) == 10:
             LOGGER.debug(f"[ℹ️] Processing SQS batch to queue: {queue_url}...")
@@ -129,7 +128,7 @@ def account_fanout(
 
 def account_region_fanout(
     verified_template: Dict[str, Any],
-    schema: BaseAccountPayloadTemplateInstance,
+    original_template: Dict[str, Any],
     template_bucket: str,
     template_prefix: str,
     queue_url: str,
@@ -153,11 +152,11 @@ def account_region_fanout(
     # For each account we need to send over the template to SQS:
     batch = []
     for account, regions in accounts_regions_map.items():
-        verified_template["starbase_assigned_account"] = account
+        original_template["StarbaseAssignedAccount"] = account
 
         for region in regions:
-            verified_template["starbase_assigned_region"] = region
-            batch.append({"Id": f"{account}{region}", "MessageBody": schema.dumps(verified_template)})
+            original_template["StarbaseAssignedRegion"] = region
+            batch.append({"Id": f"{account}{region}", "MessageBody": json.dumps(original_template)})
 
             if len(batch) == 10:
                 LOGGER.debug(f"[ℹ️] Processing SQS batch to queue: {queue_url}...")
