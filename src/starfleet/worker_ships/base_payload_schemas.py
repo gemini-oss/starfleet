@@ -105,7 +105,7 @@ class IncludeAccountsSpecificationSchema(AccountsSpecificationSchema):
         # Verify that something came in:
         else:
             missing = True
-            for field in ["by_names", "ByIds", "ByOrgUnits", "ByTags"]:
+            for field in ["by_names", "by_ids", "by_org_units", "by_tags"]:
                 if data.get(field):
                     missing = False
                     break

@@ -102,11 +102,18 @@ WorkerShipPayloadBaseTemplateInstance = TypeVar("WorkerShipPayloadBaseTemplateIn
 
 
 class StarfleetWorkerShip:
-    """The base class for Starfleet worker ship plugins. All the attributes here should either be defined statically or in the __init__ of the subclass.
+    """
+    The base class for Starfleet worker ship plugins. All the attributes here should either be defined statically or in the __init__ of the subclass.
 
-    The instantiated object type hint is `StarFleetWorkerShipInstance`."""
+    The instantiated object type hint is `StarFleetWorkerShipInstance`.
+    """
 
     # TODO: Should the invocation sources be defined here or the configuration?? (right now it's in the configuration)
+
+    # This is the template class for the worker ship. All worker ship payload templates need to be defined.
+    payload_template_class: Type[WorkerShipPayloadBaseTemplate] = WorkerShipPayloadBaseTemplate  # Default to the base
+    payload: WorkerShipPayloadBaseTemplateInstance
+    configuration_template_class: Type[WorkerShipBaseConfigurationTemplate] = WorkerShipBaseConfigurationTemplate  # Default to the base
 
     # This is the fan out strategy for the worker. This is very important and defines the type of job the worker is supposed to do (this also influences the template type).
     fan_out_strategy: FanOutStrategy = FanOutStrategy.SINGLE_INVOCATION
@@ -122,12 +129,6 @@ class StarfleetWorkerShip:
     def worker_ship_name(self) -> str:
         """Returns the name of the worker ship, which is by default the name of the class."""
         return self.get_worker_ship_name()
-
-    configuration_template_class: Type[WorkerShipBaseConfigurationTemplate] = WorkerShipBaseConfigurationTemplate  # Default to the base
-
-    # This is the template class for the worker ship. All worker ship payload templates need to be defined.
-    payload_template_class: Type[WorkerShipPayloadBaseTemplate] = WorkerShipPayloadBaseTemplate  # Default to the base
-    payload: WorkerShipPayloadBaseTemplateInstance
 
     def load_template(self, raw_template: Dict[str, Any]) -> None:
         """This will load the template and store it in the loaded_template attribute. This will raise

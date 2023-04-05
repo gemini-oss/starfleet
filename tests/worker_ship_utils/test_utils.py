@@ -7,19 +7,21 @@ Tests that the CLI utilities are working properly and lambda function utilities 
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+# pylint: disable=unused-argument,unused-import,too-many-locals
 import json
-
-# pylint: disable=unused-argument
 
 from typing import Dict, Any, TypeVar
 from unittest import mock
 
 import click
 import pytest
+from click import Context
 from click.testing import CliRunner
 from marshmallow import ValidationError
 
+from starfleet.account_index.schematics import AccountIndexInstance
 from starfleet.worker_ships.cli_utils import load_payload
+from tests.account_index.conftest import test_index  # noqa
 
 
 @click.group()
@@ -40,22 +42,223 @@ def test_load_payload(test_configuration: Dict[str, Any]) -> None:
 
     # Need to test with a file that exists:
     test_file = __file__.split("test_utils.py", maxsplit=1)[0] + "sample_payloads/sample_payload.yaml"
-    result = runner.invoke(unit_test, ["--payload", test_file])
+    result = runner.invoke(cli_testing_group, ["unit-test", "--payload", test_file])
     assert result.exit_code == 0
 
     # Need to test with file that does not exist:
-    result = runner.invoke(unit_test, ["--payload", "pew pew pew"])
+    result = runner.invoke(cli_testing_group, ["unit-test", "--payload", "pew pew pew"])
     assert "Error: Invalid value for '--payload': 'pew pew pew': No such file or directory" in result.output
 
     # Need to test with a file that is empty:
     test_file = __file__.split("test_utils.py", maxsplit=1)[0] + "sample_payloads/empty_payload.yaml"
-    result = runner.invoke(unit_test, ["--payload", test_file])
+    result = runner.invoke(cli_testing_group, ["unit-test", "--payload", test_file])
     assert "[💥] Problem loading the YAML template. See the stacktrace below!\nError: [💥] The loaded YAML is EMPTY!!" in result.output
 
     # With an invalid YAML:
     test_file = __file__.split("test_utils.py", maxsplit=1)[0] + "sample_payloads/invalid_yaml.yaml"
-    result = runner.invoke(unit_test, ["--payload", test_file])
+    result = runner.invoke(cli_testing_group, ["unit-test", "--payload", test_file])
     assert "[💥] Problem loading the YAML template. See the stacktrace below!" in result.output
+
+
+def test_starfleet_single_invoke_command(test_index: AccountIndexInstance) -> None:  # noqa  # pylint: disable=redefined-outer-name
+    """This tests that the StarfleetSingleInvokeCommand works."""
+    from starfleet.worker_ships.cli_utils import BadWorkerError, BadWorkerTemplateError, StarfleetSingleInvokeCommand
+    from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip, WorkerShipPayloadBaseTemplate
+
+    runner = CliRunner()
+
+    bad_template = __file__.split("test_utils.py", maxsplit=1)[0] + "sample_payloads/invalid_base.yaml"
+    good_template = __file__.split("test_utils.py", maxsplit=1)[0] + "sample_payloads/sample_payload.yaml"
+
+    class SingleInvokeTestShip(StarfleetWorkerShip):  # pylint: disable=abstract-method
+        """Testing for an SINGLE_INVOCATION worker"""
+
+        payload_template_class = WorkerShipPayloadBaseTemplate
+
+    @click.command(cls=StarfleetSingleInvokeCommand)
+    def bad_command(**kwargs) -> None:  # noqa # pragma: no cover
+        """A bad command that won't run"""
+
+    # Without a payload:
+    result = runner.invoke(bad_command)
+    assert "Error: Missing option '--payload'" in result.output
+
+    # With the payload but command lacks the proper context set:
+    result = runner.invoke(bad_command, ["--payload", bad_template])
+    assert isinstance(result.exception, BadWorkerError)
+
+    # To be used later...
+    instantiated_worker = SingleInvokeTestShip()
+
+    @click.group()
+    @click.pass_context
+    def good_group(ctx: Context) -> None:
+        """A good click command group"""
+        ctx.obj = instantiated_worker
+
+    @good_group.command(cls=StarfleetSingleInvokeCommand)
+    @click.pass_context
+    def good_command(ctx: Context, **kwargs) -> None:  # noqa
+        """A good click command"""
+        assert True
+
+    # Template is invalid:
+    result = runner.invoke(good_group, ["good-command", "--payload", bad_template])
+    assert isinstance(result.exception, ValidationError)
+
+    # Everything is correct:
+    result = runner.invoke(good_group, ["good-command", "--payload", good_template])
+    assert "🆗" in result.output
+
+    # Finally, verify that we triple check the payload type:
+    instantiated_worker.payload_template_class = str  # just put some random class in here.
+    result = runner.invoke(good_group, ["good-command", "--payload", good_template])
+    assert isinstance(result.exception, BadWorkerTemplateError)
+
+
+def test_starfleet_account_command(test_index: AccountIndexInstance) -> None:  # noqa  # pylint: disable=redefined-outer-name
+    """This tests that the StarfleetAccountCommand works."""
+    from starfleet.worker_ships.cli_utils import BadWorkerError, BadWorkerTemplateError, StarfleetAccountCommand
+    from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip
+    from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplate
+
+    runner = CliRunner()
+
+    bad_template = __file__.split("test_utils.py", maxsplit=1)[0] + "sample_payloads/sample_payload.yaml"
+    good_template = __file__.split("test_utils.py", maxsplit=1)[0] + "sample_payloads/sample_account_payload.yaml"
+
+    class AccountTestShip(StarfleetWorkerShip):  # pylint: disable=abstract-method
+        """Testing for an ACCOUNT-REGION worker"""
+
+        payload_template_class = BaseAccountPayloadTemplate
+
+    @click.command(cls=StarfleetAccountCommand)
+    def bad_command(**kwargs) -> None:  # noqa # pragma: no cover
+        """A bad command that won't run"""
+
+    # Without a payload:
+    result = runner.invoke(bad_command)
+    assert "Error: Missing option '--payload'" in result.output
+
+    # Without an account ID:
+    result = runner.invoke(bad_command, ["--payload", bad_template])
+    assert "Error: Missing option '--account-id'" in result.output
+
+    # With all 2 but the bad command lacks the proper context set:
+    result = runner.invoke(bad_command, ["--payload", bad_template, "--account-id", "012345678910"])
+    assert isinstance(result.exception, BadWorkerError)
+
+    # To be used later...
+    instantiated_worker = AccountTestShip()
+
+    @click.group()
+    @click.pass_context
+    def good_group(ctx: Context) -> None:
+        """A good click command group"""
+        ctx.obj = instantiated_worker
+
+    @good_group.command(cls=StarfleetAccountCommand)
+    @click.pass_context
+    def good_command(ctx: Context, **kwargs) -> None:  # noqa
+        """A good click command"""
+        assert True
+
+    # Template is invalid:
+    result = runner.invoke(good_group, ["good-command", "--payload", bad_template, "--account-id", "012345678910"])
+    assert isinstance(result.exception, ValidationError)
+
+    # Valid Template, but not processing the account in question:
+    result = runner.invoke(good_group, ["good-command", "--payload", good_template, "--account-id", "012345678910"])
+    assert "The account provided is not applicable for this template." in result.output
+
+    # Everything is correct:
+    result = runner.invoke(good_group, ["good-command", "--payload", good_template, "--account-id", "000000000001"])
+    assert "🆗" in result.output
+
+    # Verify that the worker payload contains the proper account ID and region passed in from the successful run:
+    assert instantiated_worker.payload["starbase_assigned_account"] == "000000000001"
+
+    # Finally, verify that we triple check the payload type:
+    instantiated_worker.payload_template_class = str  # just put some random class in here.
+    result = runner.invoke(good_group, ["good-command", "--payload", good_template, "--account-id", "000000000001"])
+    assert isinstance(result.exception, BadWorkerTemplateError)
+
+
+def test_starfleet_account_region_command(test_index: AccountIndexInstance) -> None:  # noqa  # pylint: disable=redefined-outer-name
+    """This tests that the StarfleetAccountRegionCommand works."""
+    from starfleet.worker_ships.cli_utils import BadWorkerError, BadWorkerTemplateError, StarfleetAccountRegionCommand
+    from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip
+    from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplate, BaseAccountRegionPayloadTemplate
+
+    runner = CliRunner()
+
+    bad_template = __file__.split("test_utils.py", maxsplit=1)[0] + "sample_payloads/sample_payload.yaml"
+    good_template = __file__.split("test_utils.py", maxsplit=1)[0] + "sample_payloads/sample_account_region_payload.yaml"
+
+    class AccountRegionTestShip(StarfleetWorkerShip):  # pylint: disable=abstract-method
+        """Testing for an ACCOUNT-REGION worker"""
+
+        payload_template_class = BaseAccountRegionPayloadTemplate
+
+    @click.command(cls=StarfleetAccountRegionCommand)
+    def bad_command(**kwargs) -> None:  # noqa # pragma: no cover
+        """A bad command that won't run"""
+
+    # Without a payload:
+    result = runner.invoke(bad_command)
+    assert "Error: Missing option '--payload'" in result.output
+
+    # Without an account ID:
+    result = runner.invoke(bad_command, ["--payload", bad_template])
+    assert "Error: Missing option '--account-id'" in result.output
+
+    # Without the region:
+    result = runner.invoke(bad_command, ["--payload", bad_template, "--account-id", "012345678910"])
+    assert "Error: Missing option '--region'" in result.output
+
+    # With all 3 but the bad command lacks the proper context set:
+    result = runner.invoke(bad_command, ["--payload", bad_template, "--account-id", "012345678910", "--region", "us-east-1"])
+    assert isinstance(result.exception, BadWorkerError)
+
+    # To be used later...
+    instantiated_worker = AccountRegionTestShip()
+
+    @click.group()
+    @click.pass_context
+    def good_group(ctx: Context) -> None:
+        """A good click command group"""
+        ctx.obj = instantiated_worker
+
+    @good_group.command(cls=StarfleetAccountRegionCommand)
+    @click.pass_context
+    def good_command(ctx: Context, **kwargs) -> None:  # noqa
+        """A good click command"""
+        assert True
+
+    # Template is invalid:
+    result = runner.invoke(good_group, ["good-command", "--payload", bad_template, "--account-id", "012345678910", "--region", "us-east-1"])
+    assert isinstance(result.exception, ValidationError)
+
+    # Valid Template, but not processing the account and region in question:
+    result = runner.invoke(good_group, ["good-command", "--payload", good_template, "--account-id", "012345678910", "--region", "us-east-1"])
+    assert "The account/region provided is not applicable for this template." in result.output
+
+    # Valid Template, but not processing the region in question:
+    result = runner.invoke(good_group, ["good-command", "--payload", good_template, "--account-id", "111111111111", "--region", "us-west-1"])
+    assert "The account/region provided is not applicable for this template." in result.output
+
+    # Everything is correct:
+    result = runner.invoke(good_group, ["good-command", "--payload", good_template, "--account-id", "000000000001", "--region", "us-east-1"])
+    assert "🆗" in result.output
+
+    # Verify that the worker payload contains the proper account ID and region passed in from the successful run:
+    assert instantiated_worker.payload["starbase_assigned_account"] == "000000000001"
+    assert instantiated_worker.payload["starbase_assigned_region"] == "us-east-1"
+
+    # Finally, verify that we triple check the payload type:
+    instantiated_worker.payload_template_class = BaseAccountPayloadTemplate
+    result = runner.invoke(good_group, ["good-command", "--payload", good_template, "--account-id", "000000000001", "--region", "us-east-1"])
+    assert isinstance(result.exception, BadWorkerTemplateError)
 
 
 def test_worker_lambda_handler(test_configuration: Dict[str, Any]) -> None:

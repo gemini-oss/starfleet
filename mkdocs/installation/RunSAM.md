@@ -58,7 +58,6 @@ We need to update the SAM configuration, _manually_, to allow it to create IAM r
 capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]
 
 [TEST.validate.parameters]
-template_file = "test_sam_template.yaml"
 region = "YOUR_REGION_HERE"
 lint = true
 

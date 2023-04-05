@@ -1,0 +1,8 @@
+AwsConfigWorkerShip:
+  Enabled: True
+  TemplatePrefix: awsconfig/
+  InvocationQueueUrl: https://sqs.amazonaws.com/replace-me
+  InvocationSources:
+      - EVENTBRIDGE_TIMED_EVENT
+  EventBridgeTimedFrequency: SIX_HOURLY
+  WorkerRoleToAssume: starfleet-worker-basic-test-role

@@ -37,7 +37,7 @@ tests = [
     "mkdocstrings[python]",
     "mkdocs-gen-files",
     "mkdocs-literate-nav",
-    "mkdocs-section-index"
+    "mkdocs-section-index",
 ]
 
 [tool.pytest.ini_options]

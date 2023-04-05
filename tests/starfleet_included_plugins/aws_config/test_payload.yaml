@@ -1,0 +1,61 @@
+TemplateName: AWSConfigEnablement
+TemplateDescription: Enabled AWS Config everywhere
+IncludeAccounts:
+    AllAccounts: True
+OperateInOrgRoot: True
+IncludeRegions:
+    - ALL
+AccountOverrideConfigurations:
+    -
+        IncludeAccounts:
+            ByIds:
+                - "000000000001"
+        IncludeRegions:
+            - us-west-1
+        DeliveryChannelDetails:
+            BucketName: bucket-000000000001
+            BucketKeyPrefix: some/prefix/
+            S3DeliveryFrequency: TwentyFour_Hours
+            S3KmsKeyArn: arn:aws:kms:us-west-1:000000000001:key/1234-1445-1919232
+            SnsTopicArn: arn:aws:sns:us-west-1:000000000001:topic/sometopic
+            PreferredName: us-west-1-000000000001
+        RecorderConfiguration:
+            PreferredName: us-west-1-000000000001
+            ConfigRoleName: MyConfigRole
+            RecordingEnabled: True
+            RecordingGroup:
+                ResourceTypes:
+                    - ALL
+                GlobalsInRegions:
+                    - us-west-1
+        RetentionPeriodInDays: 30
+    -
+        IncludeAccounts:
+            ByIds:
+                - "000000000002"
+        IncludeRegions:
+            - us-west-1
+        DeliveryChannelDetails:
+            BucketName: bucket-000000000002
+            S3DeliveryFrequency: TwentyFour_Hours
+        RecorderConfiguration:
+            ConfigRoleName: MyConfigRole
+            RecordingEnabled: True
+            RecordingGroup:
+                ResourceTypes:
+                    - AWS::S3::Bucket
+                    - AWS::EC2::SecurityGroup
+        RetentionPeriodInDays: 2557
+DefaultConfiguration:
+    DeliveryChannelDetails:
+        BucketName: all-bucket
+        S3DeliveryFrequency: TwentyFour_Hours
+    RecorderConfiguration:
+        ConfigRoleName: MyConfigRole
+        RecordingEnabled: True
+        RecordingGroup:
+            ResourceTypes:
+                - ALL
+            GlobalsInRegions:
+                - us-east-1
+    RetentionPeriodInDays: 2557

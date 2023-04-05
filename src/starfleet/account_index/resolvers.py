@@ -32,7 +32,7 @@ def resolve_worker_template_accounts(loaded_template: Dict[str, Any]) -> Set[str
     return resolved_accounts
 
 
-def resolve_worker_template_account_regions(loaded_template: Dict[str, Any]) -> Dict[str, Set[str]]:
+def resolve_worker_template_account_regions(loaded_template: Dict[str, Any], org_root_check: bool = True) -> Dict[str, Set[str]]:
     """
     This will resolve the accounts/regions that a given worker template is supposed to operate on. This receives a deserialized dictionary that was based on the
     `starfleet.worker_ships.base_payload_schemas.BaseAccountRegionPayloadTemplate` (or a subclass or equivalent).
@@ -40,9 +40,16 @@ def resolve_worker_template_account_regions(loaded_template: Dict[str, Any]) -> 
     This will return a Dictionary of the account ID and set of regions to operate over.
 
     This is scoped to the `STARFLEET` configuration value for `ScopeToRegions`. If that is set, then that is the maximum list of regions that can be tasked.
+
+    There is an optional parameter called `org_root_check`. This is a boolean that is default True. This is an optional if you want to use this function in
+    a worker where you define a similar config to the BaseAccountRegionPayloadTemplate, but don't have a need for root checking. The AWS Config worker ship is an
+    example of this.
     """
     # Get the accounts:
-    resolved_accounts = resolve_worker_template_accounts(loaded_template)
+    if org_root_check:
+        resolved_accounts = resolve_worker_template_accounts(loaded_template)
+    else:
+        resolved_accounts = resolve_include_exclude(loaded_template)
 
     # Grab the requested regions:
     excluded_regions = loaded_template["exclude_regions"] if loaded_template["exclude_regions"] else set()
@@ -56,7 +63,7 @@ def resolve_worker_template_account_regions(loaded_template: Dict[str, Any]) -> 
     if scoped_regions:
         LOGGER.debug(f"[🌐] Region scoping is enabled to only task within the following regions: {', '.join(scoped_regions)}")
         regions_accounts_map = {}
-        # Fetch the region->accounts mapping but we are only going to process them if it's permitted in the scope:
+        # Fetch the region->accounts mapping, but we are only going to process them if it's permitted in the scope:
         for region, accounts in ACCOUNT_INDEX.index.get_accounts_by_regions(resolved_regions).items():
             if region in scoped_regions:
                 regions_accounts_map[region] = accounts
