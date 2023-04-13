@@ -61,7 +61,7 @@ class StarfleetDefaultAccountIndex(AccountIndex):
                 f"[🪣] Fetching the index from the S3 bucket: {config['index_bucket']}, region: {config['bucket_region']}, path: {config['index_object_path']}..."
             )
             client = boto3.client("s3", region_name=config["bucket_region"])
-            account_dict = json.loads(client.get_object(Bucket=config["index_bucket"], Key=config["index_object_path"])["Body"].read())
+            account_dict = json.loads(client.get_object(Bucket=config["index_bucket"], Key=config["index_object_path"])["Body"].read())["accounts"]
             self._load_inventory(account_dict)
             LOGGER.debug("[🆗] Index loaded.")
 
