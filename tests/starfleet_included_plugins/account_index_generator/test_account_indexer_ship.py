@@ -174,7 +174,9 @@ def test_full_run(
 
     if commit:
         # Verify that we got what we needed from S3:
-        account_index = json.loads(aws_s3.get_object(Bucket=inventory_bucket, Key="accountIndex.json")["Body"].read())
+        loaded_index = json.loads(aws_s3.get_object(Bucket=inventory_bucket, Key="accountIndex.json")["Body"].read())
+        assert datetime.strptime(loaded_index["generated"], "%Y-%m-%dT%H:%M:%SZ")
+        account_index = loaded_index["accounts"]
 
         # Pop out the timestamps from both:
         for account in list(account_index.values()) + list(account_map.values()):

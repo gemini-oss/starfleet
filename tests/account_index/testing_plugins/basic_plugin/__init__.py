@@ -28,7 +28,7 @@ class TestingAccountIndexPlugin(StarfleetDefaultAccountIndex):
 
         path = f"{tests.starfleet_included_plugins.account_index_generator.__path__[0]}/generatedIndex.json"
         with open(path, "r", encoding="utf-8") as file:
-            account_dict = json.loads(file.read())
+            account_dict = json.loads(file.read())["accounts"]
 
         self._load_inventory(account_dict)
 

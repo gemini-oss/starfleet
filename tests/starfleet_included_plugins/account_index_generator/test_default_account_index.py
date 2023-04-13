@@ -8,6 +8,7 @@ This defines all the tests used by the Default Account Index
 :Author: Mike Grima <michael.grima@gemini.com>
 """
 # pylint: disable=unused-argument,too-many-locals
+from datetime import datetime
 from typing import Any, Dict
 
 import pytest
@@ -55,18 +56,20 @@ def test_invalid_json(account_index_config: Dict[str, Any], aws_s3: BaseClient, 
 def test_loading(account_index_config: Dict[str, Any], aws_s3: BaseClient, inventory_bucket: str, index_obj: Dict[str, Any]) -> None:
     """This tests that the index can be successfully loaded and that the index_obj fixture works."""
     index = StarfleetDefaultAccountIndex()
-    assert len(index.account_ids) == len(index_obj.keys())
-    assert len(index.alias_map) == len(index_obj.keys())
+    assert datetime.strptime(index_obj["generated"], "%Y-%m-%dT%H:%M:%SZ")
+    account_map = index_obj["accounts"]
+    assert len(index.account_ids) == len(account_map.keys())
+    assert len(index.alias_map) == len(account_map.keys())
     assert index.alias_map["Account 20".lower()] == "000000000020"
     for region_mapping in index.regions_map.values():
-        assert len(region_mapping) == len(index_obj.keys())
+        assert len(region_mapping) == len(account_map.keys())
 
-    assert len(index.ou_map["r-123456"]) == len(index.ou_map["ROOT".lower()]) == len(index_obj.keys())
-    assert len(index.ou_map["ou-1234-5678910"]) == len(index.ou_map["SomeOU".lower()]) == len(index_obj.keys()) - 1
+    assert len(index.ou_map["r-123456"]) == len(index.ou_map["ROOT".lower()]) == len(account_map.keys())
+    assert len(index.ou_map["ou-1234-5678910"]) == len(index.ou_map["SomeOU".lower()]) == len(account_map.keys()) - 1
 
     for tag_values in index.tag_map.values():
         for values in tag_values.values():
-            assert len(values) == len(index_obj.keys())
+            assert len(values) == len(account_map.keys())
 
 
 def test_get_accounts_by_id(index_obj: Dict[str, Any]) -> None:
@@ -89,7 +92,7 @@ def test_get_accounts_by_tag(index_obj: Dict[str, Any]) -> None:
     """This tests getting accounts by account tags"""
     index = StarfleetDefaultAccountIndex()
     accounts = index.get_accounts_by_tag("kEy1", "VaLuE1")  # This tests casing as well
-    assert len(accounts) == len(index_obj.keys())
+    assert len(accounts) == len(index_obj["accounts"].keys())
 
     # With accounts that don't exist:
     assert not index.get_accounts_by_tag("fake", "tag")
@@ -99,7 +102,7 @@ def test_get_accounts_by_ou(index_obj: Dict[str, Any]) -> None:
     """This tests getting accounts by OUs"""
     index = StarfleetDefaultAccountIndex()
     accounts = index.get_accounts_by_ou("sOMeOu")  # This tests casing as well
-    assert len(accounts) == len(index_obj.keys()) - 1
+    assert len(accounts) == len(index_obj["accounts"].keys()) - 1
     assert "000000000020" not in accounts  # We didn't search for Root
 
     # Try this again, but this time pass in the OU ID. It should be the same result:
@@ -112,20 +115,20 @@ def test_get_accounts_by_regions(index_obj: Dict[str, Any]) -> None:
     regions_map = index.get_accounts_by_regions({"us-east-1", "us-east-2", "fake-region"})  # include a region that doesn't exist
     assert len(regions_map["fake-region"]) == 0
     assert len(regions_map) == 3  # it will include the empty set for fake-region
-    assert len(regions_map["us-east-1"]) == len(regions_map["us-east-2"]) == len(index_obj.keys())
+    assert len(regions_map["us-east-1"]) == len(regions_map["us-east-2"]) == len(index_obj["accounts"].keys())
 
     # Now try getting all the regions:
     all_regions_map = index.get_accounts_for_all_regions()
     assert len(all_regions_map.keys()) > 10  # There are a bunch of regions...
     for accounts in all_regions_map.values():
-        assert len(accounts) == len(index_obj.keys())
+        assert len(accounts) == len(index_obj["accounts"].keys())
 
 
 def test_get_all_accounts(index_obj: Dict[str, Any]) -> None:
     """This tests getting all accounts back"""
     index = StarfleetDefaultAccountIndex()
     accounts = index.get_all_accounts()
-    assert len(accounts) == len(index_obj.keys())
+    assert len(accounts) == len(index_obj["accounts"].keys())
 
 
 def test_get_org_roots(index_obj: Dict[str, Any]) -> None:

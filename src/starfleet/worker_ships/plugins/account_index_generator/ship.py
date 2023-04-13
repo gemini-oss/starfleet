@@ -8,6 +8,7 @@ This contians the entrypoints for both the CLI and Lambda as well.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+from datetime import datetime
 import json
 from typing import Dict, Any, TypeVar
 
@@ -85,13 +86,14 @@ class AccountIndexGeneratorShip(StarfleetWorkerShip):
 
         # Save it to S3:
         if commit:
+            dump_accounts = {"accounts": account_map, "generated": datetime.utcnow().replace(tzinfo=None, microsecond=0).isoformat() + "Z"}
             LOGGER.info(f"[🪣] Saving the report as {self.payload['inventory_object_prefix']} in {self.payload['account_inventory_bucket']}")
             client = boto3.client("s3", region_name=self.payload["inventory_bucket_region"])
             client.put_object(
                 Bucket=self.payload["account_inventory_bucket"],
                 Key=self.payload["inventory_object_prefix"],
                 ACL="bucket-owner-full-control",
-                Body=json.dumps(account_map, indent=4),
+                Body=json.dumps(dump_accounts, indent=4),
                 ContentType="application/json",
             )
 
