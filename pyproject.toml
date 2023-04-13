@@ -25,19 +25,19 @@ starfleet = "starfleet.cli.entrypoint:cli"
 
 [project.optional-dependencies]
 tests = [
-    "pytest",
-    "pytest-cov",
-    "pytest-xdist",
-    "black",
-    "flake8",
-    "pylint",
-    "tox",
-    "moto",
-    "mkdocs",
-    "mkdocstrings[python]",
-    "mkdocs-gen-files",
-    "mkdocs-literate-nav",
-    "mkdocs-section-index",
+    "pytest==7.3.0",
+    "pytest-cov==4.0.0",
+    "pytest-xdist==3.2.1",
+    "black==23.3.0",
+    "flake8==6.0.0",
+    "pylint==2.17.2",
+    "tox==4.4.12",
+    "moto==4.1.7",
+    "mkdocs==1.4.2",
+    "mkdocstrings[python]==0.9.0",
+    "mkdocs-gen-files==0.4.0",
+    "mkdocs-literate-nav==0.6.0",
+    "mkdocs-section-index==0.3.5",
 ]
 
 [tool.pytest.ini_options]
