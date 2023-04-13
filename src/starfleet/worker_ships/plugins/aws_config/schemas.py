@@ -114,10 +114,10 @@ class DeliveryChannelDetails(Schema):
     s3_delivery_frequency = fields.Enum(DeliveryFrequency, required=True, data_key="S3DeliveryFrequency")
 
     # Optionals:
+    preferred_name = fields.String(required=False, load_default="default", data_key="PreferredName")
     bucket_key_prefix = fields.String(required=False, load_default=None, data_key="BucketKeyPrefix")
     s3_kms_key_arn = fields.String(required=False, load_default=None, data_key="S3KmsKeyArn")
     sns_topic_arn = fields.String(required=False, load_default=None, data_key="SnsTopicArn")
-    preferred_name = fields.String(required=False, load_default=None, data_key="PreferredName")
 
 
 class RecorderConfiguration(Schema):
@@ -128,11 +128,11 @@ class RecorderConfiguration(Schema):
     recording_group = fields.Nested(RecordingGroup(), required=True, data_key="RecordingGroup")
 
     # Optionals:
-    preferred_name = fields.String(required=False, load_default=None, data_key="PreferredName")
+    preferred_name = fields.String(required=False, load_default="default", data_key="PreferredName")
 
 
-class AllAccountsConfiguration(Schema):
-    """This is the schema component for defining the AWS Config configuration all accounts that are included in the template.
+class DefaultConfiguration(Schema):
+    """This is the schema component for defining the default AWS Config configuration for all non-overriden account/regions that are included in the template.
 
     *Note:* If you want to override or exclude, then the way to do that is to do the following:
         1. Explicitly exclude the account/region in ExcludeAccounts/ExcludeRegions and/or don't include the account/region in IncludeAccounts/IncludeRegions
@@ -143,13 +143,16 @@ class AllAccountsConfiguration(Schema):
     delivery_channel_details = fields.Nested(DeliveryChannelDetails(), required=True, data_key="DeliveryChannelDetails")
     recorder_configuration = fields.Nested(RecorderConfiguration(), required=True, data_key="RecorderConfiguration")
 
+    # Recommend you use 2557 days (7 years + leap days).
+    retention_period_in_days = fields.Integer(required=True, validate=validate.Range(min=30, max=2557), data_key="RetentionPeriodInDays")
 
-class AccountOverrideConfiguration(AllAccountsConfiguration):
-    """This is exactly like the AllAccountsRecorderConfiguration, but this one allows you to specify accounts and regions to include/exclude.
+
+class AccountOverrideConfiguration(DefaultConfiguration):
+    """This is exactly like the DefaultConfiguration, but this one allows you to specify accounts and regions to include/exclude.
     This borrows the IncludeAccounts, ExcludeAccounts, IncludeRegions, and ExcludeRegions schemas from the base template.
     100% of that is used here and applies here.
 
-    This subclasses the AllAccountsRecorderConfiguration, but overrides some of the components.
+    This subclasses the DefaultConfiguration, but overrides some of the components.
     """
 
     include_accounts = fields.Nested(IncludeAccountsSpecificationSchema(), data_key="IncludeAccounts", required=True)
@@ -209,7 +212,7 @@ class AwsConfigWorkerShipPayloadTemplate(BaseAccountRegionPayloadTemplate):
     Much of the configuration details are mapped 1:1 with AWS's SDK and documentation for AWS Config with some deviations for convenience.
     """
 
-    all_accounts_configuration = fields.Nested(AllAccountsConfiguration(), required=True, data_key="AllAccountsConfiguration")
+    default_configuration = fields.Nested(DefaultConfiguration(), required=True, data_key="DefaultConfiguration")
     account_override_configurations = fields.List(
         fields.Nested(AccountOverrideConfiguration()), required=False, load_default=[], data_key="AccountOverrideConfigurations"
     )

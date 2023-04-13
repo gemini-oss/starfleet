@@ -148,7 +148,7 @@ def test_full_run(
     test_worker_ship_loader: StarfleetWorkerShipLoader,
 ) -> None:
     """This performs the full test run of the worker for both the CLI and also the Lambda."""
-    from starfleet.worker_ships.plugins.account_index_generator.ship import generate, lambda_handler
+    from starfleet.worker_ships.plugins.account_index_generator.ship import account_inventory, lambda_handler
     from starfleet.worker_ships.plugins.account_index_generator.utils import fetch_additional_details
 
     # We need to get the proper account map so we can verify that we generated the proper thing:
@@ -159,12 +159,12 @@ def test_full_run(
         if cli:
             runner = CliRunner()
             payload_file = __file__.split("test_account_indexer_ship.py", maxsplit=1)[0] + "test_payload.yaml"
-            cmd_line_args = ["--payload", payload_file]
+            cmd_line_args = ["generate", "--payload", payload_file]
 
             if commit:
                 cmd_line_args.append("--commit")
 
-            runner.invoke(generate, cmd_line_args)  # noqa
+            runner.invoke(account_inventory, cmd_line_args)  # noqa
 
         else:
             if commit:

@@ -12,11 +12,14 @@ import json
 from typing import Dict, Any, TypeVar
 
 import click
+from click import Context
 
-# from starfleet.utils.configuration import STARFLEET_CONFIGURATION
+from starfleet.utils.configuration import STARFLEET_CONFIGURATION
 from starfleet.utils.logging import LOGGER
-from starfleet.worker_ships.cli_utils import load_payload
+from starfleet.worker_ships.cli_utils import StarfleetAccountRegionCommand
 from starfleet.worker_ships.lambda_utils import worker_lambda
+
+from starfleet.worker_ships.plugins.aws_config.logic import get_account_region_payload, get_current_state, determine_workload, sync_config
 from starfleet.worker_ships.plugins.aws_config.schemas import AwsConfigWorkerShipConfigurationTemplate, AwsConfigWorkerShipPayloadTemplate
 from starfleet.worker_ships.ship_schematics import FanOutStrategy, StarfleetWorkerShip
 
@@ -31,37 +34,39 @@ class AwsConfigWorkerShip(StarfleetWorkerShip):
 
     def execute(self, commit: bool = False) -> None:
         """Execute the payload to enable AWS Config."""
-        raise NotImplementedError("Soon!")
-        # config = STARFLEET_CONFIGURATION.config[self.worker_ship_name]
-        #
-        # # Sync it!
-        # if commit:
-        #     pass
-        #
-        # else:
-        #     pass
+        config = self.configuration_template_class().load(STARFLEET_CONFIGURATION.config[self.worker_ship_name])
+
+        # Pull out the payload details for this account/region pair:
+        account = self.payload["starbase_assigned_account"]
+        region = self.payload["starbase_assigned_region"]
+        working_payload = get_account_region_payload(self.payload, account, region)
+
+        # Get the current state of AWS Config in this account/region:
+        LOGGER.info(f"[🧺] Fetching the current AWS Config state in {account}/{region}...")
+        assume_role = config["worker_role_to_assume"]
+        session_name = config["worker_role_session_name"]
+        current_state = get_current_state(account, region, assume_role, session_name)
+        workload = determine_workload(current_state, working_payload, account, region)
+
+        # Do the work!
+        sync_config(workload, working_payload, account, region, assume_role, session_name, commit)
 
 
 @click.group()
-def aws_config() -> None:
+@click.pass_context
+def aws_config(ctx: Context) -> None:
     """This is the worker ship for enabling AWS Config."""
+    ctx.obj = AwsConfigWorkerShip()
 
 
-@aws_config.command()
-@click.option("--payload", required=True, type=click.File("r"), callback=load_payload, help="This is the worker payload YAML")
-@click.option("--account-id", required=True, type=str, help="The AWS account ID to operate in")
-@click.option("--region", required=True, type=str, help="The AWS region to operate in")
-@click.option("--commit", is_flag=True, default=False, show_default=True, help="Must be supplied for changes to be made")
-def sync(payload: Dict[str, Any], account_id: str, region: str, commit: bool) -> None:
+@aws_config.command(cls=StarfleetAccountRegionCommand)
+@click.pass_context
+def sync(ctx: Context, commit: bool, **kwargs) -> None:  # noqa # pylint: disable=unused-argument
     """This will sync the AWS Config payload in the desired account and region."""
     if not commit:
         LOGGER.warning("[⚠️] Commit flag is disabled: not making any changes")
 
-    # TODO Remove this once implemented:
-    LOGGER.debug(f"{account_id}/{region}")
-
-    worker = AwsConfigWorkerShip()
-    worker.load_template(payload)
+    worker = ctx.obj
     worker.execute(commit=commit)
 
     LOGGER.info("[✅] Done!")

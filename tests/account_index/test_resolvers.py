@@ -227,6 +227,26 @@ def test_resolve_worker_templates_account_regions(test_index: AccountIndexInstan
     result = resolve_worker_template_account_regions(template)
     assert result == {"000000000002": all_regions, "000000000018": all_regions, "000000000020": all_regions}
 
+    # Test the above but with the flag to disable the root org checking:
+    payload = """
+        TemplateName: SomeAccountsAllRegions
+        TemplateDescription: A proper payload that is able to fetch some accounts with some excluded
+        IncludeAccounts:
+            ByNames:
+                - Account 1
+                - Account 2
+                - Account 18
+                - Account 20
+        ExcludeAccounts:
+            ByNames:
+                - Account 1
+        IncludeRegions:
+            - ALL
+    """
+    template = BaseAccountRegionPayloadTemplate().load(yaml.safe_load(payload))
+    result = resolve_worker_template_account_regions(template, org_root_check=False)
+    assert result == {"000000000002": all_regions, "000000000018": all_regions, "000000000020": all_regions}
+
     # With some excluded regions:
     payload = """
         TemplateName: SomeAccountsAllRegions

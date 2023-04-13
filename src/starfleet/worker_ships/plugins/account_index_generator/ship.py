@@ -13,11 +13,12 @@ from typing import Dict, Any, TypeVar
 
 import boto3
 import click
+from click import Context
 from marshmallow import fields
 
 from starfleet.utils.configuration import STARFLEET_CONFIGURATION
 from starfleet.utils.logging import LOGGER
-from starfleet.worker_ships.cli_utils import load_payload
+from starfleet.worker_ships.cli_utils import StarfleetSingleInvokeCommand
 from starfleet.worker_ships.lambda_utils import worker_lambda
 from starfleet.worker_ships.plugins.account_index_generator.utils import (
     fetch_additional_details,
@@ -100,20 +101,20 @@ class AccountIndexGeneratorShip(StarfleetWorkerShip):
 
 
 @click.group()
-def account_inventory() -> None:
+@click.pass_context
+def account_inventory(ctx: Context) -> None:
     """This is the worker ship for generating an S3 account inventory"""
+    ctx.obj = AccountIndexGeneratorShip()
 
 
-@account_inventory.command()
-@click.option("--payload", required=True, type=click.File("r"), callback=load_payload, help="This is the worker payload YAML")
-@click.option("--commit", is_flag=True, default=False, show_default=True, help="Must be supplied for changes to be made")
-def generate(payload: Dict[str, Any], commit: bool) -> None:
+@account_inventory.command(cls=StarfleetSingleInvokeCommand)
+@click.pass_context
+def generate(ctx: Context, commit: bool, **kwargs) -> None:  # noqa # pylint: disable=unused-argument
     """This will generate an AWS account inventory from the organizations API"""
     if not commit:
         LOGGER.warning("[⚠️] Commit flag is disabled: not saving report to S3")
 
-    worker = AccountIndexGeneratorShip()
-    worker.load_template(payload)
+    worker = ctx.obj
     worker.execute(commit=commit)
 
     LOGGER.info("[✅] Done!")

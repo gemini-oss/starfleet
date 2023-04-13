@@ -137,7 +137,6 @@ parameter_overrides = "EnvironmentName=\"TEST\""
 image_repositories = []
 
 [TEST.validate.parameters]
-template_file = "test_sam_template.yaml"  # Feel free to replace with your own filename
 region = "REPLACEME"
 lint = true
 
@@ -159,7 +158,6 @@ parameter_overrides = "EnvironmentName=\"PROD\""
 image_repositories = []
 
 [PROD.validate.parameters]
-template_file = "prod_sam_template.yaml"  # Feel free to replace with your own filename
 region = "REPLACEME"
 lint = true
 

@@ -28,7 +28,7 @@ def test_delivery_channel_details_schema() -> None:
         "bucket_name": "some-bucket",
         "s3_delivery_frequency": DeliveryFrequency.Twelve_Hours,
         "bucket_key_prefix": None,
-        "preferred_name": None,
+        "preferred_name": "default",
         "s3_kms_key_arn": None,
         "sns_topic_arn": None,
     }
@@ -146,7 +146,7 @@ def test_recorder_configuration_schema() -> None:
         "config_role_name": "AWSConfigRole",
         "recording_enabled": True,
         "recording_group": {"resource_types": ["ALL"], "globals_in_regions": ["us-east-1"]},
-        "preferred_name": None,
+        "preferred_name": "default",
     }
 
     # Bad:
@@ -156,8 +156,8 @@ def test_recorder_configuration_schema() -> None:
 
 
 def test_all_accounts_configuration() -> None:
-    """This tests that the AllAccountsConfiguration schema has proper validation logic."""
-    from starfleet.worker_ships.plugins.aws_config.schemas import AllAccountsConfiguration
+    """This tests that the DefaultConfiguration schema has proper validation logic."""
+    from starfleet.worker_ships.plugins.aws_config.schemas import DefaultConfiguration
 
     # Good:
     payload = """
@@ -176,16 +176,21 @@ def test_all_accounts_configuration() -> None:
                     - ALL
                 GlobalsInRegions:
                     - us-east-1
+        RetentionPeriodInDays: 30
     """
     # Just verify that some of the fields are good:
-    loaded = AllAccountsConfiguration().load(yaml.safe_load(payload))
+    loaded = DefaultConfiguration().load(yaml.safe_load(payload))
     assert loaded["delivery_channel_details"]["bucket_name"] == "some-bucket"
     assert loaded["recorder_configuration"]["recording_group"]["resource_types"] == ["ALL"]
 
     # Exclude the required things:
     with pytest.raises(ValidationError) as exc:
-        AllAccountsConfiguration().load({})
-    assert exc.value.messages == {"DeliveryChannelDetails": ["Missing data for required field."], "RecorderConfiguration": ["Missing data for required field."]}
+        DefaultConfiguration().load({})
+    assert exc.value.messages == {
+        "DeliveryChannelDetails": ["Missing data for required field."],
+        "RecorderConfiguration": ["Missing data for required field."],
+        "RetentionPeriodInDays": ["Missing data for required field."],
+    }
 
 
 def test_account_override_configuration() -> None:
@@ -219,6 +224,7 @@ def test_account_override_configuration() -> None:
                     - ALL
                 GlobalsInRegions:
                     - us-east-1
+        RetentionPeriodInDays: 2557
     """
     # Just verify that some of the fields are good:
     loaded = AccountOverrideConfiguration().load(yaml.safe_load(payload))
@@ -259,6 +265,7 @@ def test_account_override_configuration() -> None:
         "IncludeAccounts": ["Missing data for required field."],
         "IncludeRegions": ["Missing data for required field."],
         "RecorderConfiguration": ["Missing data for required field."],
+        "RetentionPeriodInDays": ["Missing data for required field."],
     }
 
 
@@ -274,7 +281,7 @@ def test_payload_template() -> None:
             AllAccounts: True
         IncludeRegions:
             - ALL
-        AllAccountsConfiguration:
+        DefaultConfiguration:
             DeliveryChannelDetails:
                 BucketName: some-bucket
                 S3DeliveryFrequency: Twelve_Hours
@@ -286,6 +293,7 @@ def test_payload_template() -> None:
                         - ALL
                     GlobalsInRegions:
                         - us-east-1
+            RetentionPeriodInDays: 2557
         # For Some Override Account, we just want to record S3 buckets in all regions except for us-west-1:
         AccountOverrideConfigurations:
             -
@@ -305,6 +313,7 @@ def test_payload_template() -> None:
                     RecordingGroup:
                         ResourceTypes:
                             - AWS::S3::Bucket
+                RetentionPeriodInDays: 2557
     """
     # Just confirm that we can load it all:
     assert AwsConfigWorkerShipPayloadTemplate().load(yaml.safe_load(payload))
@@ -320,4 +329,4 @@ def test_payload_template() -> None:
                 - ALL
         """
         AwsConfigWorkerShipPayloadTemplate().load(yaml.safe_load(payload))
-    assert exc.value.messages == {"AllAccountsConfiguration": ["Missing data for required field."]}
+    assert exc.value.messages == {"DefaultConfiguration": ["Missing data for required field."]}

@@ -1,0 +1,8 @@
+TemplateName: SampleAccountRegionTemplate
+TemplateDescription: This is a template for unit test purposes only for ACCOUNT_REGION workers.
+IncludeAccounts:
+  AllAccounts: True
+IncludeRegions:
+  - ALL
+ExcludeRegions:
+  - us-west-1
