@@ -3,7 +3,8 @@ Welcome to the [Starfleet](https://github.com/gemini-oss/starfleet) project! Sta
 
 <img src="logo_files/Logo.png" alt="Starfleet Logo" width="300" style="margin: auto; display: block">
 
-## Note: This project is under very active development! Documentation is also currently being written. Please mind the gap.
+!!! danger "Please note"
+    This project is under very active development! Documentation is also currently being written. Please mind the bumps.
 
 Starfleet is a tool that runs automation against an entire AWS infrastructure. The primary goal is to address gaps that exist with AWS Organizations.
 

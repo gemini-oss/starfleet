@@ -217,6 +217,49 @@ Resources:
         - S3WritePolicy:
             BucketName: !Ref AccountIndexBucket
 
+  # Uncomment for the AWS Config worker to have that set up and deployed:
+  # AWSConfigWorkerDLQ:
+  #   Type: AWS::SQS::Queue
+  #   Properties:
+  #     QueueName: starfleet-aws-config-worker-dlq
+  #     RedriveAllowPolicy:
+  #       redrivePermission: allowAll
+  #
+  # AWSConfigWorkerQueue:
+  #   Type: AWS::SQS::Queue
+  #   Properties:
+  #     QueueName: starfleet-aws-config-worker
+  #     VisibilityTimeout: 300  # This needs to be the same as the Lambda function timeout.
+  #     RedrivePolicy:
+  #       deadLetterTargetArn: !GetAtt StarbaseFanoutDLQ.Arn
+  #       maxReceiveCount: 4
+  #
+  # AWSConfigWorker:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     CodeUri: ./starfleet/src
+  #     Handler: starfleet.worker_ships.plugins.aws_config.ship.lambda_handler
+  #     Runtime: python3.9
+  #     Architectures:
+  #       - arm64
+  #     MemorySize: 128
+  #     Events:
+  #       SQSEvent:
+  #         Type: SQS
+  #         Properties:
+  #           Queue: !GetAtt AWSConfigWorkerQueue.Arn
+  #           BatchSize: 2
+  #     Environment:
+  #       Variables:
+  #         STARFLEET_COMMIT: False
+  #     Policies:
+  #       # Grant permissions to read from the inventory S3 bucket:
+  #       - S3ReadPolicy:
+  #           BucketName: !FindInMap
+  #             - EnvMap
+  #             - !Ref 'EnvironmentName'
+  #             - AccountInventoryBucket
+
   # Finally, the Starbase Fanout Function:
   StarbaseFanoutFunction:
     Type: AWS::Serverless::Function
@@ -240,7 +283,7 @@ Resources:
         - S3ReadPolicy:
             BucketName: !Ref StarfleetTemplateBucket
         - SQSSendMessagePolicy:
-            QueueName: !GetAtt AccountIndexGeneratorQueue.QueueName
+            QueueName: starfleet-*
 
   # Common worker ship components here:
   AssumeRoleManagedPolicy:
@@ -264,7 +307,8 @@ Resources:
                     - BaseRoleName
       Roles:
         - !Ref AccountIndexGeneratorRole  # AccountIndexGeneratorRole is created automatically by SAM and can be referenced
-        # -!Ref YourWorkerRoleHere # Add your worker roles here to get the policy attached
+        # - !Ref AWSConfigWorkerRole  # Uncomment for the AWS Config worker
+        # - !Ref YourWorkerRoleHere # Add your worker roles here to get the policy attached
 
 Outputs:
   StarbaseFanoutQueue:
@@ -297,3 +341,13 @@ Outputs:
   AccountIndexGeneratorFunction:
     Description: The Account Index Generator worker ship function that generates an account index
     Value: !GetAtt AccountIndexGenerator.Arn
+  # Uncomment for the AWS Config worker:
+  # AWSConfigWorkerQueue:
+  #   Description: The Queue URL for the AWS Config Worker invocation queue
+  #   Value: !GetAtt AWSConfigWorkerQueue.QueueUrl
+  # AWSConfigWorkerDLQ:
+  #   Description: The Queue URL for the AWS Config Worker invocation DLQ
+  #   Value: !GetAtt AWSConfigWorkerDLQ.QueueUrl
+  # AWSConfigWorker:
+  #   Description: The AWS Config Worker ship function that enables AWS Config everywhere
+  #   Value: !GetAtt AWSConfigWorker.Arn
