@@ -81,6 +81,14 @@ nav:
     - Run AWS SAM: installation/RunSAM.md
     - Make the Account Index: installation/MakeAccountIndex.md
     - Wrapping Up: installation/WrapUp.md
+  - User Guide:
+    - Overview: userGuide/Overview.md
+    - Starbase: userGuide/Starbase.md
+    - Account Index Generator: userGuide/AccountIndexGenerator.md
+    - AWS Config Worker:
+      - Overview: userGuide/awsConfig/AWSConfigWorker.md
+      - Installation: userGuide/awsConfig/Installation.md
+      - Template: userGuide/awsConfig/Template.md
   - Developer Guide:
     - Developer Overview: developerGuide/Overview.md
     - Primary Components:
@@ -94,5 +102,4 @@ nav:
       - Account Indexer: developerGuide/primaryComponents/AccountIndexer.md
     - AWS SAM Configuration: developerGuide/SAMConfiguration.md
     - Check List: developerGuide/CheckList.md
-  - User Guide: UserGuide.md
   - Code Reference: reference/
