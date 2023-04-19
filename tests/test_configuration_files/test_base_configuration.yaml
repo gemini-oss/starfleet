@@ -4,6 +4,9 @@ STARFLEET:
     FanOutQueueUrl: https://sqs.amazonaws.com/fanout-queue
     AccountIndex: TestingAccountIndexPlugin
     LogLevel: DEBUG
+    SecretsManager:
+        SecretId: starfleet-secrets
+        SecretRegion: us-east-2
     ThirdPartyLoggerLevels:
         botocore: CRITICAL
         'urllib3.connectionpool': CRITICAL

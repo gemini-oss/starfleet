@@ -1,0 +1,7 @@
+GitHubSyncWorkerShip:
+  Enabled: True
+  TemplatePrefix: github_sync/
+  InvocationQueueUrl: https://sqs.amazonaws.com/replace-me
+  InvocationSources:
+      - EVENTBRIDGE_TIMED_EVENT
+  EventBridgeTimedFrequency: HOURLY

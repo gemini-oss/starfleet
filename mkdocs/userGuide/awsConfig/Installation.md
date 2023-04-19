@@ -177,7 +177,7 @@ Resources:
       QueueName: starfleet-aws-config-worker
       VisibilityTimeout: 300  # This needs to be the same as the Lambda function timeout.
       RedrivePolicy:
-        deadLetterTargetArn: !GetAtt StarbaseFanoutDLQ.Arn
+        deadLetterTargetArn: !GetAtt AWSConfigWorkerDLQ.Arn
         maxReceiveCount: 4
 
   AWSConfigWorker:

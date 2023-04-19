@@ -14,6 +14,15 @@ from marshmallow import Schema, fields, INCLUDE, validate
 aws_regions = set(boto3.session.Session().get_available_regions("ec2"))
 
 
+class SecretsManager(Schema):
+    """This is a nested schema for AWS Secrets manager which is a pair of the Secrets ID and the region it resides in."""
+
+    secret_id = fields.String(required=True, data_key="SecretId")
+    secret_region = fields.String(
+        required=True, validate=validate.OneOf(aws_regions), data_key="SecretRegion"
+    )  # assuming that the Secrets Manager regions are the same as EC2
+
+
 class StarfleetSchema(Schema):
     """This is the main schema for Starfleet itself."""
 
@@ -32,6 +41,9 @@ class StarfleetSchema(Schema):
     # If this is set, then you can only run in the regions defined here despite what regions an account has enabled:
     scope_to_regions = fields.List(fields.String(validate=validate.OneOf(aws_regions)), required=False, data_key="ScopeToRegions", load_default=[])
     # ^^ This is useful if you have an SCP that disables regions; this prevents Starfleet to run in regions that are disabled by SCP.
+
+    # Secrets Manager ARN for Starfleet's secrets if required
+    secrets_manager = fields.Nested(SecretsManager(), required=False, data_key="SecretsManager")
 
     # Log Level:
     log_level = fields.String(
