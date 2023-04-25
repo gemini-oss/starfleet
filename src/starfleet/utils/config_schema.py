@@ -8,8 +8,10 @@ has the correct components on it.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+from typing import Any, Dict
+
 import boto3
-from marshmallow import Schema, fields, INCLUDE, validate
+from marshmallow import Schema, fields, INCLUDE, validate, validates_schema, ValidationError
 
 aws_regions = set(boto3.session.Session().get_available_regions("ec2"))
 
@@ -18,9 +20,9 @@ class SecretsManager(Schema):
     """This is a nested schema for AWS Secrets manager which is a pair of the Secrets ID and the region it resides in."""
 
     secret_id = fields.String(required=True, data_key="SecretId")
-    secret_region = fields.String(
-        required=True, validate=validate.OneOf(aws_regions), data_key="SecretRegion"
-    )  # assuming that the Secrets Manager regions are the same as EC2
+
+    # We are assuming that the Secrets Manager regions are the same as EC2
+    secret_region = fields.String(required=True, validate=validate.OneOf(aws_regions), data_key="SecretRegion")
 
 
 class StarfleetSchema(Schema):
@@ -45,12 +47,31 @@ class StarfleetSchema(Schema):
     # Secrets Manager ARN for Starfleet's secrets if required
     secrets_manager = fields.Nested(SecretsManager(), required=False, data_key="SecretsManager")
 
+    # If we want Slack alerts, then you need to set this to True (which channel ID to use is set for each worker configuration)
+    # and the API token is stored in the SecretsManager
+    slack_enabled = fields.Boolean(required=False, load_default=False, data_key="SlackEnabled")
+
     # Log Level:
     log_level = fields.String(
         required=False, load_default="INFO", validate=validate.OneOf({"CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG", "NOTSET"}), data_key="LogLevel"
     )
     # Dictionary to override log levels for 3rd party loggers. This is the name of the log and the level.
     third_party_logger_levels = fields.Dict(required=False, data_key="ThirdPartyLoggerLevels")
+
+    @validates_schema(pass_original=True)
+    def verify_schema(self, data: Dict[str, Any], original_data: Dict[str, Any], **kwargs) -> None:  # pylint: disable=unused-argument  # noqa
+        """
+        This validates that the schema is correct. At present, this is going to validate:
+        1. That if SlackEnabled is True, that we also have SecretsManager configured.
+        """
+        errors = {}
+        if data.get("slack_enabled"):  # Check the properly parsed.
+            # Verify that we also have Secrets Manager:
+            if not data.get("secrets_manager"):
+                errors["SlackEnabled"] = ["Slack can only be enabled if you are using Secrets Manager -- you need to configure the `SecretsManager` field."]
+
+        if errors:
+            raise ValidationError(errors)
 
 
 class BaseConfigurationSchema(Schema):

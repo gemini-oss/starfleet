@@ -18,6 +18,7 @@ from starfleet.utils.logging import LOGGER
 # pylint: disable=pointless-string-statement
 """Mapping of the Secrets Dict:
 {
+    "STARFLEET": {"SlackToken": "the-token-here"},
     "WORKER_NAME": "Any value - this can be a string, nested Dict, etc.",
     "..."
 }

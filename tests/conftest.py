@@ -12,6 +12,7 @@ import os
 
 from typing import Any, Dict, Generator, Callable
 from unittest import mock
+from unittest.mock import MagicMock
 
 import boto3
 import pytest
@@ -116,3 +117,32 @@ def mock_retry() -> None:
 
     with mock.patch("retry.retry", mock_retry_decorator):
         yield
+
+
+@pytest.fixture
+def base_secrets() -> Generator[Dict[str, Any], None, None]:
+    """This mocks out secrets manager to contain secrets."""
+    from starfleet.utils.secrets import SECRETS_MANAGER
+
+    new_secret_value = {"STARFLEET": {"SlackToken": "lolsometoken"}}
+
+    old_secrets = SECRETS_MANAGER._secrets  # noqa
+    SECRETS_MANAGER._secrets = new_secret_value
+
+    yield SECRETS_MANAGER.secrets
+
+    SECRETS_MANAGER._secrets = old_secrets
+    assert SECRETS_MANAGER._secrets != new_secret_value  # Note the underscore (_): don't use the actual property since it will go out to AWS!
+    assert SECRETS_MANAGER._secrets == old_secrets
+
+
+@pytest.fixture
+def mock_slack_api(test_configuration: Dict[str, Any], base_secrets: Dict[str, Any]) -> Generator[MagicMock, None, None]:
+    """This mocks out the Slack WebClient API."""
+    from starfleet.utils.slack import SLACK_CLIENT
+
+    with mock.patch("starfleet.utils.slack.WebClient") as mocked_web_client:
+        yield mocked_web_client
+
+    # Reset the Slack Client class:
+    SLACK_CLIENT.reset()  # The singleton can keep the old reference to the external Slack WebClient so this ensures that it's truly wiped out.

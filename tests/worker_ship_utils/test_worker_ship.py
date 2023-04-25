@@ -86,3 +86,43 @@ def test_plugin_loader_invalid_configuration(
     assert verify_logger(
         mock_loader_logger, "[💥] Major exception encountered configuring all the Starfleet worker ship plugins. See the stacktrace for details."
     )
+
+
+def test_send_alerts(mock_slack_api: MagicMock) -> None:
+    """This will test that we Ship's send_alert function works properly at sending alerts (to Slack)."""
+    from starfleet.worker_ships.ship_schematics import AlertPriority
+    from tests.worker_ship_utils.testing_plugins.basic_plugin import TestingStarfleetWorkerPlugin
+
+    ship = TestingStarfleetWorkerPlugin()
+    ship.alert_channel = "pewpewpew"
+
+    priorities = [priority for priority in AlertPriority]  # pylint: disable=unnecessary-comprehension
+    emoji_map = {
+        AlertPriority.PROBLEM: "🚨",
+        AlertPriority.IMPORTANT: "📣",
+        AlertPriority.SUCCESS: "✅",
+        AlertPriority.INFORMATIONAL: "ℹ️",
+    }
+
+    # Send alert messages without having an AlertPriority established (the default for the worker ship is AlertPriority.NONE) -- no messages to slack should be sent out:
+    for priority in priorities:
+        ship.send_alert(priority, "Some message", "some message body")
+        assert not mock_slack_api.return_value.chat_postMessage.called
+
+    priorities.remove(AlertPriority.NONE)
+    for current_priority in priorities:
+        ship.alert_priority = current_priority
+
+        # Verify that we are able to send with the current priority and all the prior ones:
+        for priority in priorities:
+            mock_slack_api.return_value.chat_postMessage.reset_mock()
+            ship.send_alert(priority, "Some message", "some message body")
+
+            # If the current priority is the same or bigger than the message priority sent, then the message should have been sent:
+            if current_priority.value >= priority.value:
+                assert mock_slack_api.return_value.chat_postMessage.call_args[1]["channel"] == "pewpewpew"
+                assert mock_slack_api.return_value.chat_postMessage.call_args[1]["text"].startswith(emoji_map[priority])
+
+            # Otherwise it should not have been sent:
+            else:
+                assert not mock_slack_api.return_value.chat_postMessage.called

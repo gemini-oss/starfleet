@@ -7,6 +7,7 @@ STARFLEET:
     SecretsManager:
         SecretId: starfleet-secrets
         SecretRegion: us-east-2
+    SlackEnabled: True
     ThirdPartyLoggerLevels:
         botocore: CRITICAL
         'urllib3.connectionpool': CRITICAL

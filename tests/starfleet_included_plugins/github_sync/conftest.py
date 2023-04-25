@@ -22,6 +22,7 @@ from zipfile import ZipFile
 
 import boto3
 import pytest
+import yaml
 from botocore.client import BaseClient
 from moto import mock_s3
 
@@ -82,20 +83,10 @@ def testing_github_key() -> str:
 
 
 @pytest.fixture
-def unit_test_secrets(testing_github_key: str) -> Generator[Dict[str, Any], None, None]:
+def unit_test_secrets(base_secrets: Dict[str, Any], testing_github_key: str) -> Dict[str, Any]:
     """This mocks out secrets manager to contain what we need to contain for this unit test."""
-    from starfleet.utils.secrets import SECRETS_MANAGER
-
-    new_secret_value = {"GitHubSyncWorker": {"fakeorg": testing_github_key}}
-
-    old_secrets = SECRETS_MANAGER._secrets  # noqa
-    SECRETS_MANAGER._secrets = new_secret_value
-
-    yield SECRETS_MANAGER.secrets
-
-    SECRETS_MANAGER._secrets = old_secrets
-    assert SECRETS_MANAGER._secrets != new_secret_value  # Note the underscore (_): don't use the actual property since it will go out to AWS!
-    assert SECRETS_MANAGER._secrets == old_secrets
+    base_secrets.update({"GitHubSyncWorker": {"fakeorg": testing_github_key}})
+    return base_secrets
 
 
 @pytest.fixture
@@ -233,3 +224,20 @@ def excess_files(aws_s3: BaseClient) -> Set[str]:
         aws_s3.put_object(Bucket="some-bucket", Key=f"some/path/{item}", Body=f"{item}")
 
     return items
+
+
+@pytest.fixture
+def github_sync_payload() -> Dict[str, Any]:
+    """This is the base test payload loaded from disk."""
+    payload_file = f"{os.path.dirname(os.path.abspath(__file__))}/test_payload.yaml"
+    with open(payload_file, "r", encoding="UTF-8") as file:
+        payload = yaml.safe_load(file.read())
+
+    return payload
+
+
+@pytest.fixture
+def mock_github_sync_secrets(base_secrets: Dict[str, Any]) -> Dict[str, Any]:
+    """Injects the GitHubSync secrets into the secrets dictionary."""
+    base_secrets["GitHubSyncWorker"] = {"fakeorg": "pewpewpew"}
+    return base_secrets

@@ -13,7 +13,6 @@ import logging
 from typing import Dict, Any
 
 import pytest
-import yaml
 from botocore.client import BaseClient
 from marshmallow import ValidationError
 
@@ -31,6 +30,7 @@ def test_load_base_configuration(test_configuration: Dict[str, Any]) -> None:
         "AccountIndex": "TestingAccountIndexPlugin",
         "LogLevel": "DEBUG",
         "SecretsManager": {"SecretId": "starfleet-secrets", "SecretRegion": "us-east-2"},
+        "SlackEnabled": True,
         "ThirdPartyLoggerLevels": {
             "botocore": "CRITICAL",
             "urllib3.connectionpool": "CRITICAL",
@@ -64,24 +64,45 @@ def test_configuration_exceptions() -> None:
     assert exc.value.args[0] == {"STARFLEET": ["Missing data for required field."]}
 
 
-def test_secret_configuration_schema() -> None:
+def test_secret_configuration_schema(test_configuration: Dict[str, Any]) -> None:
     """This mostly just tests that we provide a proper region in to the SecretsManager part of the STARFLEET configuration."""
-    from starfleet.utils.config_schema import SecretsManager
+    from starfleet.utils.config_schema import BaseConfigurationSchema
 
-    template = """
-        SecretId: starfleet-secrets
-        SecretRegion: us-east-1
-    """
-    assert SecretsManager().load(yaml.safe_load(template))
+    # Should be no problem with the fixture:
+    configuration_schema = BaseConfigurationSchema().load(test_configuration)
+    assert configuration_schema["starfleet"]["slack_enabled"]
+    assert configuration_schema["starfleet"]["secrets_manager"] == {"secret_id": "starfleet-secrets", "secret_region": "us-east-2"}
 
-    # With an invalid region:
-    template = """
-        SecretId: starfleet-secrets
-        SecretRegion: pewpewpew
-    """
+    # Remove the SecretsManager section:
+    test_configuration["STARFLEET"].pop("SecretsManager")
     with pytest.raises(ValidationError) as exc:
-        SecretsManager().load(yaml.safe_load(template))
-    assert exc.value.messages_dict["SecretRegion"][0].startswith("Must be one of: ")
+        BaseConfigurationSchema().load(test_configuration)
+    assert exc.value.args[0] == {
+        "STARFLEET": {"SlackEnabled": ["Slack can only be enabled if you are using Secrets Manager -- you need to configure the `SecretsManager` field."]}
+    }
+
+
+def test_slack_configuration() -> None:
+    """Tests that if we lack SecretsManager defined but have SlackEnabled as true that we raise an error."""
+    from starfleet.utils.configuration import BadConfigurationError
+
+    config_loader = StarfleetConfigurationLoader()
+
+    # First test is to try it without a proper directory path:
+    config_loader._configuration_path = "LOLNO"
+
+    with pytest.raises(Exception) as exc:
+        config_loader.load_base_configuration()
+
+    assert exc.typename == "FileNotFoundError"
+
+    # Next, let's load a configuration that's missing the required sections:
+    config_loader._configuration_path = f"{tests.__path__[0]}/bad_configuration_files"
+
+    with pytest.raises(BadConfigurationError) as exc:
+        config_loader.load_base_configuration()
+
+    assert exc.value.args[0] == {"STARFLEET": ["Missing data for required field."]}
 
 
 def test_load_secrets(aws_secretsmanager: BaseClient, test_configuration: Dict[str, Any]) -> None:
