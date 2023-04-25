@@ -45,6 +45,8 @@ class FanOutStrategy(Enum):
 class EventBridgeFrequency(Enum):
     """These are the valid values for EventBridge Event timed invocation frequencies."""
 
+    FIVE_MIN = "FIVE_MIN"  # Every 5 min
+    FIFTEEN_MIN = "FIFTEEN_MIN"  # Every 15 min
     THIRTY_MIN = "THIRTY_MIN"  # Every 30 min / half-hourly
     HOURLY = "HOURLY"  # Every 60 min / hourly
     SIX_HOURLY = "SIX_HOURLY"  # Every 6 hours

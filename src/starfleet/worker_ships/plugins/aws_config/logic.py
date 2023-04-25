@@ -351,28 +351,28 @@ def _log_summary(workload: Dict[str, Any]) -> bool:
 
     # Print out the summary:
     if workload["ConfigurationRecorder"]:
-        LOGGER.info(f"[❌] Configuration Recorder needs update with config: {workload['ConfigurationRecorder']}")
+        LOGGER.info(f"[🙅‍♂️] Configuration Recorder needs update with config: {workload['ConfigurationRecorder']}")
         work_to_do = True
     else:
         LOGGER.info("[🆗] Configuration Recorder is in sync.")
 
     if workload["DeliveryChannel"]:
-        LOGGER.info(f"[❌] Delivery Channel needs update with config: {workload['DeliveryChannel']}")
+        LOGGER.info(f"[🙅‍♂️] Delivery Channel needs update with config: {workload['DeliveryChannel']}")
         work_to_do = True
     else:
         LOGGER.info("[🆗] Delivery Channel is in sync.")
 
     if workload["RetentionConfig"]:
-        LOGGER.info(f"[❌] Retention Configuration needs update with config: {workload['RetentionConfig']}")
+        LOGGER.info(f"[🙅‍♂️] Retention Configuration needs update with config: {workload['RetentionConfig']}")
         work_to_do = True
     else:
         LOGGER.info("[🆗] Retention Configuration is in sync.")
 
     if workload["EnableRecording"] == RecorderAction.START_RECORDING:
-        LOGGER.info("[❌] The recorder needs to be enabled.")
+        LOGGER.info("[🙅‍♂️] The recorder needs to be enabled.")
         work_to_do = True
     elif workload["EnableRecording"] == RecorderAction.STOP_RECORDING:
-        LOGGER.info("[❌] The recorder needs to be disabled.")
+        LOGGER.info("[🙅‍♂️] The recorder needs to be disabled.")
         work_to_do = True
     else:
         LOGGER.info("[🆗] The recorder's status is in sync.")

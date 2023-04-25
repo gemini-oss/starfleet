@@ -15,6 +15,11 @@ STARFLEET:
   # Only replace if you have your own Account Index plugin defined:
   AccountIndex: StarfleetDefaultAccountIndex
 
+  # Only use this if you have to store Secrets for your workers (example is the GitHubSyncWorker)
+  #  SecretsManager:
+  #    SecretId: starfleet
+  #    SecretRegion: us-east-2
+
   LogLevel: DEBUG
   ThirdPartyLoggerLevels:
     botocore: CRITICAL

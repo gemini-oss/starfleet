@@ -1,0 +1,11 @@
+TemplateName: TestGitHubSync
+TemplateDescription: Tests out the GitHub syncing worker
+Organization: fakeorg
+Repository: myrepo
+BranchName: main
+GitHubAppId: "1234567"
+GitHubInstallationId: "987654"
+BucketName: some-bucket
+BucketRegion: us-east-2
+ExtractZipContents: True
+DeleteMissingFiles: True

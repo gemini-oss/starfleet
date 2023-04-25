@@ -45,6 +45,8 @@ As mentioned, the worker ship's configuration also contains a path in the Payloa
 The following is a list of supported frequencies that a worker can be timed for. These are the exact string values that need to be in the worker's configuration:
 
 ```yaml
+FIVE_MIN        # Every 5 min
+FIFTEEN_MIN     # Every 15 min
 THIRTY_MIN      # Every 30 min / half-hourly
 HOURLY          # Every 60 min / hourly
 SIX_HOURLY      # Every 6 hours

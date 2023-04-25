@@ -285,10 +285,10 @@ def test_log_summary(loaded_template: Dict[str, Any]) -> None:
     with mock.patch("starfleet.worker_ships.plugins.aws_config.logic.LOGGER") as mocked_logger:
         # Everything is wrong:
         logs_should_be = [
-            "[❌] Configuration Recorder",
-            "[❌] Delivery Channel",
-            "[❌] Retention Configuration",
-            "[❌] The recorder needs to be enabled",
+            "[🙅‍♂️] Configuration Recorder",
+            "[🙅‍♂️] Delivery Channel",
+            "[🙅‍♂️] Retention Configuration",
+            "[🙅‍♂️] The recorder needs to be enabled",
         ]
         assert _log_summary(workload)
         for index, value in enumerate(logs_should_be):
@@ -321,7 +321,7 @@ def test_log_summary(loaded_template: Dict[str, Any]) -> None:
 
         # Make it so that the recorder needs to stopped:
         workload["EnableRecording"] = RecorderAction.STOP_RECORDING
-        logs_should_be[3] = "[❌] The recorder needs to be disabled"
+        logs_should_be[3] = "[🙅‍♂️] The recorder needs to be disabled"
         assert _log_summary(workload)
         for index, value in enumerate(logs_should_be):
             assert value in mocked_logger.info.call_args_list[index][0][0]
