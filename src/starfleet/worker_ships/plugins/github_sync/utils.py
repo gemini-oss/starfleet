@@ -161,7 +161,7 @@ def match_path(file_path: str, regex_list: List[str]) -> bool:
 def generate_s3_hash(file_path: str) -> str:
     """Generates the S3 e-tag hash of the file. This determines if the file is the same as the file that is existing in S3 or not."""
     # See https://zihao.me/post/calculating-etag-for-aws-s3-objects/ for details: -- using 4 MB chunks for checksum.
-    value_md5 = hashlib.md5()
+    value_md5 = hashlib.md5(usedforsecurity=False)
     with open(file_path, "rb") as file:
         for data in iter(lambda: file.read(4096), b""):
             value_md5.update(data)
