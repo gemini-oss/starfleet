@@ -50,7 +50,7 @@ def process_eventbridge_timed_event(event: Dict[str, Any]) -> None:
         # Does the worker ship listen to EventBridge?
         if "EVENTBRIDGE_TIMED_EVENT" in config["InvocationSources"]:
             # If yes, is this an event that it should care for?
-            if event_detail.name in config["EventBridgeTimedFrequency"]:
+            if event_detail.name == config["EventBridgeTimedFrequency"]:
                 need_to_task.append((worker_ship, config))
 
     if not need_to_task:
