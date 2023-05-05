@@ -1,0 +1,223 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  This template creates an IAM role in the AWS Organizations management account that will be
+  assumed by the Starfleet Account Index Generator and is intended to be deployed using a
+  CloudFormation Stack in the organization management account.
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Required Parameters for Starfleet Execution Role
+        Parameters:
+          - AdministrativeRoleName
+          - OrganizationId
+          - StarfleetAccountId
+      - Label:
+          default: Optional Parameters for Starfleet Execution Role
+        Parameters:
+          - AdministrativeRolePath
+          - ExecutionRoleName
+          - ExecutionRolePrefix
+          - Partition
+
+Parameters:
+  AdministrativeRoleName:
+    Type: String
+    Description: >-
+      (Required) The friendly name (not ARN) of an IAM role that will be authorized to assume
+      the Starfleet execution roles in every managed account. This role will be used by
+      Starfleet administrators for local development and executing the Starfleet CLI.
+    AllowedPattern: '^[\w+=,.@*-]{1,64}$'
+    MinLength: 1
+    MaxLength: 64
+  OrganizationId:
+    Type: String
+    Description: >-
+      (Required) The unique identifier (ID) of the AWS Organization in which Starfleet
+      is being deployed. Starfleet execution roles will be configured to deny any attempt
+      to assume the role from an external IAM principal.
+    AllowedPattern: '^o-[a-z0-9]{10,32}$'
+    MinLength: 10
+    MaxLength: 32
+  StarfleetAccountId:
+    Type: String
+    Description: >-
+      (Required) The 12-digit AWS account ID where Starfleet is deployed and managed.
+    AllowedPattern: '\d{12}'
+    MinLength: 12
+    MaxLength: 12
+
+  AccountIndexRoleName:
+    Type: String
+    Description: >-
+      (Optional) The name of the Starfleet IAM execution role that will be created
+      for the Starfleet Account Index Generator.
+    Default: starfleet-account-index-execution-role
+    AllowedPattern: '^[\w+=,.@*-]{1,64}$'
+    MinLength: 1
+    MaxLength: 64
+  AdministrativeRolePath:
+    Type: String
+    Description: >-
+      (Optional) The path to the Starfleet administrative IAM role.
+    Default: /
+    AllowedPattern: '(\u002F)|(\u002F[\u0021-\u007E]+\u002F)'
+    MinLength: 1
+    MaxLength: 512
+  ExecutionRoleName:
+    Type: String
+    Description: >-
+      (Optional) The name of the Starfleet IAM execution role that will be created.
+    Default: starfleet-worker-execution-role
+    AllowedPattern: '^[\w+=,.@*-]{1,64}$'
+    MinLength: 1
+    MaxLength: 64
+  ExecutionRolePrefix:
+    Type: String
+    Description: >-
+      (Optional) The name prefix that is used across all Starfleet execution roles. The role
+      prefix is used to restrict which roles in the Starfleet account can assume Starfleet
+      execution roles.
+    Default: starfleet-*
+    AllowedPattern: '^[\w+=,.@*-]{1,32}$'
+    MinLength: 1
+    MaxLength: 32
+  Partition:
+    Type: String
+    Description: >-
+      (Optional) The AWS partition name in which Starfleet resources are being deployed.
+    Default: aws
+    AllowedValues:
+      - aws
+      - aws-cn
+      - aws-us-gov
+
+Resources:
+  AccountIndexExecutionRole:
+    Type: AWS::IAM::Role
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W11
+            reason: 'The `ListAccounts` Organizations API action does not accept a resource.'
+          - id: W28
+            reason: 'This is an execution role that is intended to have a well-known static name.'
+    Properties:
+      RoleName: !Ref AccountIndexRoleName
+      Description: >-
+        Execution role that can be assumed by the Starfleet Account Index Generator and
+        administrators from the Starfleet management account to execute tasks in Starfleet
+        managed accounts.
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !Sub 'arn:${Partition}:iam::${StarfleetAccountId}:root'
+            Action: sts:AssumeRole
+            Condition:
+              ArnLike:
+                aws:PrincipalArn:
+                  - !Sub 'arn:${Partition}:iam::${StarfleetAccountId}:role/${ExecutionRolePrefix}'
+                  - !Sub 'arn:${Partition}:iam::${StarfleetAccountId}:role${AdministrativeRolePath}${AdministrativeRoleName}'
+              StringEquals:
+                aws:PrincipalOrgId:
+                  - !Ref OrganizationId
+      Policies:
+        - PolicyName: AuthorizeOrganizationsList
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: AuthorizeOrgListRestricted
+                Effect: Allow
+                Action:
+                  - organizations:ListOrganizationalUnitsForParent
+                  - organizations:ListParents
+                  - organizations:ListTagsForResource
+                Resource:
+                  - !Sub 'arn:${Partition}:organizations::${AWS::AccountId}:account/${OrganizationId}/*'
+                  - !Sub 'arn:${Partition}:organizations::${AWS::AccountId}:ou/${OrganizationId}/ou-*'
+                  - !Sub 'arn:${Partition}:organizations::${AWS::AccountId}:root/${OrganizationId}/r-*'
+              - Sid: AuthorizeOrgListAccounts
+                Effect: Allow
+                Action:
+                  - organizations:ListAccounts
+                Resource:
+                  - '*'
+
+  StarfleetExecutionRole:
+    Type: AWS::IAM::Role
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W11
+            reason: 'The `DescribeRegions` EC2 API action does not accept a resource.'
+          - id: W28
+            reason: 'This is an execution role that is intended to have a well-known static name.'
+    Properties:
+      RoleName: !Ref ExecutionRoleName
+      Description: >-
+        Execution role that can be assumed by Starfleet workers and administrators from
+        the Starfleet management account to execute tasks in Starfleet managed accounts.
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - !Sub 'arn:${Partition}:iam::${StarfleetAccountId}:root'
+            Action: sts:AssumeRole
+            Condition:
+              ArnLike:
+                aws:PrincipalArn:
+                  - !Sub 'arn:${Partition}:iam::${StarfleetAccountId}:role/${ExecutionRolePrefix}'
+                  - !Sub 'arn:${Partition}:iam::${StarfleetAccountId}:role${AdministrativeRolePath}${AdministrativeRoleName}'
+              StringEquals:
+                aws:PrincipalOrgId:
+                  - !Ref OrganizationId
+      Policies:
+        - PolicyName: AuthorizeEC2
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: AuthorizeDescribeRegions
+                Effect: Allow
+                Action:
+                  - ec2:DescribeRegions
+                Resource:
+                  - '*'
+
+Outputs:
+  AdministrativeRoleName:
+    Description: >-
+      The friendly name (not ARN) of the IAM role authorized to assume Starfleet
+      execution roles in every Starfleet managed account and execute Starfleet
+      CLI commands.
+    Value: !Ref AdministrativeRoleName
+  AdministrativeRolePath:
+    Description: >-
+      The path to the IAM role authorized to assume Starfleet execution roles in
+      every Starfleet managed account and execute Starfleet CLI commands.
+    Value: !Ref AdministrativeRolePath
+  ExecutionRolePrefix:
+    Description: >-
+      The name prefix that is used across all Starfleet execution roles.
+    Value: !Ref ExecutionRolePrefix
+  OrganizationId:
+    Description: >-
+      The unique identifier (ID) of the AWS Organization in which Starfleet is
+      deployed.
+    Value: !Ref OrganizationId
+  StarfleetAccountId:
+    Description: The 12-digit AWS account ID of the Starfleet management account.
+    Value: !Ref StarfleetAccountId
+  StarfleetAccountIndexRoleArn:
+    Description: >- 
+      The Amazon Resource Name (ARN) of the Starfleet Account Index Generator
+      execution role.
+    Value: !GetAtt AccountIndexExecutionRole.Arn
+  StarfleetExecutionRoleArn:
+    Description: The Amazon Resource Name (ARN) of the Starfleet execution role that was created.
+    Value: !GetAtt StarfleetExecutionRole.Arn
