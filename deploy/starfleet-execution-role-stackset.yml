@@ -80,8 +80,6 @@ Parameters:
     Default: aws
     AllowedValues:
       - aws
-      - aws-cn
-      - aws-us-gov
 
 Resources:
   StarfleetExecutionRole:
