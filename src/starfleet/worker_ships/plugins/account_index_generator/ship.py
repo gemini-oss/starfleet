@@ -71,7 +71,6 @@ class AccountIndexGeneratorShip(StarfleetWorkerShip):
             org_account_id=config["OrgAccountId"],
             org_account_role_name=config["OrgAccountAssumeRole"],
         )
-
         # Fetch the tags and enabled regions:
         LOGGER.info("[🚚] Fetching tags and enabled regions for each account...")
         fetch_additional_details(

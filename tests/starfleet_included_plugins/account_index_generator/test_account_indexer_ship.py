@@ -113,7 +113,6 @@ def test_fetch_additional_details(
         elif account["Id"] == "000000000020":
             assert account["Parents"] == [{"Id": "r-abcd", "Type": "ROOT", "Name": "ROOT"}]
         elif account["Id"] == "000000000019":
-            print(f"\n######\n{account['Parents']}\n######\n")
             assert account["Parents"] == [
                 {"Id": "ou-abcd-q8z9vop9", "Type": "ORGANIZATIONAL_UNIT", "Name": "Prod"},
                 {"Id": "ou-abcd-e604f59w", "Type": "ORGANIZATIONAL_UNIT", "Name": "Workloads"},
@@ -207,8 +206,6 @@ def test_full_run(
             account.pop("JoinedTimestamp")
 
         # Verify that the output inventory JSON is exactly what it's supposed to be:
-        print(f"\n########################\n{json.dumps(account_index)}\n########################\n")
-        print(f"\n########################\n{json.dumps(account_map)}\n########################\n")
         assert account_index == account_map
 
     # Clean up the env var:

@@ -54,7 +54,7 @@ def get_organizational_unit_map(
     org_account_role_name: str,
     client: Optional[BaseClient] = None,
 ) -> dict[str, Any]:
-    """Recursively lists all OUs contained Returns a map of all OU names keyed to their identifier, searching recursively."""
+    """Recursively lists all OUs, returning a map of all OU names keyed to their identifier."""
     ou_map: dict[str, str] = {}
     if client is None:
         client: BaseClient = boto3_cached_conn(service="organizations", account_number=org_account_id, assume_role=org_account_role_name)
