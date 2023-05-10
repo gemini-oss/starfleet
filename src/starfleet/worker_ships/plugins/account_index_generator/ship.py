@@ -24,7 +24,6 @@ from starfleet.worker_ships.lambda_utils import worker_lambda
 from starfleet.worker_ships.plugins.account_index_generator.utils import (
     fetch_additional_details,
     list_accounts,
-    list_organizational_units_for_parent,
     get_account_map,
     get_organizational_unit_map,
 )

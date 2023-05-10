@@ -54,10 +54,10 @@ def test_resolve_include_account_specification(test_index: AccountIndexInstance)
         "by_ids": [],
         "by_names": [],
         "by_tags": [],
-        "by_org_units": ["ROOT", "SomeOU", "r-123456", "ou-1234-5678910"],
+        "by_org_units": ["ROOT", "Workloads", "r-abcd", "ou-abcd-e604f59w"],
     }
     results["ou_loop"] = resolve_include_account_specification(template["include_accounts"])
-    for org_unit in ["ROOT", "r-123456"]:
+    for org_unit in ["ROOT", "r-abcd"]:
         template["include_accounts"] = {"all_accounts": False, "by_ids": [], "by_names": [], "by_tags": [], "by_org_units": [org_unit]}
         results[f"ou_key_{org_unit}"] = resolve_include_account_specification(template["include_accounts"])
 
@@ -71,7 +71,7 @@ def test_resolve_include_account_specification(test_index: AccountIndexInstance)
         assert all_accounts == value
 
     # Lastly, check out the non-root OU since that will lack the org root ID (Account 20):
-    for org_unit in ["SomeOU", "ou-1234-5678910"]:
+    for org_unit in ["Workloads", "ou-abcd-e604f59w"]:
         template["include_accounts"] = {"all_accounts": False, "by_ids": [], "by_names": [], "by_tags": [], "by_org_units": [org_unit]}
         result = resolve_include_account_specification(template["include_accounts"])
         assert "000000000020" not in result
@@ -111,7 +111,7 @@ def test_resolve_include_exclude(test_index: AccountIndexInstance) -> None:
             AllAccounts: True
         ExcludeAccounts:
             ByOrgUnits:
-                - SomeOU
+                - Workloads
     """
     template = BaseAccountPayloadTemplate().load(yaml.safe_load(payload))
     assert resolve_include_exclude(template) == {"000000000020"}

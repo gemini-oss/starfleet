@@ -64,8 +64,8 @@ def test_loading(account_index_config: Dict[str, Any], aws_s3: BaseClient, inven
     for region_mapping in index.regions_map.values():
         assert len(region_mapping) == len(account_map.keys())
 
-    assert len(index.ou_map["r-123456"]) == len(index.ou_map["ROOT".lower()]) == len(account_map.keys())
-    assert len(index.ou_map["ou-1234-5678910"]) == len(index.ou_map["SomeOU".lower()]) == len(account_map.keys()) - 1
+    assert len(index.ou_map["r-abcd"]) == len(index.ou_map["ROOT".lower()]) == len(account_map.keys())
+    assert len(index.ou_map["ou-abcd-e604f59w"]) == len(index.ou_map["Workloads".lower()]) == len(account_map.keys()) - 1
 
     for tag_values in index.tag_map.values():
         for values in tag_values.values():
@@ -101,12 +101,12 @@ def test_get_accounts_by_tag(index_obj: Dict[str, Any]) -> None:
 def test_get_accounts_by_ou(index_obj: Dict[str, Any]) -> None:
     """This tests getting accounts by OUs"""
     index = StarfleetDefaultAccountIndex()
-    accounts = index.get_accounts_by_ou("sOMeOu")  # This tests casing as well
+    accounts = index.get_accounts_by_ou("wOrkLOads")  # This tests casing as well
     assert len(accounts) == len(index_obj["accounts"].keys()) - 1
     assert "000000000020" not in accounts  # We didn't search for Root
 
     # Try this again, but this time pass in the OU ID. It should be the same result:
-    assert index.get_accounts_by_ou("oU-1234-5678910") == accounts  # Also test casing
+    assert index.get_accounts_by_ou("oU-abcd-e604f59w") == accounts  # Also test casing
 
 
 def test_get_accounts_by_regions(index_obj: Dict[str, Any]) -> None:

@@ -10,7 +10,7 @@ This defines the PyTest fixtures exclusively for the Account Indexer worker
 # pylint: disable=redefined-outer-name,unused-argument,duplicate-code
 import json
 from datetime import datetime
-from typing import Any, Dict, Generator, List, Optional
+from typing import Any, Dict, Generator, Optional
 from unittest import mock
 from unittest.mock import MagicMock
 
@@ -56,7 +56,7 @@ def good_configuration() -> Dict[str, Any]:
         EventBridgeTimedFrequency: HOURLY
         OrgAccountAssumeRole: starfleet-worker-basic-test-role
         OrgAccountId: "123456789012"
-        OrgRootId: r-123456
+        OrgRootId: r-abcd
         DescribeRegionsAssumeRole: starfleet-worker-basic-test-role
     """
 
@@ -90,7 +90,7 @@ def account_generator(paginator: Optional[str] = None) -> Dict[str, Any]:
         accounts.append(
             {
                 "Id": str(count + 1).zfill(12),
-                "Arn": f"arn:aws:organizations::000000000020:account/o-abcdefghi/{str(count + 1).zfill(12)}",
+                "Arn": f"arn:aws:organizations::000000000020:account/o-abcdefghij/{str(count + 1).zfill(12)}",
                 "Email": f"account{count + 1}@company.com",
                 "Name": f"Account {count + 1}",
                 "Status": "ACTIVE",
@@ -143,9 +143,16 @@ def mock_direct_boto_clients() -> MagicMock:
         """This is the mocked out function that will just return a few Org OUs back out."""
         # If the root is passed in (000000000020), then return the Root org ID:
         if kwargs["ChildId"] == "000000000020":
-            return {"Parents": [{"Id": "r-123456", "Type": "ROOT"}]}
-
-        return {"Parents": [{"Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT"}]}
+            return {"Parents": [{"Id": "r-abcd", "Type": "ROOT"}]}
+        if kwargs["ChildId"] == "000000000019":
+            return {
+                "Parents": [
+                    {"Id": "ou-abcd-q8z9vop9", "Type": "ORGANIZATIONAL_UNIT"},
+                    {"Id": "ou-abcd-e604f59w", "Type": "ORGANIZATIONAL_UNIT"},
+                    {"Id": "r-abcd", "Type": "ROOT"},
+                ]
+            }
+        return {"Parents": [{"Id": "ou-abcd-e604f59w", "Type": "ORGANIZATIONAL_UNIT"}]}
 
     class MockedBoto3:
         """This is a mocked Boto3 package that will return a normal boto3 client for everything except organizations. Moto handles the other mocked boto calls."""
@@ -176,11 +183,11 @@ def mock_list_parent_ous() -> Generator[None, None, None]:
     and it's easier to just mock out what we need vs. test the boto3 stuff itself.
     """
 
-    def mocked_func(*args, **kwargs) -> List[Dict[str, Any]]:  # noqa
+    def mocked_func(*args, **kwargs) -> Dict[str, Any]:  # noqa
         """This is the mocked out function that will just list all the OUs that are not Root back out."""
-        return [{"Id": "ou-1234-5678910", "Arn": "arn:aws:organizations::000000000020:ou/o-000000000020/ou-1234-5678910", "Name": "SomeOU"}]
+        return {"r-abcd": "ROOT", "ou-abcd-e604f59w": "Workloads", "ou-abcd-q8z9vop9": "Prod", "ou-abcd-7puk9u2d": "Sandbox"}
 
-    with mock.patch("starfleet.worker_ships.plugins.account_index_generator.ship.list_organizational_units_for_parent", mocked_func):
+    with mock.patch("starfleet.worker_ships.plugins.account_index_generator.ship.get_organizational_unit_map", mocked_func):
         yield
 
 

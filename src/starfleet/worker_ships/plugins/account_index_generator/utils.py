@@ -27,7 +27,7 @@ from starfleet.utils.logging import LOGGER
 # or the fully-qualified ARN. For example:
 #   >>> arn:aws:organizations::123456789012:root/o-ca45vq09vj/r-aux4
 #   >>> r-aux4
-ORGANIZATION_ROOT_ID_PATTERN: re.Pattern = re.compile(r"(^arn:aws:organizations::\d{12}:root/o-[a-z0-9]{10,32}/r-[0-9a-z]{4,32}$)|" r"(^r-[0-9a-z]{4,32}$)")
+ORGANIZATION_ROOT_ID_PATTERN: re.Pattern = re.compile(r"(^arn:aws:organizations::\d{12}:root/o-[a-z0-9]{10,32}/r-[0-9a-z]{4,32}$)|(^r-[0-9a-z]{4,32}$)")
 
 
 class AccountIndexerProcessError(Exception):
@@ -55,17 +55,19 @@ def get_organizational_unit_map(
     client: Optional[BaseClient] = None,
 ) -> dict[str, Any]:
     """Recursively lists all OUs contained Returns a map of all OU names keyed to their identifier, searching recursively."""
-    ou_map: dict[str, str] = dict()
+    ou_map: dict[str, str] = {}
     if client is None:
         client: BaseClient = boto3_cached_conn(service="organizations", account_number=org_account_id, assume_role=org_account_role_name)
     if ORGANIZATION_ROOT_ID_PATTERN.fullmatch(parent_id):
         ou_map[parent_id] = "ROOT"
     paginator = client.get_paginator("list_organizational_units_for_parent")
     response = paginator.paginate(ParentId=parent_id).build_full_result()
-    for ou in response["OrganizationalUnits"]:
-        ou_map.update({ou["Id"]: ou["Name"]})
+    for organizational_unit in response["OrganizationalUnits"]:
+        ou_map.update({organizational_unit["Id"]: organizational_unit["Name"]})
         ou_map.update(
-            get_organizational_unit_map(parent_id=ou["Id"], org_account_id=org_account_id, org_account_role_name=org_account_role_name, client=client)
+            get_organizational_unit_map(
+                parent_id=organizational_unit["Id"], org_account_id=org_account_id, org_account_role_name=org_account_role_name, client=client
+            )
         )
     return ou_map
 

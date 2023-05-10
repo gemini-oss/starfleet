@@ -67,7 +67,7 @@ def test_list_org_accounts(mock_list_account: MagicMock) -> None:
         assert isinstance(all_accounts[count].pop("JoinedTimestamp"), datetime)
         test_value = {
             "Id": f"{str(count + 1).zfill(12)}",
-            "Arn": f"arn:aws:organizations::000000000020:account/o-abcdefghi/{str(count + 1).zfill(12)}",
+            "Arn": f"arn:aws:organizations::000000000020:account/o-abcdefghij/{str(count + 1).zfill(12)}",
             "Email": f"account{count + 1}@company.com",
             "Name": f"Account {count + 1}",
             "Status": "ACTIVE",
@@ -92,9 +92,8 @@ def test_fetch_additional_details(
     """This is a test to ensure that we can fetch all the additional details about"""
     from starfleet.worker_ships.plugins.account_index_generator.utils import fetch_additional_details
 
-    ous = {"ou-1234-5678910": "SomeOU", "r-123456": "ROOT"}
-
-    fetch_additional_details(account_map, ous, "r-123456", "000000000020", "testing", "testing", "us-east-2")
+    ous = {"r-abcd": "ROOT", "ou-abcd-e604f59w": "Workloads", "ou-abcd-q8z9vop9": "Prod", "ou-abcd-7puk9u2d": "Sandbox"}
+    fetch_additional_details(account_map, ous, "r-abcd", "000000000020", "testing", "testing", "us-east-2")
 
     # Verify that everything is there:
     tag_value = {f"Key{x}": f"Value{x}" for x in range(1, 4)}
@@ -106,13 +105,20 @@ def test_fetch_additional_details(
         assert account["Regions"] == regions
 
         # And the parent OUs:
-        if account["Id"] != "000000000020":
+        if account["Id"] not in ("000000000020", "000000000019"):
             assert account["Parents"] == [
-                {"Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeOU"},
-                {"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"},
+                {"Id": "ou-abcd-e604f59w", "Type": "ORGANIZATIONAL_UNIT", "Name": "Workloads"},
+                {"Id": "r-abcd", "Type": "ROOT", "Name": "ROOT"},
             ]
-        else:
-            assert account["Parents"] == [{"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"}]
+        elif account["Id"] == "000000000020":
+            assert account["Parents"] == [{"Id": "r-abcd", "Type": "ROOT", "Name": "ROOT"}]
+        elif account["Id"] == "000000000019":
+            print(f"\n######\n{account['Parents']}\n######\n")
+            assert account["Parents"] == [
+                {"Id": "ou-abcd-q8z9vop9", "Type": "ORGANIZATIONAL_UNIT", "Name": "Prod"},
+                {"Id": "ou-abcd-e604f59w", "Type": "ORGANIZATIONAL_UNIT", "Name": "Workloads"},
+                {"Id": "r-abcd", "Type": "ROOT", "Name": "ROOT"},
+            ]
 
 
 def test_async_exceptions(aws_sts: BaseClient) -> None:
@@ -127,7 +133,7 @@ def test_async_exceptions(aws_sts: BaseClient) -> None:
     with pytest.raises(AccountIndexerProcessError) as exc:
         with mock.patch("starfleet.worker_ships.plugins.account_index_generator.utils.fetch_tags_and_parents", raise_exception):
             with mock.patch("starfleet.worker_ships.plugins.account_index_generator.utils.fetch_regions", raise_exception):
-                fetch_additional_details({"000000000000": {}}, {"r-123456": "ROOT"}, "r-123456", "000000000020", "testing", "testing", "us-east-2")
+                fetch_additional_details({"000000000000": {}}, {"r-abcd": "ROOT"}, "r-abcd", "000000000020", "testing", "testing", "us-east-2")
 
     assert "Fetching tags and regions" in str(exc.value)
 
@@ -152,8 +158,8 @@ def test_full_run(
     from starfleet.worker_ships.plugins.account_index_generator.utils import fetch_additional_details
 
     # We need to get the proper account map so we can verify that we generated the proper thing:
-    ou_map = {"ou-1234-5678910": "SomeOU", "r-123456": "ROOT"}
-    fetch_additional_details(account_map, ou_map, "r-123456", "000000000020", "testing", "testing", "us-east-2")
+    ou_map = {"r-abcd": "ROOT", "ou-abcd-e604f59w": "Workloads", "ou-abcd-q8z9vop9": "Prod", "ou-abcd-7puk9u2d": "Sandbox"}
+    fetch_additional_details(account_map, ou_map, "r-abcd", "000000000020", "testing", "testing", "us-east-2")
 
     with mock.patch("starfleet.worker_ships.plugins.account_index_generator.ship.LOGGER") as mocked_logger:
         if cli:
@@ -201,6 +207,8 @@ def test_full_run(
             account.pop("JoinedTimestamp")
 
         # Verify that the output inventory JSON is exactly what it's supposed to be:
+        print(f"\n########################\n{json.dumps(account_index)}\n########################\n")
+        print(f"\n########################\n{json.dumps(account_map)}\n########################\n")
         assert account_index == account_map
 
     # Clean up the env var:
