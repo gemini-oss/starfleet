@@ -284,9 +284,9 @@ def diff_local_with_s3(local_files: Dict[str, str], s3_files: Dict[str, Any]) ->
         for file in s3_files.keys():
             LOGGER.debug(f"[👾] File: {file} is in S3 but not in the repo.")
 
-    LOGGER.info(f"[🆕] There are {len(missing_files)} missing files in the bucket.")
-    LOGGER.info(f"[📝] There are {len(different_files)} outdated files in the bucket.")
-    LOGGER.info(f"[👾] There are {len(s3_files)} excess files on the bucket.")
+    LOGGER.info(f"[🆕] There are {len(missing_files)} missing file(s) in the bucket.")
+    LOGGER.info(f"[📝] There are {len(different_files)} outdated file(s) in the bucket.")
+    LOGGER.info(f"[👾] There are {len(s3_files)} excess file(s) on the bucket.")
 
     return missing_files, different_files
 

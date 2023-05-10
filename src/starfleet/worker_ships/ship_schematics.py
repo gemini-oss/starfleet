@@ -14,8 +14,9 @@ to see existing ship plugins to get ideas on how to make your own.
 from enum import Enum
 from typing import Any, Dict, Type, TypeVar
 
-from marshmallow import Schema, fields, INCLUDE, post_load, ValidationError
+from marshmallow import Schema, fields, INCLUDE, post_load, ValidationError, validate
 
+from starfleet.utils.slack import SLACK_CLIENT
 from starfleet.worker_ships.base_payload_schemas import WorkerShipPayloadBaseTemplate
 
 
@@ -54,6 +55,29 @@ class EventBridgeFrequency(Enum):
     DAILY = "DAILY"  # Once a day / every 24 hours
 
 
+class AlertPriority(Enum):
+    """
+    These are the valid values for the types of alerts that should be emitted (if at all).
+
+    This is somewhat similar to the way that Python logging levels work in that levels encompass other levels. For example this goes by ranking from
+    least noisy to most noisy. If you select PROBLEM, then you will only receive alerts that are a PROBLEM. If you select INFORMATIONAL, then you will
+    receive alerts that are INFORMATIONAL, SUCCESS, IMPORTANT, and PROBLEM.
+    """
+
+    NONE = 0  # Alert nothing
+    PROBLEM = 1  # For errors or other items of significance to note (typically used for "bad" things)
+    IMPORTANT = 2  # For information that is important but not necessarily an error
+    SUCCESS = 3  # For information that would highlight that something was successful
+    INFORMATIONAL = 4  # For informational messages
+
+
+class AlertConfiguration(Schema):
+    """This defines a schema for a worker's configuration defining details about what alerts should be emitted."""
+
+    channel_id = fields.String(required=True, data_key="ChannelId")
+    alert_priority = fields.String(required=True, validate=validate.OneOf([priority.name for priority in AlertPriority]), data_key="AlertPriority")
+
+
 class WorkerShipBaseConfigurationTemplate(Schema):
     """This is the base worker ship configuration template schema that illustrates how the worker should be configured.
     This is _only_ used for validation purposes. The worker configuration will live with the global configuration and should
@@ -84,6 +108,9 @@ class WorkerShipBaseConfigurationTemplate(Schema):
     # This is an (Optional) SNS topic ARN that gets Starbase to invoke this Lambda function. The purpose for this is really for multistage
     # workflows (or externally invoked workflows) where the Starbase needs to perform fan-out operations (to be placed on the InvocationQueueUrl above)
     starbase_invocation_topic_arn = fields.String(required=False, data_key="StarbaseInvocationTopicArn")
+
+    # This is an optional alert configuration (i.e. for sending to Slack) that a worker that opts in to can use to send alerts to.
+    alert_configuration = fields.Nested(AlertConfiguration(), required=False, data_key="AlertConfiguration")
 
     @post_load
     def validate_eventbridge_timed_frequencies(self, in_data: Dict[str, Any], **kwargs) -> Dict[str, Any]:  # pylint: disable=W0613
@@ -125,6 +152,12 @@ class StarfleetWorkerShip:
         """Static method to return the worker ship name."""
         return cls.__name__
 
+    def __init__(self):
+        """Default constructor. By default, this will set empty alerting details -- for sending messages to Slack with a priority of NONE."""
+        # By default, do not set an alert priority. This will be set later if required by the @worker_lambda decorator.
+        self.alert_priority = AlertPriority.NONE
+        self.alert_channel = None
+
     # This is the name for the worker ship plugin (this should be UpperCamelCase). This is also the name of the Configuration section for the given worker ship plugin.
     # You can override this if you want in your own subclass to just be a flat string, but by default this is a property that returns the name of the class.
     @property
@@ -133,13 +166,33 @@ class StarfleetWorkerShip:
         return self.get_worker_ship_name()
 
     def load_template(self, raw_template: Dict[str, Any]) -> None:
-        """This will load the template and store it in the loaded_template attribute. This will raise
-        exceptions if there are validation errors."""
+        """
+        This will load the template and store it in the loaded_template attribute. This will raise
+        exceptions if there are validation errors.
+        """
         self.payload = self.payload_template_class().load(raw_template)
 
     def execute(self, commit: bool = False) -> None:
         """This will execute the job from the payload."""
         raise NotImplementedError("pew pew pew")  # pragma: no cover
+
+    def send_alert(self, message_priority: AlertPriority, title: str, body_markdown: str) -> None:
+        """This will do the work to send an alert to the Alerting plugin (Slack) if it is configured."""
+        if (
+            self.alert_priority.value >= message_priority.value > AlertPriority.NONE.value
+        ):  # the `> None` part is done to prevent NONE being passed in to the message_priority
+            # Send the message
+            if message_priority == AlertPriority.INFORMATIONAL:
+                SLACK_CLIENT.post_info(self.alert_channel, title, body_markdown)
+
+            elif message_priority == AlertPriority.SUCCESS:
+                SLACK_CLIENT.post_success(self.alert_channel, title, body_markdown)
+
+            elif message_priority == AlertPriority.IMPORTANT:
+                SLACK_CLIENT.post_important(self.alert_channel, title, body_markdown)
+
+            elif message_priority == AlertPriority.PROBLEM:
+                SLACK_CLIENT.post_problem(self.alert_channel, title, body_markdown)
 
 
 StarfleetWorkerShipInstance = TypeVar("StarfleetWorkerShipInstance", bound=StarfleetWorkerShip)

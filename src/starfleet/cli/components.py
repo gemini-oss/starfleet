@@ -12,6 +12,7 @@ from typing import Any, List
 import click
 
 import starfleet.worker_ships.plugins
+from starfleet.utils.configuration import STARFLEET_CONFIGURATION
 from starfleet.worker_ships.loader import STARFLEET_WORKER_SHIPS
 from starfleet.startup import base_start_up
 from starfleet.utils.logging import LOGGER
@@ -73,6 +74,9 @@ class StarfleetClickGroup(click.Group):
 
         # Load the worker ships (makes sure everything is all good):
         STARFLEET_WORKER_SHIPS.get_worker_ships()
+
+        # Disable Slack alerts:
+        STARFLEET_CONFIGURATION.config["STARFLEET"]["SlackEnabled"] = False
 
         # Load up the CLIs:
         for command in STARFLEET_CLI_LOADER.clis:

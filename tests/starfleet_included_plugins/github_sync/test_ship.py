@@ -17,7 +17,6 @@ from unittest import mock
 from unittest.mock import MagicMock
 
 import pytest
-import yaml
 from botocore.client import BaseClient
 from click.testing import CliRunner
 from tests.starfleet_included_plugins.github_sync.conftest import WrappedTempDir
@@ -178,6 +177,7 @@ def test_lambda(
     extract_zip: bool,
     delete_missing: bool,
     aws_s3: BaseClient,
+    github_sync_payload: Dict[str, Any],
     mock_installation_token: MagicMock,
     mock_github: MagicMock,
     excess_files: Set[str],
@@ -190,16 +190,11 @@ def test_lambda(
     if commit:
         os.environ["STARFLEET_COMMIT"] = "true"
 
-    # Load the base template:
-    payload_file = f"{os.path.dirname(os.path.abspath(__file__))}/test_payload.yaml"
-    with open(payload_file, "r", encoding="UTF-8") as file:
-        base_payload = yaml.safe_load(file.read())
-
     # Update the payload with the details:
-    base_payload.update({"ExtractZipContents": extract_zip, "DeleteMissingFiles": delete_missing})
+    github_sync_payload.update({"ExtractZipContents": extract_zip, "DeleteMissingFiles": delete_missing})
 
     # Run it:
-    lambda_handler({"Records": [{"body": json.dumps(base_payload)}]}, object())  # pylint: disable=no-value-for-parameter
+    lambda_handler({"Records": [{"body": json.dumps(github_sync_payload)}]}, object())  # pylint: disable=no-value-for-parameter
 
     # If we have commit mode, then we should see things in S3:
     if not commit:
@@ -214,7 +209,7 @@ def test_lambda(
             # Run it again to confirm that we log out that we have nothing to do:
             zip_repo.seek(0)  # Need to reset the zip read for the mocked GitHub API
             with mock.patch("starfleet.worker_ships.plugins.github_sync.ship.LOGGER") as mocked_logger:
-                lambda_handler({"Records": [{"body": json.dumps(base_payload)}]}, object())  # pylint: disable=no-value-for-parameter
+                lambda_handler({"Records": [{"body": json.dumps(github_sync_payload)}]}, object())  # pylint: disable=no-value-for-parameter
             found = False
             for call in mocked_logger.info.call_args_list:
                 if call[0][0] == "[🆗] No new or modified files to upload to S3.":
@@ -247,3 +242,94 @@ def test_lambda(
 
     # Clean up the env var:
     os.environ.pop("STARFLEET_COMMIT", None)
+
+
+def test_with_slack_alerts(
+    github_sync_payload: Dict[str, Any], test_configuration: Dict[str, Any], mock_slack_api: MagicMock, mock_github_sync_secrets: Dict[str, Any]
+) -> None:
+    """This tests the Slack alerts that are sent out."""
+    from starfleet.worker_ships.ship_schematics import AlertPriority
+    from starfleet.worker_ships.plugins.github_sync.ship import GitHubSyncWorkerShip
+
+    ship = GitHubSyncWorkerShip()
+    ship.alert_priority = AlertPriority.INFORMATIONAL
+    ship.alert_channel = "pewpewpew"
+    ship.load_template(github_sync_payload)
+    ship.payload["dir_path"] = "pewpewpew"
+    ship.payload["extract_zip_contents"] = False
+
+    # We are going to mock out all the utility functions since we just want to confirm that we send out
+    # all the proper alerts.
+
+    # Mock out entire things for the duration of this test:
+    with mock.patch("starfleet.worker_ships.plugins.github_sync.ship.download_repo"):
+        with mock.patch("starfleet.worker_ships.plugins.github_sync.ship.collect_files_for_diff"):
+            with mock.patch("starfleet.worker_ships.plugins.github_sync.ship.upload_to_s3"):
+                with mock.patch("starfleet.worker_ships.plugins.github_sync.ship.delete_from_s3"):
+                    # First is to test that we don't have any files to change or delete - no alert should be sent:
+                    with mock.patch("starfleet.worker_ships.plugins.github_sync.ship.collect_s3_files_for_diff", return_value={}):
+                        with mock.patch("starfleet.worker_ships.plugins.github_sync.ship.diff_local_with_s3", return_value=([], [])):
+                            ship.execute(commit=True)
+                            assert not mock_slack_api.return_value.chat_postMessage.called
+                            mock_slack_api.return_value.chat_postMessage.reset_mock()
+
+                        # Next, with new files to upload:
+                        with mock.patch("starfleet.worker_ships.plugins.github_sync.ship.diff_local_with_s3", return_value=(["fileone", "filetwo"], [])):
+                            ship.execute(commit=True)
+                            assert mock_slack_api.return_value.chat_postMessage.call_args[1]["text"] == "📣  Starfleet GitHub -> S3 Sync Job for TestGitHubSync"
+                            assert (
+                                "> *🆕  The following new files were uploaded:*\n>```\n - fileone\n - filetwo\n"
+                                in mock_slack_api.return_value.chat_postMessage.call_args[1]["blocks"][1]["text"]["text"]
+                            )
+                            mock_slack_api.return_value.chat_postMessage.reset_mock()
+
+                        # Next with only different files to upload:
+                        with mock.patch("starfleet.worker_ships.plugins.github_sync.ship.diff_local_with_s3", return_value=([], ["fileone", "filetwo"])):
+                            ship.execute(commit=True)
+                            assert mock_slack_api.return_value.chat_postMessage.call_args[1]["text"] == "📣  Starfleet GitHub -> S3 Sync Job for TestGitHubSync"
+                            assert (
+                                "> *✨  The following modified files were uploaded:*\n>```\n - fileone\n - filetwo\n"
+                                in mock_slack_api.return_value.chat_postMessage.call_args[1]["blocks"][1]["text"]["text"]
+                            )
+                            mock_slack_api.return_value.chat_postMessage.reset_mock()
+
+                        # Next with both new and different files to upload:
+                        with mock.patch(
+                            "starfleet.worker_ships.plugins.github_sync.ship.diff_local_with_s3", return_value=(["newfile"], ["fileone", "filetwo"])
+                        ):
+                            ship.execute(commit=True)
+                            assert mock_slack_api.return_value.chat_postMessage.call_args[1]["text"] == "📣  Starfleet GitHub -> S3 Sync Job for TestGitHubSync"
+                            assert (
+                                "> *🆕  The following new files were uploaded:*\n>```\n - newfile\n```\n\n"
+                                + "> *✨  The following modified files were uploaded:*\n>```\n - fileone\n - filetwo\n"
+                                in mock_slack_api.return_value.chat_postMessage.call_args[1]["blocks"][1]["text"]["text"]
+                            )
+                            mock_slack_api.return_value.chat_postMessage.reset_mock()
+
+                    # Now test with only files to delete:
+                    with mock.patch("starfleet.worker_ships.plugins.github_sync.ship.collect_s3_files_for_diff", return_value={"fileone": {}, "filetwo": {}}):
+                        ship.execute(commit=True)
+                        assert mock_slack_api.return_value.chat_postMessage.call_args[1]["text"] == "📣  Starfleet GitHub -> S3 Sync Job for TestGitHubSync"
+                        assert (
+                            "> *🗑  The following files have been deleted:*\n>```\n - fileone\n - filetwo"
+                            in mock_slack_api.return_value.chat_postMessage.call_args[1]["blocks"][1]["text"]["text"]
+                        )
+                        mock_slack_api.return_value.chat_postMessage.reset_mock()
+
+                        # Now test with files to add, modify, and delete:
+                        with mock.patch(
+                            "starfleet.worker_ships.plugins.github_sync.ship.diff_local_with_s3", return_value=(["newfile"], ["filethree", "filefour"])
+                        ):
+                            ship.execute(commit=True)
+                            assert mock_slack_api.return_value.chat_postMessage.call_args[1]["text"] == "📣  Starfleet GitHub -> S3 Sync Job for TestGitHubSync"
+                            assert (
+                                "> *🆕  The following new files were uploaded:*\n>```\n - newfile\n```\n\n"
+                                + "> *✨  The following modified files were uploaded:*\n>```\n - filethree\n - filefour\n```\n\n"
+                                + "> *🗑  The following files have been deleted:*\n>```\n - fileone\n - filetwo"
+                                in mock_slack_api.return_value.chat_postMessage.call_args[1]["blocks"][1]["text"]["text"]
+                            )
+                            mock_slack_api.return_value.chat_postMessage.reset_mock()
+
+                            # And with no commit: no messages should be sent out:
+                            ship.execute(commit=False)
+                            assert not mock_slack_api.return_value.chat_postMessage.called

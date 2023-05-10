@@ -10,7 +10,7 @@ This is primarily used for syncing Starfleet templates to S3 for CI/CD, but can 
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
-# pylint: disable=too-many-locals
+# pylint: disable=too-many-locals,too-many-statements
 import json
 import tempfile
 from typing import Dict, Any, Optional, TypeVar
@@ -24,7 +24,7 @@ from starfleet.utils.logging import LOGGER
 from starfleet.worker_ships.base_payload_schemas import WorkerShipPayloadBaseTemplate
 from starfleet.worker_ships.cli_utils import StarfleetSingleInvokeCommand
 from starfleet.worker_ships.lambda_utils import worker_lambda
-from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip
+from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip, AlertPriority
 from starfleet.worker_ships.plugins.github_sync.auth import GITHUB_AUTH_MANGER
 from starfleet.worker_ships.plugins.github_sync.utils import (
     collect_files_for_diff,
@@ -103,19 +103,41 @@ class GitHubSyncWorkerShip(StarfleetWorkerShip):
 
         # Step 6: Upload the files that need to be uploaded (if commit):
         upload_files = missing_files + different_files
+        delete_files = list(s3_files.keys())
         if commit:
+            alert_message = ""
+            if upload_files or delete_files:
+                alert_message += f"Starfleet's GitHub -> S3 sync job: {self.payload['template_name']} has made the following changes:\n\n"
+
             if upload_files:
+                if missing_files:
+                    alert_message += "> *🆕  The following new files were uploaded:*\n>```\n"
+                    alert_message += "\n".join([f" - {missing}" for missing in missing_files])
+                    alert_message += "\n```\n\n"
+
+                if different_files:
+                    alert_message += "> *✨  The following modified files were uploaded:*\n>```\n"
+                    alert_message += "\n".join([f" - {different}" for different in different_files])
+                    alert_message += "\n```\n\n"
+
                 LOGGER.info(f"[🪣] Uploading {len(upload_files)} file(s) to S3...")
                 upload_to_s3(bucket, directory, upload_files, s3_client, key_prefix=key_prefix)
             else:
                 LOGGER.info("[🆗] No new or modified files to upload to S3.")
 
             # Step 7: Delete the excess (if enabled and if commit)
-            if self.payload["delete_missing_files"] and s3_files:
-                LOGGER.info(f"[🗑️] Deleting {len(s3_files)} from S3...")
-                delete_from_s3(bucket, list(s3_files.keys()), s3_client, key_prefix=key_prefix)
+            if self.payload["delete_missing_files"] and delete_files:
+                alert_message += "> *🗑  The following files have been deleted:*\n>```\n"
+                alert_message += "\n".join([f" - {remove}" for remove in delete_files])
+                alert_message += "\n```"
+
+                LOGGER.info(f"[🗑️] Deleting {len(delete_files)} file(s) from S3...")
+                delete_from_s3(bucket, delete_files, s3_client, key_prefix=key_prefix)
             else:
                 LOGGER.info("[🆗] No files to delete.")
+
+            if alert_message:
+                self.send_alert(AlertPriority.IMPORTANT, f"Starfleet GitHub -> S3 Sync Job for {self.payload['template_name']}", alert_message)
 
         else:
             LOGGER.info("[⏭️] Commit is not enabled so not doing anything.")

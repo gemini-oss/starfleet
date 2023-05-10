@@ -266,19 +266,33 @@ def test_worker_lambda_handler(test_configuration: Dict[str, Any]) -> None:
     from starfleet.worker_ships.lambda_utils import worker_lambda
     from starfleet.utils.configuration import BadConfigurationError
     from tests.worker_ship_utils.testing_plugins.basic_plugin import TestingStarfleetWorkerPlugin
+    from starfleet.worker_ships.ship_schematics import AlertPriority
 
     TestingStarfleetWorkerInstance = TypeVar("TestingStarfleetWorkerInstance", bound=TestingStarfleetWorkerPlugin)
 
-    # Test with no errors:
+    # Test with no errors (no alert configuration supplied):
     @worker_lambda(TestingStarfleetWorkerPlugin)
     def normal_func(event: Dict[str, Any], context: object, worker: TestingStarfleetWorkerInstance, commit: bool) -> None:  # noqa
         """Testing no errors."""
         assert json.loads(event["Records"][0]["body"])  # not loading or verifying the event in this function beyond json work.
         assert commit is False
         assert isinstance(worker, TestingStarfleetWorkerPlugin)
+        assert not worker.alert_channel
+        assert worker.alert_priority == AlertPriority.NONE
 
     event = {"Records": [{"body": '{"some": "event"}'}]}
     normal_func(event, object())  # pylint: disable=no-value-for-parameter
+
+    # Test with an alert configuration supplied:
+    test_configuration[TestingStarfleetWorkerPlugin.get_worker_ship_name()]["AlertConfiguration"] = {"ChannelId": "lol", "AlertPriority": "SUCCESS"}
+
+    @worker_lambda(TestingStarfleetWorkerPlugin)
+    def alert_config_func(event: Dict[str, Any], context: object, worker: TestingStarfleetWorkerInstance, commit: bool) -> None:  # noqa
+        """Testing with an alert configuration:"""
+        assert worker.alert_channel == "lol"
+        assert worker.alert_priority == AlertPriority.SUCCESS
+
+    alert_config_func(event, object())  # pylint: disable=no-value-for-parameter
 
     # Test with an invalid payload:
     @worker_lambda(TestingStarfleetWorkerPlugin)

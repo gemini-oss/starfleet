@@ -380,18 +380,19 @@ def _log_summary(workload: Dict[str, Any]) -> bool:
     return work_to_do
 
 
-def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str, region: str, assume_role: str, session_name: str, commit: bool) -> None:
+def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str, region: str, assume_role: str, session_name: str, commit: bool) -> str:
     """This will sync the AWS Config details if the commit flag is set. This will also dump a summary of what the actions are."""
     LOGGER.info(f"[➕➖] Summarizing the items that are out of sync in {account}/{region}...")
     work_to_do = _log_summary(workload)
+    alert_text = ""
 
     if not work_to_do:
         LOGGER.info(f"[✅] Nothing to do. Everything is all set in {account}/{region}.")
-        return
+        return alert_text
 
     if not commit:
         LOGGER.info(f"[⏭️] There is work to do but because commit is disabled, no action is being taken in {account}/{region}.")
-        return
+        return alert_text
 
     # Commit is enabled so fix it!
     # Configuration Recorder:
@@ -405,6 +406,7 @@ def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str
             session_name=session_name,
             sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
         )
+        alert_text += "> ✅  Updated the Configuration Recorder\n"
 
     # Delivery Channel:
     if workload["DeliveryChannel"]:
@@ -417,6 +419,7 @@ def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str
             session_name=session_name,
             sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
         )
+        alert_text += "> ✅  Updated the Delivery Channel\n"
 
     # Retention Configuration:
     if workload["RetentionConfig"]:
@@ -429,6 +432,7 @@ def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str
             session_name=session_name,
             sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
         )
+        alert_text += "> ✅  Updated the Retention Configuration\n"
 
     # The recorder status:
     if workload["EnableRecording"] == RecorderAction.START_RECORDING:
@@ -441,6 +445,7 @@ def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str
             session_name=session_name,
             sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
         )
+        alert_text += "> ✅  Started the Configuration Recorder\n"
 
     if workload["EnableRecording"] == RecorderAction.STOP_RECORDING:
         LOGGER.info("[🛑] Stopping the recorder...")
@@ -452,5 +457,9 @@ def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str
             session_name=session_name,
             sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
         )
+        alert_text += "> ✅  Stopped the Configuration Recorder\n"
 
     LOGGER.info(f"[✅] Completed all work for {account}/{region}.")
+    alert_text += "\n\nCheck out the Lambda logs for more verbose details."
+
+    return alert_text

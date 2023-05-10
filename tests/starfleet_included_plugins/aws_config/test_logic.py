@@ -343,33 +343,41 @@ def test_sync_config(loaded_template: Dict[str, Any], aws_config: BaseClient) ->
     with mock.patch("starfleet.worker_ships.plugins.aws_config.logic.LOGGER") as mocked_logger:
         # First test with nothing to do:
         workload = {"ConfigurationRecorder": {}, "DeliveryChannel": {}, "EnableRecording": RecorderAction.DO_NOTHING, "RetentionConfig": {}}
-        sync_config(workload, {}, "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", False)
+        alert_text = sync_config(workload, {}, "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", False)
         # It will be the last logged item:
         assert (
             mocked_logger.info.call_args_list[len(mocked_logger.call_args_list) - 1][0][0]
             == "[✅] Nothing to do. Everything is all set in 000000000001/us-east-1."
         )
+        assert not alert_text
         mocked_logger.reset_mock()
 
         # Then test with work but with commit disabled:
         current_state = {"ConfigurationRecorder": {}, "DeliveryChannel": {}, "RecorderStatus": {}, "RetentionConfig": {}}
         workload = determine_workload(current_state, loaded_template["default_configuration"], "000000000001", "us-east-1")
-        sync_config(workload, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", False)
+        alert_text = sync_config(workload, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", False)
         assert (
             mocked_logger.info.call_args_list[len(mocked_logger.call_args_list) - 1][0][0]
             == "[⏭️] There is work to do but because commit is disabled, no action is being taken in 000000000001/us-east-1."
         )
+        assert not alert_text
         mocked_logger.reset_mock()
 
     # Commit is enabled... Let's gooooooo
-    sync_config(workload, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", True)
+    alert_text = sync_config(workload, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", True)
 
     # Verify that everything is all good by using our existing get_current_state function:
     current_state = get_current_state("000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig")
     workload = determine_workload(current_state, loaded_template["default_configuration"], "000000000001", "us-east-1")
     assert workload == {"ConfigurationRecorder": {}, "DeliveryChannel": {}, "EnableRecording": RecorderAction.DO_NOTHING, "RetentionConfig": {}}
+    assert (
+        alert_text
+        == "> ✅  Updated the Configuration Recorder\n> ✅  Updated the Delivery Channel\n> ✅  Updated the Retention Configuration\n"
+        + "> ✅  Started the Configuration Recorder\n\n\nCheck out the Lambda logs for more verbose details."
+    )
 
     # Let's try stopping the recorder (this also tests out what happens if the other fields are false):
     workload["EnableRecording"] = RecorderAction.STOP_RECORDING
-    sync_config(workload, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", True)
+    alert_text = sync_config(workload, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", True)
     assert not get_current_state("000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig")["RecorderStatus"]["recording"]
+    assert alert_text == "> ✅  Stopped the Configuration Recorder\n\n\nCheck out the Lambda logs for more verbose details."

@@ -9,6 +9,7 @@ to easily specify per-account/region configuration details for each recorder.
 :Author: Mike Grima <michael.grima@gemini.com>
 """
 import json
+import traceback
 from typing import Dict, Any, TypeVar
 
 import click
@@ -21,7 +22,7 @@ from starfleet.worker_ships.lambda_utils import worker_lambda
 
 from starfleet.worker_ships.plugins.aws_config.logic import get_account_region_payload, get_current_state, determine_workload, sync_config
 from starfleet.worker_ships.plugins.aws_config.schemas import AwsConfigWorkerShipConfigurationTemplate, AwsConfigWorkerShipPayloadTemplate
-from starfleet.worker_ships.ship_schematics import FanOutStrategy, StarfleetWorkerShip
+from starfleet.worker_ships.ship_schematics import FanOutStrategy, StarfleetWorkerShip, AlertPriority
 
 
 class AwsConfigWorkerShip(StarfleetWorkerShip):
@@ -49,7 +50,11 @@ class AwsConfigWorkerShip(StarfleetWorkerShip):
         workload = determine_workload(current_state, working_payload, account, region)
 
         # Do the work!
-        sync_config(workload, working_payload, account, region, assume_role, session_name, commit)
+        alert_text = sync_config(workload, working_payload, account, region, assume_role, session_name, commit)
+        if commit and alert_text:
+            self.send_alert(
+                AlertPriority.SUCCESS, "Updated AWS Config properties", f"*Below is a summary of the work performed in {account}/{region}:*\n\n" + alert_text
+            )
 
 
 @click.group()
@@ -85,6 +90,15 @@ def lambda_handler(event: Dict[str, Any], context: object, worker: AwsConfigWork
         worker.load_template(payload)
 
         # Process it!
-        worker.execute(commit=commit)
+        try:
+            worker.execute(commit=commit)
+        except Exception:
+            message_text = (
+                f"*Error processing AWS Config template: {worker.payload['template_name']}*\n"
+                + f"*Unable to update the AWS Config configuration in: {worker.payload['starbase_assigned_account']}/{worker.payload['starbase_assigned_region']}.*\n\n"
+                + f"The exception details are below:\n```\n{traceback.format_exc()}```"
+            )
+            worker.send_alert(AlertPriority.PROBLEM, f"Problem updating AWS Config properties for template: {worker.payload['template_name']}", message_text)
+            raise
 
     LOGGER.info("[🏁] Completed syncing the AWS Config template.")

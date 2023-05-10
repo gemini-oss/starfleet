@@ -13,8 +13,7 @@ from typing import Callable, Dict, Type, Any
 
 from starfleet.utils.configuration import BadConfigurationError, STARFLEET_CONFIGURATION
 from starfleet.utils.logging import LOGGER
-from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip
-
+from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip, AlertPriority
 
 # Set up the configuration now so loggers are properly configured:
 STARFLEET_CONFIGURATION.config  # noqa pylint: disable=W0104
@@ -65,6 +64,12 @@ def worker_lambda(worker_ship: Type[StarfleetWorkerShip]) -> Callable:
 
             # If any combination of the string "true" is present, then it's True. The default is thus False.
             commit = os.environ.get("STARFLEET_COMMIT", "").lower() == "true"
+
+            # Finally, inject the alert details if present in the configuration:
+            alert_config = worker_config.get("AlertConfiguration", {"ChannelId": None, "AlertPriority": "NONE"})
+            priorities = {priority.name: priority for priority in AlertPriority}
+            worker.alert_channel = alert_config["ChannelId"]
+            worker.alert_priority = priorities[alert_config["AlertPriority"]]
 
             try:
                 func(event, context, worker, commit)
