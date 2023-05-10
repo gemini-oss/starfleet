@@ -24,8 +24,9 @@ from starfleet.worker_ships.lambda_utils import worker_lambda
 from starfleet.worker_ships.plugins.account_index_generator.utils import (
     fetch_additional_details,
     list_accounts,
-    get_account_map,
     list_organizational_units_for_parent,
+    get_account_map,
+    get_organizational_unit_map,
 )
 from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip, WorkerShipBaseConfigurationTemplate
 from starfleet.worker_ships.base_payload_schemas import WorkerShipPayloadBaseTemplate
@@ -66,11 +67,11 @@ class AccountIndexGeneratorShip(StarfleetWorkerShip):
 
         # Fetch the list of org OUs:
         LOGGER.info("[📡] Reaching out to the Orgs API to get the list of all OUs in the org...")
-        all_ous = list_organizational_units_for_parent(  # pylint: disable=no-value-for-parameter
-            ParentId=config["OrgRootId"], account_number=config["OrgAccountId"], assume_role=config["OrgAccountAssumeRole"]
+        ou_map = get_organizational_unit_map(
+            parent_id=config["OrgRootId"],
+            org_account_id=config["OrgAccountId"],
+            org_account_role_name=config["OrgAccountAssumeRole"],
         )
-        ou_map = {ou["Id"]: ou["Name"] for ou in all_ous}  # noqa  # Reformat the data into a nice map
-        ou_map[config["OrgRootId"]] = "ROOT"  # Add the root in
 
         # Fetch the tags and enabled regions:
         LOGGER.info("[🚚] Fetching tags and enabled regions for each account...")
