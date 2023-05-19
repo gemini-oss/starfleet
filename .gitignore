@@ -201,5 +201,8 @@ samconfig.toml
 # VS Code:
 .vscode/
 
+# Some kubernetes things
+.kuberlr/
+
 # By default ignore configuration file changes. If this needs to be changed, you need to force add in git:
 src/starfleet/configuration_files/
