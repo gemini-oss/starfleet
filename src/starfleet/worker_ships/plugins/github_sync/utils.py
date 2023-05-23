@@ -241,14 +241,14 @@ def get_content_type(filename: str) -> str:
 
 
 def upload_to_s3(bucket: str, dir_path: str, files_to_upload: List[str], s3_client: BaseClient, key_prefix: Optional[str] = None) -> None:
-    """This will upload the files in question to S3."""
+    """This will upload the files in question to S3. This will upload all objects with the `bucket-owner-full-control` canned ACL."""
     key_prefix = key_prefix or ""
 
     for file in files_to_upload:
         prefix = key_prefix + file
         with open(f"{dir_path}/{file}", "rb") as file_body:
             LOGGER.debug(f"[⬆️] Uploading object: {file} to bucket/prefix: {bucket}/{prefix}...")
-            s3_client.put_object(Bucket=bucket, Key=prefix, ContentType=get_content_type(file), Body=file_body)
+            s3_client.put_object(Bucket=bucket, Key=prefix, ContentType=get_content_type(file), Body=file_body, ACL="bucket-owner-full-control")
 
 
 def diff_local_with_s3(local_files: Dict[str, str], s3_files: Dict[str, Any]) -> Tuple[List[str], List[str]]:

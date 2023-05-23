@@ -150,9 +150,8 @@ Policies:
 
 For production, you will need the `iam:PassRole` permissions since the worker will be informing Config on which IAM role to make use of.
 
-
 ## AWS SAM Template
-For the AWS SAM template, you will need to add in this worker's components to it. The templates are mostly the same. The only difference is that for Prod, we operate off of a larger batch size to reduce costs, increase the RAM amount, and have the `STARFLEET_COMMIT` environment variable set to `True`.
+For the AWS SAM template, you will need to add in this worker's components to it. The templates for testing and production are mostly the same. The only difference is that for production, we operate off of a larger batch size to reduce costs, increase the RAM amount, and have the `STARFLEET_COMMIT` environment variable set to `True`.
 
 !!! tip
     We have included the below SAM details in the `test_sam_template.yaml` file that is included with this repo. All you need to do is uncomment the sections labeled `Uncomment for the AWS Config worker` with the details outlined.
@@ -183,9 +182,9 @@ Resources:
   AWSConfigWorker:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: ./starfleet/src
+      CodeUri: ./src
       Handler: starfleet.worker_ships.plugins.aws_config.ship.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.10
       Architectures:
         - arm64
       MemorySize: 128
@@ -255,7 +254,7 @@ Resources:
     Properties:
       CodeUri: ./starfleet/src
       Handler: starfleet.worker_ships.plugins.aws_config.ship.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.10
       Architectures:
         - arm64
       MemorySize: 256

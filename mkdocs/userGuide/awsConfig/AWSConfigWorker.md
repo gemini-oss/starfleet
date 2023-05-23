@@ -25,3 +25,6 @@ The AWS Config worker is an `ACCOUNT_REGION` worker, that is to say that it sche
 This worker ship plugin can be invoked on any EventBridge timed event and/or by updating the S3 template. We recommend that at a minimum, you run this once daily. As mentioned above, we do not set up aggregators because AWS Organizations does this very nicely for you. See the documentation above for more details on how to set that up.
 
 The next sections describe how to configure, set up, and use this worker ship plugin.
+
+## Alerting
+The Config worker supports alerts to Slack. It will alert on any errors that are encountered during execution. It will also emit `SUCCESS` notices if it makes a change to the AWS Config configuration.

@@ -1,6 +1,7 @@
 # Starfleet
 
-## 🚧🏗️👷⚠️Special Note: This project is under heavy development
+## Documentation
+There is a lot of documentation on our very fancy docs site here: [https://gemini-oss.github.io/starfleet](https://gemini-oss.github.io/starfleet)
 
 ## What is it?
 This is a whole AWS infrastructure automation tool that is able to run Lambda functions with AWS account specific workloads.
@@ -9,6 +10,3 @@ state across an entire AWS organization in a manner that cannot adequately be ac
 
 You can make lambdas to do whatever it is that you want to do with the proper context of the AWS account or region that you want
 to operate in.
-
-## Documentation
-There is a lot of documentation -- to much for this simple readme! Check out our fancy docs here: https://gemini-oss.github.io/starfleet

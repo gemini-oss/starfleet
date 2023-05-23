@@ -126,7 +126,7 @@ Resources:
     Properties:
       CodeUri: ./src
       Handler: starfleet.starbase.entrypoints.eventbridge_timed_lambda_handler
-      Runtime: python3.9
+      Runtime: python3.10
       Architectures:
         - arm64
       Events:
@@ -215,7 +215,7 @@ Resources:
       QueueName: starfleet-account-index-generator
       VisibilityTimeout: 300  # This needs to be the same as the Lambda function timeout.
       RedrivePolicy:
-        deadLetterTargetArn: !GetAtt StarbaseFanoutDLQ.Arn
+        deadLetterTargetArn: !GetAtt AccountIndexGeneratorDLQ.Arn
         maxReceiveCount: 4
 
   AccountIndexGenerator:
@@ -223,7 +223,7 @@ Resources:
     Properties:
       CodeUri: ./src
       Handler: starfleet.worker_ships.plugins.account_index_generator.ship.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.10
       Architectures:
         - arm64
       MemorySize: 256
@@ -263,9 +263,9 @@ Resources:
 #  AWSConfigWorker:
 #    Type: AWS::Serverless::Function
 #    Properties:
-#      CodeUri: ./starfleet/src
+#      CodeUri: ./src
 #      Handler: starfleet.worker_ships.plugins.aws_config.ship.lambda_handler
-#      Runtime: python3.9
+#      Runtime: python3.10
 #      Architectures:
 #        - arm64
 #      MemorySize: 128
@@ -286,7 +286,7 @@ Resources:
 #              - !Ref 'EnvironmentName'
 #              - AccountInventoryBucket
 
-# Uncomment for the GitHubSyncWorker to have that set up and deployed:
+# Uncomment for the GitHub Repo Sync Worker:
 #  GitHubSyncWorkerDLQ:
 #    Type: AWS::SQS::Queue
 #    Properties:
@@ -306,9 +306,9 @@ Resources:
 #  GitHubSyncWorker:
 #    Type: AWS::Serverless::Function
 #    Properties:
-#      CodeUri: ./starfleet/src
+#      CodeUri: ./src
 #      Handler: starfleet.worker_ships.plugins.github_sync.ship.lambda_handler
-#      Runtime: python3.9
+#      Runtime: python3.10
 #      Architectures:
 #        - arm64
 #      MemorySize: 128
@@ -325,6 +325,7 @@ Resources:
 #        # Grant permissions to read and write to the templates bucket, so you can do CI/CD!
 #        - S3CrudPolicy:
 #            BucketName: !Ref StarfleetTemplateBucket
+#        # Add any additional S3 policies here!
 
   # Finally, the Starbase Fanout Function:
   StarbaseFanoutFunction:
@@ -334,7 +335,7 @@ Resources:
     Properties:
       CodeUri: ./src
       Handler: starfleet.starbase.entrypoints.fanout_payload_lambda_handler
-      Runtime: python3.9
+      Runtime: python3.10
       Architectures:
         - arm64
       Events:
@@ -371,9 +372,15 @@ Resources:
                     - EnvMap
                     - !Ref 'EnvironmentName'
                     - BaseRoleName
+          # Uncomment for secrets manager permissions as well for Slack alerts and GitHub Repo Sync worker
+          # - Effect: Allow
+          #  Action: secretsmanager:GetSecretValue
+          #  Resource: arn:aws:secretsmanager:REGION:ACCOUNTNUMBER:secret:STARFLEET-SECRET-ID-HERE
+
       Roles:
         - !Ref AccountIndexGeneratorRole  # AccountIndexGeneratorRole is created automatically by SAM and can be referenced
         # - !Ref AWSConfigWorkerRole  # Uncomment for the AWS Config worker
+        # - !Ref GitHubSyncWorkerRole # Uncomment for the GitHub Repo Sync Worker
         # - !Ref YourWorkerRoleHere # Add your worker roles here to get the policy attached
 
 Outputs:

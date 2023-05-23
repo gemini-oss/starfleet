@@ -173,8 +173,9 @@ def get_installation_token(ctx: Context, **kwargs) -> None:  # noqa # pylint: di
 @click.option("--save-dir", type=click.Path(exists=True), required=True, help="A local directory to save the zip in.")
 def download(ctx: Context, save_dir: str, **kwargs) -> None:  # noqa # pylint: disable=unused-argument
     """
-    This is a helpful debugging command to download the repository. This will not extract the contents. You simply provide the payload template and the location
-    for where you want the repo to be downloaded, and it will be saved to that path as `REPO_NAME.zip`.
+    This is a helpful debugging command to download the repository. This will extract the contents if the payload specifies the `ExtractZipContents` flag set to `True`.
+    You simply provide the payload template and the location for where you want the repo to be downloaded (and optionally extracted),
+    and it will be saved to that path as `REPO_NAME.zip` (and extracted as `REPO_NAME-COMMIT-HASH/`).
 
     The commit flag doesn't do anything for this command.
     """
@@ -202,7 +203,7 @@ def download(ctx: Context, save_dir: str, **kwargs) -> None:  # noqa # pylint: d
     help="An optional local directory to save and retain the contents within. " "If not supplied, then this will create a temporary directory and delete it.",
 )
 def run(ctx: Context, commit: bool, save_dir: Optional[str] = None, **kwargs) -> None:  # noqa # pylint: disable=unused-argument
-    """This will run the syncing of the repository against our bucket"""
+    """This will run the syncing of the repository against the payload's specified S3 bucket."""
     if not commit:
         LOGGER.warning("[⚠️] Commit flag is disabled: not writing anything to S3!")
 

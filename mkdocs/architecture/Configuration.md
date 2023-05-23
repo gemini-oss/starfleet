@@ -36,6 +36,10 @@ STARFLEET:
     TemplateBucket: starfleet-templates-YOUR-ACCOUNT-ID
     FanOutQueueUrl: https://sqs.DEPLOYEMENT-REGION.amazonaws.com/ACCOUNT-ID/starbase-fanout-queue
     LogLevel: DEBUG
+    SecretsManager:
+        SecretId: Starfleet
+        SecretRegion: us-east-2
+    SlackEnabled: True
     ThirdPartyLoggerLevels:
         botocore: CRITICAL
         'urllib3.connectionpool': CRITICAL
@@ -72,6 +76,8 @@ The base configuration configures the primary Starfleet components. This is in t
 * **`ScopeToRegions`** - This is a set of AWS regions that should be scoped for `ACCOUNT_REGION` worker templates. This is useful if you have an SCP that restricts the regions that are allowed to be operated in. This ensures that `ACCOUNT_REGION` workers can only operate in those regions specified in this list. By default this is not set.
 * **`LogLevel`** - This is the Python log level to make use of. The valid fields are the [Python log level names](https://docs.python.org/3/library/logging.html#levels). The default value is `INFO`.
 * **`ThirdPartyLoggerLevels`** - This is a dictionary of Python logger name, and the corresponding log level for it. By default we silence the loggers for `botocore` and `urllib3.connectionpool`, because they can be noisy when making `boto3` API calls. Feel free to add or modify this section as you see fit.
+* **`SecretsManager`** - This is a dictionary that outlines the ID of an AWS Secrets Manager secret. This allows Starfleet workers to reference secrets. If specified, this contains 2 required fields: `SecretId` and `SecretRegion`. The ID is the name of the secret and the region is the region for it. The secret should reside in the same AWS account as Starfleet. Note: if you make use of Slack alerts, then you will need to have this configured.
+* **`SlackEnabled`** - This is a boolean that specifies if Slack alerting is enabled. There is an entire section on Slack alerts, but for now, just note that if you want to enable alerts to Slack, then you need to set this field to `True` and you _also_ need to configure SecretsManager as indicated in the item above. AWS Secrets Manager will securely hold the Slack application token.
 
 ### Worker Ship Configurations
 Each worker ship must have a configuration entry. The configuration entry has a number of required fields that _**every**_ worker ship needs. But, each worker ship can extend their own schemas as they see fit. You should consult with the documentation for each worker ship to know what it should look like.
@@ -82,5 +88,10 @@ Each worker ship must have a configuration entry. The configuration entry has a 
 * **`InvocationQueueUrl`** - As described in the [Worker Ship section](WorkerShips.md#the-sqs-queue), this is the SQS queue URL for where the Lambda's invocation will happen. The AWS SAM template has an example of what this should be. If you rely on the SAM template, than simply swap out the account ID and region, and you are good to go!
 * **`InvocationSources`** - As described in the [Worker Ship section](WorkerShips.md#invocation-source), this defines when the given worker gets invoked. This is used to inform the Starbase component when to task the worker.
 
+#### Optional Worker Fields
+* **`AlertConfiguration`** - This is an encompassing dictionary that specifies a Slack channel ID and a message priority for sending alerts to Slack from that worker. This is documented more in the Developer and User guides around Notifications.
+    * **`ChannelId`** - This is the Slack Channel ID that messages should be sent to
+    * **`AlertPriority`** - This is the `AlertPriority` enum string (documented in the Developer and User guides). Acceptable values are: `NONE`, `PROBLEM`, `IMPORTANT`, `SUCCESS`, and `INFORMATIONAL`.
+
 !!! Note
-    Each worker has it's own schema and can define other required and optional components. The fields above are required for all worker ships.
+    Each worker has it's own schema and can define other required and optional components. The fields above are applicable for all worker ships.
