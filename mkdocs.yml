@@ -1,9 +1,8 @@
 site_name: ✨Starfleet✨
-# Replace this once launched somewhere...
-site_url: https://github.com/gemini-oss/starfleet
+site_url: https://gemini-oss.github.io/starfleet/
 repo_url: https://github.com/gemini-oss/starfleet
 docs_dir: mkdocs
-copyright: Copyright &copy; 2023 - Gemini
+copyright: Copyright &copy; 2023 - <a href="https://gemini.com/careers">Gemini Trust Company, LLC</a><br/>See the <a href="https://gemini-oss.github.io/starfleet/Attributions">attributions page</a> for additional copyrights.
 theme:
   name: material
   font:
@@ -33,6 +32,7 @@ theme:
     - navigation.sections
     - navigation.footer
     - navigation.tabs
+    - content.code.copy
 
 plugins:
   - search
@@ -58,9 +58,15 @@ markdown_extensions:
   - toc:
       toc_depth: 3
       permalink: true
+  - attr_list
 
 extra_css:
   - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/gemini-oss
 
 nav:
   - Home: index.md
@@ -73,6 +79,8 @@ nav:
     - Resident IAM Role: architecture/ResidentIAMRole.md
     - Starbase: architecture/Starbase.md
     - CLI: architecture/CLI.md
+    - Secrets Management: architecture/Secrets.md
+    - Alerts & Notifications: architecture/Alerts.md
   - Installation Guide:
     - Installation Overview: installation/Overview.md
     - Set up IAM: installation/IAM.md
@@ -83,12 +91,23 @@ nav:
     - Wrapping Up: installation/WrapUp.md
   - User Guide:
     - Overview: userGuide/Overview.md
+    - Payload Templates: userGuide/PayloadTemplates.md
     - Starbase: userGuide/Starbase.md
-    - Account Index Generator: userGuide/AccountIndexGenerator.md
+    - Secrets Manager: userGuide/Secrets.md
+    - Slack Alerts: userGuide/Slack.md
+    - Account Index Generator:
+      - Overview: userGuide/AccountIndexGenerator.md
     - AWS Config Worker:
       - Overview: userGuide/awsConfig/AWSConfigWorker.md
       - Installation: userGuide/awsConfig/Installation.md
-      - Template: userGuide/awsConfig/Template.md
+      - Payload Templates: userGuide/awsConfig/Template.md
+      - CLI: userGuide/awsConfig/CLI.md
+    - GitHub Repo Sync Worker:
+      - Overview: userGuide/GitHubSync/Overview.md
+      - GitHub App Configuration: userGuide/GitHubSync/ConfigureGitHubApp.md
+      - Installation and Configuration: userGuide/GitHubSync/InstallationAndConfiguration.md
+      - Payload Templates: userGuide/GitHubSync/Template.md
+      - CLI: userGuide/GitHubSync/CLI.md
   - Developer Guide:
     - Developer Overview: developerGuide/Overview.md
     - Primary Components:
@@ -100,6 +119,12 @@ nav:
         - CLI: developerGuide/primaryComponents/workerShips/CLI.md
         - Worker Ship Loader: developerGuide/primaryComponents/workerShips/Loader.md
       - Account Indexer: developerGuide/primaryComponents/AccountIndexer.md
+      - Secrets Manager: developerGuide/primaryComponents/SecretsManager.md
+      - Notifications: developerGuide/primaryComponents/Notifications.md
     - AWS SAM Configuration: developerGuide/SAMConfiguration.md
     - Check List: developerGuide/CheckList.md
-  - Code Reference: reference/
+    - Generating Documentation: developerGuide/GeneratingDocs.md
+  - Extras:
+    - Overview: Links.md
+    - Attributions: Attributions.md
+    - Code Reference: reference/

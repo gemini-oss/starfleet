@@ -22,7 +22,7 @@ AccountIndexGeneratorQueue:
     QueueName: starfleet-account-index-generator
     VisibilityTimeout: 300  # This needs to be the same as the Lambda function timeout.
     RedrivePolicy:
-      deadLetterTargetArn: !GetAtt StarbaseFanoutDLQ.Arn
+      deadLetterTargetArn: !GetAtt AccountIndexGeneratorDLQ.Arn
       maxReceiveCount: 4
 
 # The Lambda function:
@@ -31,7 +31,7 @@ AccountIndexGenerator:
   Properties:
     CodeUri: ./src
     Handler: starfleet.worker_ships.plugins.account_index_generator.ship.lambda_handler
-    Runtime: python3.9
+    Runtime: python3.10
     Architectures:
       - arm64
     MemorySize: 256
@@ -67,7 +67,7 @@ StarbaseFanoutFunction:
   Properties:
     CodeUri: ./src
     Handler: starfleet.starbase.entrypoints.fanout_payload_lambda_handler
-    Runtime: python3.9
+    Runtime: python3.10
     Architectures:
       - arm64
     Events:

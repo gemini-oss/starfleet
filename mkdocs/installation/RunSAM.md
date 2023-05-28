@@ -2,6 +2,9 @@
 
 Now you are ready to run AWS SAM and get the infrastructure components deployed! To do this you should follow the instructions to get the AWS SAM CLI installed on your system. Also note, you will also need to build Starfleet in a docker container to properly install all the dependencies (this is doable via the SAM CLI as we'll discuss below.)
 
+!!! danger "Help Wanted!"
+    This section could use some assistance from the community for simplifying the installation process and documentation. We would love for assistance on the creation of things like an installation script, for example that would set all of this up for you.
+
 ## The Test Template
 We include a file called `test_sam_template.yaml`, so you can later clone it for production with production specific values in. The commands below will assume that the template is named `test_sam_template.yaml`.
 
@@ -59,6 +62,7 @@ capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]
 
 [TEST.validate.parameters]
 region = "YOUR_REGION_HERE"
+template_file = "test_sam_template.yaml"
 lint = true
 
 [TEST.build.parameters]
@@ -93,7 +97,7 @@ This should go through and generate the CloudFormation stack and attempt to depl
     Unfortunately, the SAM CLI doesn't do any of this by default so you have to finagle with it a bit. Once you do this a few times, you will get the hang of it.
 
 ## SAM Configuration
-When setting up SAM, it will create a configuration. A sample configuration has been provided here that you should use: [`samconfig.toml`](https://github.com/gemini-oss/starfleet/blob/main/samconfig.toml).
+When setting up SAM, it will create a configuration. A sample configuration has been provided here that you should use: [`sample_samconfig.toml`](https://github.com/gemini-oss/starfleet/blob/main/sample_samconfig.toml) - make a copy of this named as `samconfig.toml`.
 
 More details about this is described in the [Developer Guide](../developerGuide/SAMConfiguration.md#sam-config).
 

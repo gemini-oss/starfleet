@@ -26,7 +26,7 @@ For now, just know that workers require a configuration entry that details what 
 Each worker ship has an SQS queue and a corresponding dead-letter queue (DLQ). The SQS queue for the worker is used for invoking the Lambda function. SQS is used for a variety of reasons, namely it scales Lambda invocations very nicely, has great retry-capabilities, and DLQ integration. The DLQ is used to help debug why given payloads have failed.
 
 ### Invocation Source
-A worker also needs an ==Invocation Source==. This is discussed in much more detail later when the Starbase component is explored. Instead of bouncing you back and forth, we are just going to leave a TL;DR summary of what this is: the Invocation Source is what will determine *when* the worker ship gets invoked. The worker ship can be invoked by a CRON-like event (`EVENT_BRIDGE_TIMED_EVENT`), or by an update to the worker's template in S3 (`S3`).
+A worker also needs an ==Invocation Source==. This is discussed in much more detail later when the Starbase component is explored. Instead of bouncing you back and forth, we are just going to leave a TL;DR summary of what this is: the Invocation Source is what will determine *when* the worker ship gets invoked. The worker ship can be invoked by a CRON-like event (`EVENTBRIDGE_TIMED_EVENT`), or by an update to the worker's template in S3 (`S3`).
 
 If using a CRON-like syntax, the configuration will need something that looks like this:
 ```yaml
