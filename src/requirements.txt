@@ -1,4 +1,4 @@
-cloudaux @ git+https://github.com/mikegrima/cloudaux@TwoPointZero
+cloudaux-lite==1.0.0
 click==8.1.3
 PyYAML==6.0
 marshmallow==3.19.0
