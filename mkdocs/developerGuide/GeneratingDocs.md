@@ -27,7 +27,7 @@ The docs are built by running:
 
 ```bash
 source venv/bin/activate  # Make sure you are in your venv
-mkdocs build
+mkdocs build -d docs/
 ```
 
 Doing this will generate the docs to the `site/` directory. You need to rename this directory to `docs/`. This directory is _not_ included in the _main_ branch of the repository. Instead, we have another branch called `gh-pages` where this is committed to. This is what GitHub uses to host the site you are reading right now.
