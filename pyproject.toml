@@ -8,7 +8,7 @@ authors = [
     {name = "Gemini", email = "careers@gemini.com"},
     {name = "Mike Grima", email = "michael.grima@gemini.com"},
 ]
-version = "0.0.1"
+version = "1.0.0"
 dynamic = ["dependencies"]
 
 [tool.setuptools]

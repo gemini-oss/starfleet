@@ -124,24 +124,14 @@ Resources:
                 aws:PrincipalOrgId:
                   - !Ref OrganizationId
       Policies:
-        - PolicyName: AuthorizeOrganizationsList
+        - PolicyName: OrganizationsReadOnly
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
-              - Sid: AuthorizeOrgListRestricted
-                Effect: Allow
+              - Effect: Allow
                 Action:
-                  - organizations:ListOrganizationalUnitsForParent
-                  - organizations:ListParents
-                  - organizations:ListTagsForResource
-                Resource:
-                  - !Sub 'arn:${Partition}:organizations::${AWS::AccountId}:account/${OrganizationId}/*'
-                  - !Sub 'arn:${Partition}:organizations::${AWS::AccountId}:ou/${OrganizationId}/ou-*'
-                  - !Sub 'arn:${Partition}:organizations::${AWS::AccountId}:root/${OrganizationId}/r-*'
-              - Sid: AuthorizeOrgListAccounts
-                Effect: Allow
-                Action:
-                  - organizations:ListAccounts
+                  - organizations:Describe*
+                  - organizations:List*
                 Resource:
                   - '*'
 
@@ -212,7 +202,7 @@ Outputs:
     Description: The 12-digit AWS account ID of the Starfleet management account.
     Value: !Ref StarfleetAccountId
   StarfleetAccountIndexRoleArn:
-    Description: >- 
+    Description: >-
       The Amazon Resource Name (ARN) of the Starfleet Account Index Generator
       execution role.
     Value: !GetAtt AccountIndexExecutionRole.Arn

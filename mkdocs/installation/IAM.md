@@ -108,7 +108,7 @@ Resources:
     If you do decide to go with the CloudFormation StackSets route, you need to keep in mind that StackSets will _NOT_ deploy to the Organization Root account. If you do choose to use StackSets, you will need to _manually_ create an IAM role in the organization root account that has the exact same permissions as what is documented in the StackSet YAML above.
 
 !!! Note
-    If you leverage the `AccountIndexGeneratorShip` worker ship for your AWS account inventory (recommended), you will need to make sure that the Starfleet IAM roles in the Organization Root has the following permissions:
+    If you leverage the `AccountIndexGeneratorShip` worker ship for your AWS account inventory (recommended), you will need to make sure that the Starfleet IAM roles in the Organization Root account has the following permissions (in addition to the permissions you grant to the other worker roles):
 
     ```json
     {
@@ -116,7 +116,12 @@ Resources:
         "Statement": [
             {
                 "Effect": "Allow",
-                "Action": "organizations:List*",
+                "Action": [
+                    [
+                      "organizations:Describe*",
+                      "organizations:List*"
+                    ]
+                ]
                 "Resource": "*"
             }
         ]
