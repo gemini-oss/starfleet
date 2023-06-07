@@ -60,24 +60,28 @@ class AccountIndexGeneratorShip(StarfleetWorkerShip):
         config = STARFLEET_CONFIGURATION.config[self.worker_ship_name]
         LOGGER.info(f"[📡] Reaching out to the Orgs API to get the list of AWS accounts in account: {config['OrgAccountId']}...")
         all_accounts = list_accounts(  # pylint: disable=no-value-for-parameter
-            account_number=config["OrgAccountId"], assume_role=config["OrgAccountAssumeRole"]
+            account_number=config["OrgAccountId"], assume_role=config["OrgAccountAssumeRole"], region="us-east-1"
         )
         account_map = get_account_map(all_accounts)  # Reformat the data
 
-        # Fetch the list of org OUs:
-        LOGGER.info("[📡] Reaching out to the Orgs API to get the list of all OUs in the org...")
+        # Fetch the list of org OUs for root:
+        LOGGER.info("[📡] Reaching out to the Orgs API to get the list of all OUs under the ROOT OU...")
         all_ous = list_organizational_units_for_parent(  # pylint: disable=no-value-for-parameter
-            ParentId=config["OrgRootId"], account_number=config["OrgAccountId"], assume_role=config["OrgAccountAssumeRole"]
+            ParentId=config["OrgRootId"], account_number=config["OrgAccountId"], assume_role=config["OrgAccountAssumeRole"], region="us-east-1"
         )
-        ou_map = {ou["Id"]: ou["Name"] for ou in all_ous}  # noqa  # Reformat the data into a nice map
-        ou_map[config["OrgRootId"]] = "ROOT"  # Add the root in
+
+        # The resolved parents map: This is used to provide us with the parents for each account eventually pointing to ROOT.
+        # At this point, we know that the top level OUs map to root, so we build that mapping list now so we don't have to resolve this later with lots of
+        # unnecessary recursive API calls:
+        root = {"Id": config["OrgRootId"], "Name": "ROOT", "Type": "ROOT"}
+        resolved_parent_map = {ou["Id"]: [{"Id": ou["Id"], "Name": ou["Name"], "Type": "ORGANIZATIONAL_UNIT"}, root] for ou in all_ous}
+        resolved_parent_map[config["OrgRootId"]] = [root]  # Any account that has a parent of ROOT will just have ROOT as the parent.
 
         # Fetch the tags and enabled regions:
         LOGGER.info("[🚚] Fetching tags and enabled regions for each account...")
         fetch_additional_details(
             account_map,
-            ou_map,
-            config["OrgRootId"],
+            resolved_parent_map,
             config["OrgAccountId"],
             config["OrgAccountAssumeRole"],
             config["DescribeRegionsAssumeRole"],
@@ -93,13 +97,18 @@ class AccountIndexGeneratorShip(StarfleetWorkerShip):
                 Bucket=self.payload["account_inventory_bucket"],
                 Key=self.payload["inventory_object_prefix"],
                 ACL="bucket-owner-full-control",
-                Body=json.dumps(dump_accounts, indent=4),
+                Body=json.dumps(dump_accounts, indent=4, sort_keys=True),
                 ContentType="application/json",
             )
 
         # If we are not committing, then just output the raw data out:
         else:
-            LOGGER.info(f"[🍣] Raw Inventory:\n{json.dumps(account_map, indent=4)}")
+            LOGGER.info(f"[🍣] Raw Inventory:\n{json.dumps(account_map, sort_keys=True, indent=4)}")
+
+        # If you need to update the index JSON for unit tests, then run the tests and uncomment the code below. That will generate a new index JSON.
+        # Simply copy and paste this `generatedIndex.json` file to `tests/starfleet_included_plugins/account_index_generator/generatedIndex.json`:
+        # with open("generatedIndex.json", "w") as file:
+        #     file.write(json.dumps({"accounts": account_map, "generated": datetime.utcnow().replace(tzinfo=None, microsecond=0).isoformat() + "Z"}, indent=4, sort_keys=True))
 
 
 @click.group()

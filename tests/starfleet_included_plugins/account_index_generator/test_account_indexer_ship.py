@@ -55,7 +55,7 @@ def test_payload_schema(good_payload: Dict[str, Any]) -> None:
         AccountIndexGeneratorShipPayloadTemplate().load(good_payload)
 
 
-def test_list_org_accounts(mock_list_account: MagicMock) -> None:
+def test_list_org_accounts(mock_boto3_sts_orgs_calls: MagicMock) -> None:
     """This mostly tests that our code will pull out the proper (mocked) results from the AWS API. This also ensures that our fixture is working properly."""
     from starfleet.worker_ships.plugins.account_index_generator.utils import list_accounts
 
@@ -92,9 +92,12 @@ def test_fetch_additional_details(
     """This is a test to ensure that we can fetch all the additional details about"""
     from starfleet.worker_ships.plugins.account_index_generator.utils import fetch_additional_details
 
-    ous = {"ou-1234-5678910": "SomeOU", "r-123456": "ROOT"}
+    resolved_parent_map = {
+        "ou-1234-5678910": [{"Name": "SomeOU", "Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT"}, {"Name": "ROOT", "Id": "r-123456", "Type": "ROOT"}],
+        "r-123456": [{"Name": "ROOT", "Id": "r-123456", "Type": "ROOT"}],
+    }
 
-    fetch_additional_details(account_map, ous, "r-123456", "000000000020", "testing", "testing", "us-east-2")
+    fetch_additional_details(account_map, resolved_parent_map, "000000000020", "testing", "testing", "us-east-2")
 
     # Verify that everything is there:
     tag_value = {f"Key{x}": f"Value{x}" for x in range(1, 4)}
@@ -106,13 +109,50 @@ def test_fetch_additional_details(
         assert account["Regions"] == regions
 
         # And the parent OUs:
-        if account["Id"] != "000000000020":
+        if account["Id"] not in {"000000000020", "000000000010", "000000000011"}:
             assert account["Parents"] == [
                 {"Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeOU"},
                 {"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"},
             ]
-        else:
+        elif account["Id"] == "000000000020":
             assert account["Parents"] == [{"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"}]
+        elif account["Id"] == "000000000010":  # Account 10
+            assert account["Parents"] == [
+                {"Id": "ou-1234-5678912", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeNestedNestedOU"},
+                {"Id": "ou-1234-5678911", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeNestedOU"},
+                {"Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeOU"},
+                {"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"},
+            ]
+        elif account["Id"] == "000000000011":  # Account 11
+            assert account["Parents"] == [
+                {"Id": "ou-1234-5678911", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeNestedOU"},
+                {"Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeOU"},
+                {"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"},
+            ]
+
+    # Let's try this again with the resolved parent map having been fully resolved. We should get the proper parent OUs back out:
+    fetch_additional_details(account_map, resolved_parent_map, "000000000020", "testing", "testing", "us-east-2")
+    for account in account_map.values():
+        if account["Id"] not in {"000000000020", "000000000010", "000000000011"}:
+            assert account["Parents"] == [
+                {"Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeOU"},
+                {"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"},
+            ]
+        elif account["Id"] == "000000000020":
+            assert account["Parents"] == [{"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"}]
+        elif account["Id"] == "000000000010":  # Account 10
+            assert account["Parents"] == [
+                {"Id": "ou-1234-5678912", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeNestedNestedOU"},
+                {"Id": "ou-1234-5678911", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeNestedOU"},
+                {"Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeOU"},
+                {"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"},
+            ]
+        elif account["Id"] == "000000000011":  # Account 11
+            assert account["Parents"] == [
+                {"Id": "ou-1234-5678911", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeNestedOU"},
+                {"Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT", "Name": "SomeOU"},
+                {"Id": "r-123456", "Type": "ROOT", "Name": "ROOT"},
+            ]
 
 
 def test_async_exceptions(aws_sts: BaseClient) -> None:
@@ -125,9 +165,16 @@ def test_async_exceptions(aws_sts: BaseClient) -> None:
 
     # Just mock with lambda functions. These can't be pickled and cause an exception.
     with pytest.raises(AccountIndexerProcessError) as exc:
-        with mock.patch("starfleet.worker_ships.plugins.account_index_generator.utils.fetch_tags_and_parents", raise_exception):
+        with mock.patch("starfleet.worker_ships.plugins.account_index_generator.utils.fetch_tags_and_parent", raise_exception):
             with mock.patch("starfleet.worker_ships.plugins.account_index_generator.utils.fetch_regions", raise_exception):
-                fetch_additional_details({"000000000000": {}}, {"r-123456": "ROOT"}, "r-123456", "000000000020", "testing", "testing", "us-east-2")
+                fetch_additional_details(
+                    {"000000000000": {}},
+                    {"r-123456": [{"Type": "ROOT", "Name": "ROOT", "Id": "r-123456"}]},
+                    "000000000020",
+                    "testing",
+                    "testing",
+                    "us-east-2",
+                )
 
     assert "Fetching tags and regions" in str(exc.value)
 
@@ -141,7 +188,6 @@ def test_full_run(
     aws_s3: BaseClient,
     aws_sts: BaseClient,
     inventory_bucket: str,
-    mock_list_parent_ous: None,
     account_map: Dict[str, Any],
     mock_direct_boto_clients: MagicMock,
     lambda_payload: Dict[str, Any],
@@ -152,8 +198,22 @@ def test_full_run(
     from starfleet.worker_ships.plugins.account_index_generator.utils import fetch_additional_details
 
     # We need to get the proper account map so we can verify that we generated the proper thing:
-    ou_map = {"ou-1234-5678910": "SomeOU", "r-123456": "ROOT"}
-    fetch_additional_details(account_map, ou_map, "r-123456", "000000000020", "testing", "testing", "us-east-2")
+    resolved_parent_map = {
+        "ou-1234-5678910": [{"Name": "SomeOU", "Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT"}, {"Name": "ROOT", "Id": "r-123456", "Type": "ROOT"}],
+        "ou-1234-5678911": [
+            {"Name": "SomeNestedOU", "Id": "ou-1234-5678911", "Type": "ORGANIZATIONAL_UNIT"},
+            {"Name": "SomeOU", "Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT"},
+            {"Name": "ROOT", "Id": "r-123456", "Type": "ROOT"},
+        ],
+        "ou-1234-5678912": [
+            {"Name": "SomeNestedNestedOU", "Id": "ou-1234-5678912", "Type": "ORGANIZATIONAL_UNIT"},
+            {"Name": "SomeNestedOU", "Id": "ou-1234-5678911", "Type": "ORGANIZATIONAL_UNIT"},
+            {"Name": "SomeOU", "Id": "ou-1234-5678910", "Type": "ORGANIZATIONAL_UNIT"},
+            {"Name": "ROOT", "Id": "r-123456", "Type": "ROOT"},
+        ],
+        "r-123456": [{"Name": "ROOT", "Id": "r-123456", "Type": "ROOT"}],
+    }
+    fetch_additional_details(account_map, resolved_parent_map, "000000000020", "testing", "testing", "us-east-2")
 
     with mock.patch("starfleet.worker_ships.plugins.account_index_generator.ship.LOGGER") as mocked_logger:
         if cli:
