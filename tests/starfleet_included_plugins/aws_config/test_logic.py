@@ -61,6 +61,7 @@ def test_get_current_state(aws_config: BaseClient) -> None:
     )
     confirm_values = {}
     current_state = get_current_state("000000000001", "us-east-2", "AssumeThisRole", "StarfleetAwsConfig")
+    # TODO: Need to update this with latest changes made to config API in June 2023!
     assert current_state["ConfigurationRecorder"] == {
         "name": "test",
         "recordingGroup": {"allSupported": True, "includeGlobalResourceTypes": True, "resourceTypes": []},

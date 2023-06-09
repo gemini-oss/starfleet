@@ -169,6 +169,18 @@ def get_current_state(account: str, region: str, assume_role: str, session_name:
         sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
     )
 
+    # We only care about specific keys in the current state (this prevents changes to the Config API causing our comparison logic
+    # to fail):
+    if recording_group := current_state["ConfigurationRecorder"].get("recordingGroup"):
+        cleaned_up_current_state = {}
+        current_state_keys = {"allSupported", "includeGlobalResourceTypes", "resourceTypes"}
+
+        for key in recording_group.keys():
+            if key in current_state_keys:
+                cleaned_up_current_state[key] = recording_group[key]
+
+        current_state["ConfigurationRecorder"]["recordingGroup"] = cleaned_up_current_state
+
     LOGGER.debug("[⏺️] Fetching the current recorder status...")
     current_state["RecorderStatus"] = describe_configuration_recorder_status(
         account_number=account,
