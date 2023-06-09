@@ -137,8 +137,6 @@ class StarfleetWorkerShip:
     The instantiated object type hint is `StarFleetWorkerShipInstance`.
     """
 
-    # TODO: Should the invocation sources be defined here or the configuration?? (right now it's in the configuration)
-
     # This is the template class for the worker ship. All worker ship payload templates need to be defined.
     payload_template_class: Type[WorkerShipPayloadBaseTemplate] = WorkerShipPayloadBaseTemplate  # Default to the base
     payload: WorkerShipPayloadBaseTemplateInstance
