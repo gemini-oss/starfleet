@@ -8,7 +8,7 @@ This is what allows the Starbase to properly task Account and Account-Region pay
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
-from typing import Set, Dict, TypeVar
+from typing import Set, Dict, Optional, TypeVar
 
 
 class AccountIndex:  # pragma: no cover
@@ -55,6 +55,10 @@ class AccountIndex:  # pragma: no cover
         Note: The typical and preferred implementation for Starfleet is to operate on 1 AWS Organization, however, there is no reason why it can't operate over many.
         If you only have 1 org, just return the one account that is the org root account.
         """
+        raise NotImplementedError("Pew Pew Pew")
+
+    def get_account_names(self, account_ids: Set[str]) -> Dict[str, Optional[str]]:
+        """Return back a mapping of account id to account name for the given set of account IDs. If the account ID is not found, it's mapped value is None."""
         raise NotImplementedError("Pew Pew Pew")
 
 

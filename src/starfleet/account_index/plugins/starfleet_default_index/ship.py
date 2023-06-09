@@ -10,7 +10,7 @@ file to S3, and this plugin uses that generated file as the basis for the accoun
 """
 # pylint: disable=too-many-locals,too-many-statements
 import json
-from typing import Set, Dict, Any
+from typing import Any, Dict, Optional, Set
 from sys import intern
 
 import boto3
@@ -49,6 +49,7 @@ class StarfleetDefaultAccountIndex(AccountIndex):
         self.org_root = ""
         self.account_ids = set()
         self.alias_map: Dict[str, str] = {}
+        self.account_name_map: Dict[str, str] = {}
         self.ou_map: Dict[str, Set[str]] = {}
         self.regions_map: Dict[str, Set[str]] = {}
         self.tag_map: Dict[str, Dict[str, Set[str]]] = {}  # Dict of tag name -> tag value -> accounts
@@ -96,6 +97,9 @@ class StarfleetDefaultAccountIndex(AccountIndex):
             # Create the proper mapping for each account alias:
             self.alias_map[account["Name"].lower()] = intern(account_id)
             # TODO: Add in something with an alias tag to populate this
+
+            # Add the main account name in:
+            self.account_name_map[intern(account_id)] = account["Name"]
 
             # Create the regions mapping:
             for region in account["Regions"]:
@@ -180,3 +184,11 @@ class StarfleetDefaultAccountIndex(AccountIndex):
         Note: This AccountIndex plugin assumes that there is exactly 1 AWS Organization that is being used.
         """
         return {self.org_root}
+
+    def get_account_names(self, account_ids: Set[str]) -> Dict[str, Optional[str]]:
+        """Return back a mapping of account id to account name for the given set of account IDs."""
+        mapping = {}
+        for account_id in account_ids:
+            mapping[account_id] = self.account_name_map.get(account_id, None)
+
+        return mapping

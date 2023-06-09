@@ -22,6 +22,7 @@ class TestingAccountIndexPlugin(StarfleetDefaultAccountIndex):
         """This will load the generatedIndex.json file that is used by the tests.starfleet_included_plugins.account_index_generator tests."""
         self.account_ids = set()
         self.alias_map: Dict[str, str] = {}
+        self.account_name_map: Dict[str, str] = {}
         self.ou_map: Dict[str, Set[str]] = {}
         self.regions_map: Dict[str, Set[str]] = {}
         self.tag_map: Dict[str, Dict[str, Set[str]]] = {}  # Dict of tag name -> tag value -> accounts

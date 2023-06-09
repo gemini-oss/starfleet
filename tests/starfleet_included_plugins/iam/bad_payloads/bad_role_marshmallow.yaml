@@ -1,0 +1,38 @@
+TemplateName: BadIamRoleMarshmallowValidationTest
+TemplateDescription: This is a bad IAM role template with a problem that will fail marshmallow validation
+IncludeAccounts:
+  AllAccounts: True
+IambicVariables:
+  - Key: Some-Key
+    Value: Some-Value
+IambicRoleTemplate:
+  properties:
+    description: 'Starfleet iambic test role with variable {{ var.Some-Key }}'
+    included_accounts:  # Can't have this field -- need to use the StarfleetIncludeAccounts field.
+      - '*'
+    assume_role_policy_document:
+      statement:
+        - action:
+            - sts:AssumeRole
+          effect: Allow
+          principal:
+            service: lambda.amazonaws.com
+      version: '2012-10-17'
+    managed_policies:
+      - policy_arn: arn:aws:iam::aws:policy/ReadOnlyAccess
+    inline_policies:
+      - policy_name: 'SomePolicyIn-{{ var.account_name }}'
+        StarfleetIncludeAccounts:
+          ByOrgUnits:
+            - SomeNestedOU
+        StarfleetExcludeAccounts:
+          ByNames:
+            - Account 10
+        statement:
+          - effect: Deny
+            action: s3:*
+            resource: '*'
+    role_name: StarfleetIambicTesting
+    tags:
+      - key: owner
+        value: pewpewpew
