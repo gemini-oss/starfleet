@@ -50,7 +50,7 @@ class AwsConfigWorkerShip(StarfleetWorkerShip):
         workload = determine_workload(current_state, working_payload, account, region)
 
         # Do the work!
-        alert_text = sync_config(workload, working_payload, account, region, assume_role, session_name, commit)
+        alert_text = sync_config(workload, current_state, working_payload, account, region, assume_role, session_name, commit)
         if commit and alert_text:
             self.send_alert(
                 AlertPriority.SUCCESS, "Updated AWS Config properties", f"*Below is a summary of the work performed in {account}/{region}:*\n\n" + alert_text

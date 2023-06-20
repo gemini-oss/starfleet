@@ -7,11 +7,14 @@ This is where all the logic exists for the Config worker.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+import json
+from difflib import Differ
 from enum import Enum
 from typing import Any, Dict
 
 from botocore.client import BaseClient
 from cloudaux import sts_conn
+from marshmallow import Schema, fields, EXCLUDE
 from retry import retry
 
 from starfleet.account_index.resolvers import resolve_worker_template_account_regions
@@ -142,6 +145,59 @@ def stop_configuration_recorder(**kwargs) -> None:
     kwargs.pop("client").stop_configuration_recorder(**kwargs)
 
 
+class ConfigurationRecorderRecordingGroup(Schema):
+    """
+    This represents the schema for the Configuration Recorder RecordingGroup that Boto3 has. This is used to prevent changes made to AWS Config's API from indicating
+    that there are changes when in fact there are none we care about.
+    """
+
+    all_supported = fields.Boolean(data_key="allSupported")
+    include_global_resource_types = fields.Boolean(data_key="includeGlobalResourceTypes")
+    resource_types = fields.List(fields.String(), data_key="resourceTypes")
+    exclusion_by_resource_types = fields.Dict(data_key="exclusionByResourceTypes")  # Probably don't need to schema this out
+    recording_strategy = fields.Dict(data_key="recordingStrategy")  # Probably don't need to schema this out
+
+    class Meta:
+        """Unknown fields should be excluded."""
+
+        unknown = EXCLUDE
+
+
+class ConfigurationRecorderSchema(Schema):
+    """
+    This represents the schema for the Configuration Recorder that Boto3 has. This is used to prevent changes made to AWS Config's API from indicating
+    that there are changes when in fact there are none we care about.
+    """
+
+    name = fields.String()
+    role_arn = fields.String(data_key="roleARN")
+    recording_group = fields.Nested(ConfigurationRecorderRecordingGroup(), data_key="recordingGroup")
+
+    class Meta:
+        """Unknown fields should be excluded."""
+
+        unknown = EXCLUDE
+
+
+class DeliveryChannelSchema(Schema):
+    """
+    This represents the schema for the Delivery Channel that Boto3 has. This is used to prevent changes made to AWS Config's API from indicating
+    that there are changes when in fact there are none we care about.
+    """
+
+    name = fields.String()
+    s3_bucket_name = fields.String(data_key="s3BucketName")
+    s3_key_prefix = fields.String(data_key="s3KeyPrefix")
+    s3_kms_key_arn = fields.String(data_key="s3KmsKeyArn")
+    sns_topic_arn = fields.String(data_key="snsTopicARN")
+    config_snapshot_delivery_properties = fields.Dict(data_key="configSnapshotDeliveryProperties")  # Probably don't need to schema this out
+
+    class Meta:
+        """Unknown fields should be excluded."""
+
+        unknown = EXCLUDE
+
+
 # pylint: disable=no-value-for-parameter
 def get_current_state(account: str, region: str, assume_role: str, session_name: str) -> Dict[str, Any]:
     """
@@ -168,18 +224,10 @@ def get_current_state(account: str, region: str, assume_role: str, session_name:
         session_name=session_name,
         sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
     )
-
-    # We only care about specific keys in the current state (this prevents changes to the Config API causing our comparison logic
-    # to fail):
-    if recording_group := current_state["ConfigurationRecorder"].get("recordingGroup"):
-        cleaned_up_current_state = {}
-        current_state_keys = {"allSupported", "includeGlobalResourceTypes", "resourceTypes"}
-
-        for key in recording_group.keys():
-            if key in current_state_keys:
-                cleaned_up_current_state[key] = recording_group[key]
-
-        current_state["ConfigurationRecorder"]["recordingGroup"] = cleaned_up_current_state
+    # Clean the response in case AWS made changes to the API by adding things in:
+    if configuration_recorder := current_state["ConfigurationRecorder"]:
+        schema = ConfigurationRecorderSchema()
+        current_state["ConfigurationRecorder"] = schema.dump(schema.load(configuration_recorder))
 
     LOGGER.debug("[⏺️] Fetching the current recorder status...")
     current_state["RecorderStatus"] = describe_configuration_recorder_status(
@@ -198,6 +246,10 @@ def get_current_state(account: str, region: str, assume_role: str, session_name:
         session_name=session_name,
         sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
     )
+    # Clean the response in case AWS made changes to the API by adding things in:
+    if delivery_channel := current_state["DeliveryChannel"]:
+        schema = DeliveryChannelSchema()
+        current_state["DeliveryChannel"] = schema.dump(schema.load(delivery_channel))
 
     LOGGER.debug("[🗄️] Fetching the retention configuration...")
     current_state["RetentionConfig"] = describe_retention_configurations(
@@ -222,17 +274,39 @@ def _make_configuration_recorder_payload(current_state: Dict[str, Any], template
     We are not going to delete and re-create: we are just going to update the existing recorder if found and optimistically
     rename it if we need to create a new one.
     """
-    # Figure out what the payload should look like:
-    all_supported = template["recording_group"]["resource_types"][0] == "ALL"
-    include_global_resource_types = all_supported and region in template["recording_group"].get("globals_in_regions", [])
+    # Is this recording everything?
+    if template["recording_group"].get("record_everything"):
+        recording_group = {
+            "allSupported": True,
+            "includeGlobalResourceTypes": region in template["recording_group"]["record_everything"]["record_globals_in_these_regions"],
+            "resourceTypes": [],
+            "exclusionByResourceTypes": {"resourceTypes": []},
+            "recordingStrategy": {"useOnly": "ALL_SUPPORTED_RESOURCE_TYPES"},
+        }
+
+    elif template["recording_group"].get("record_specific_resources"):
+        recording_group = {
+            "allSupported": False,
+            "includeGlobalResourceTypes": False,
+            "resourceTypes": template["recording_group"]["record_specific_resources"],
+            "exclusionByResourceTypes": {"resourceTypes": []},
+            "recordingStrategy": {"useOnly": "INCLUSION_BY_RESOURCE_TYPES"},
+        }
+
+    # Only remaining is the "include all except":
+    else:
+        recording_group = {
+            "allSupported": False,
+            "includeGlobalResourceTypes": False,
+            "resourceTypes": [],
+            "exclusionByResourceTypes": {"resourceTypes": template["recording_group"]["record_everything_except"]},
+            "recordingStrategy": {"useOnly": "EXCLUSION_BY_RESOURCE_TYPES"},
+        }
+
     payload_dict = {
         "roleARN": f"arn:aws:iam::{account}:role/{template['config_role_name']}",
-        "recordingGroup": {"allSupported": all_supported, "includeGlobalResourceTypes": include_global_resource_types},
+        "recordingGroup": recording_group,
     }
-    if not all_supported:
-        payload_dict["recordingGroup"]["resourceTypes"] = template["recording_group"]["resource_types"]
-    else:
-        payload_dict["recordingGroup"]["resourceTypes"] = []
 
     # Name logic:
     if current_state.get("name"):  # If we already have a Config recorder, then use its name
@@ -353,7 +427,7 @@ def determine_workload(current_state: Dict[str, Any], template: Dict[str, Any], 
     return to_do
 
 
-def _log_summary(workload: Dict[str, Any]) -> bool:
+def _log_summary(workload: Dict[str, Any], current_state: Dict[str, Any]) -> bool:
     """
     This is a convenience function to log out the summary of what work needs to be done.
 
@@ -361,22 +435,52 @@ def _log_summary(workload: Dict[str, Any]) -> bool:
     """
     work_to_do = False
 
+    # Log out diffs of the current state and the template if applicable:
+    differ = Differ()
+
     # Print out the summary:
     if workload["ConfigurationRecorder"]:
-        LOGGER.info(f"[🙅‍♂️] Configuration Recorder needs update with config: {workload['ConfigurationRecorder']}")
         work_to_do = True
+        diff_text = "".join(
+            list(
+                differ.compare(
+                    json.dumps(current_state["ConfigurationRecorder"], indent=2, sort_keys=True).splitlines(keepends=True),
+                    json.dumps(workload["ConfigurationRecorder"], indent=2, sort_keys=True).splitlines(keepends=True),
+                )
+            )
+        )
+        LOGGER.info(f"[🙅‍♂️] Configuration Recorder needs update with config: {workload['ConfigurationRecorder']}")
+        LOGGER.info(f"[🧾] Here is the diff of the Configuration Recorder:\n{diff_text}")
     else:
         LOGGER.info("[🆗] Configuration Recorder is in sync.")
 
     if workload["DeliveryChannel"]:
-        LOGGER.info(f"[🙅‍♂️] Delivery Channel needs update with config: {workload['DeliveryChannel']}")
         work_to_do = True
+        diff_text = "".join(
+            list(
+                differ.compare(
+                    json.dumps(current_state["DeliveryChannel"], indent=2, sort_keys=True).splitlines(keepends=True),
+                    json.dumps(workload["DeliveryChannel"], indent=2, sort_keys=True).splitlines(keepends=True),
+                )
+            )
+        )
+        LOGGER.info(f"[🙅‍♂️] Delivery Channel needs update with config: {workload['DeliveryChannel']}")
+        LOGGER.info(f"[🧾] Here is the diff of the Delivery Channel:\n{diff_text}")
     else:
         LOGGER.info("[🆗] Delivery Channel is in sync.")
 
     if workload["RetentionConfig"]:
-        LOGGER.info(f"[🙅‍♂️] Retention Configuration needs update with config: {workload['RetentionConfig']}")
         work_to_do = True
+        diff_text = "".join(
+            list(
+                differ.compare(
+                    json.dumps(current_state["RetentionConfig"], indent=2, sort_keys=True).splitlines(keepends=True),
+                    json.dumps(workload["RetentionConfig"], indent=2, sort_keys=True).splitlines(keepends=True),
+                )
+            )
+        )
+        LOGGER.info(f"[🙅‍♂️] Retention Configuration needs update with config: {workload['RetentionConfig']}")
+        LOGGER.info(f"[🧾] Here is the diff of the Retention Configuration:\n{diff_text}")
     else:
         LOGGER.info("[🆗] Retention Configuration is in sync.")
 
@@ -392,10 +496,19 @@ def _log_summary(workload: Dict[str, Any]) -> bool:
     return work_to_do
 
 
-def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str, region: str, assume_role: str, session_name: str, commit: bool) -> str:
+def sync_config(
+    workload: Dict[str, Any],
+    current_state: Dict[str, Any],
+    template: Dict[str, Any],
+    account: str,
+    region: str,
+    assume_role: str,
+    session_name: str,
+    commit: bool,
+) -> str:
     """This will sync the AWS Config details if the commit flag is set. This will also dump a summary of what the actions are."""
     LOGGER.info(f"[➕➖] Summarizing the items that are out of sync in {account}/{region}...")
-    work_to_do = _log_summary(workload)
+    work_to_do = _log_summary(workload, current_state)
     alert_text = ""
 
     if not work_to_do:
@@ -418,7 +531,7 @@ def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str
             session_name=session_name,
             sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
         )
-        alert_text += "> ✅  Updated the Configuration Recorder\n"
+        alert_text += "> 📼  Updated the Configuration Recorder. See the logs for details.\n"
 
     # Delivery Channel:
     if workload["DeliveryChannel"]:
@@ -431,7 +544,7 @@ def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str
             session_name=session_name,
             sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
         )
-        alert_text += "> ✅  Updated the Delivery Channel\n"
+        alert_text += "> 🚚  Updated the Delivery Channel. See the logs for details.\n"
 
     # Retention Configuration:
     if workload["RetentionConfig"]:
@@ -444,7 +557,7 @@ def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str
             session_name=session_name,
             sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
         )
-        alert_text += "> ✅  Updated the Retention Configuration\n"
+        alert_text += "> 🗄  Updated the Retention Configuration. See the logs for details.\n"
 
     # The recorder status:
     if workload["EnableRecording"] == RecorderAction.START_RECORDING:
@@ -457,7 +570,7 @@ def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str
             session_name=session_name,
             sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
         )
-        alert_text += "> ✅  Started the Configuration Recorder\n"
+        alert_text += "> ⏺️  Started the Configuration Recorder.\n"
 
     if workload["EnableRecording"] == RecorderAction.STOP_RECORDING:
         LOGGER.info("[🛑] Stopping the recorder...")
@@ -469,7 +582,7 @@ def sync_config(workload: Dict[str, Any], template: Dict[str, Any], account: str
             session_name=session_name,
             sts_client_kwargs={"endpoint_url": f"https://sts.{region}.amazonaws.com", "region_name": region},
         )
-        alert_text += "> ✅  Stopped the Configuration Recorder\n"
+        alert_text += "> 🛑  Stopped the Configuration Recorder.\n"
 
     LOGGER.info(f"[✅] Completed all work for {account}/{region}.")
     alert_text += "\n\nCheck out the Lambda logs for more verbose details."

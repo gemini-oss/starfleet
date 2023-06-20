@@ -61,10 +61,15 @@ def test_get_current_state(aws_config: BaseClient) -> None:
     )
     confirm_values = {}
     current_state = get_current_state("000000000001", "us-east-2", "AssumeThisRole", "StarfleetAwsConfig")
-    # TODO: Need to update this with latest changes made to config API in June 2023!
     assert current_state["ConfigurationRecorder"] == {
         "name": "test",
-        "recordingGroup": {"allSupported": True, "includeGlobalResourceTypes": True, "resourceTypes": []},
+        "recordingGroup": {
+            "allSupported": True,
+            "includeGlobalResourceTypes": True,
+            "resourceTypes": [],
+            "exclusionByResourceTypes": {"resourceTypes": []},
+            "recordingStrategy": {"useOnly": "ALL_SUPPORTED_RESOURCE_TYPES"},
+        },
         "roleARN": "arn:aws:iam::000000000001:role/SomeRole",
     }
     assert current_state["RecorderStatus"] == {"name": "test", "recording": False}
@@ -126,14 +131,26 @@ def test_make_configuration_recorder_payload(loaded_template: Dict[str, Any]) ->
     payload = _make_configuration_recorder_payload({}, working_template["recorder_configuration"], "000000000001", "us-east-2")
     assert payload == {
         "name": "default",
-        "recordingGroup": {"allSupported": True, "includeGlobalResourceTypes": False, "resourceTypes": []},
+        "recordingGroup": {
+            "allSupported": True,
+            "includeGlobalResourceTypes": False,
+            "resourceTypes": [],
+            "exclusionByResourceTypes": {"resourceTypes": []},
+            "recordingStrategy": {"useOnly": "ALL_SUPPORTED_RESOURCE_TYPES"},
+        },
         "roleARN": "arn:aws:iam::000000000001:role/MyConfigRole",
     }
 
     # Pre-existing State -- where it is going to detect no changes being made! The name is different and that's OK!
     current_state = {
-        "name": "default",
-        "recordingGroup": {"allSupported": True, "includeGlobalResourceTypes": True, "resourceTypes": []},
+        "name": "different-name",
+        "recordingGroup": {
+            "allSupported": True,
+            "includeGlobalResourceTypes": True,
+            "resourceTypes": [],
+            "exclusionByResourceTypes": {"resourceTypes": []},
+            "recordingStrategy": {"useOnly": "ALL_SUPPORTED_RESOURCE_TYPES"},
+        },
         "roleARN": "arn:aws:iam::000000000001:role/MyConfigRole",
     }
     assert not _make_configuration_recorder_payload(current_state, working_template["recorder_configuration"], "000000000001", "us-east-1")
@@ -141,23 +158,55 @@ def test_make_configuration_recorder_payload(loaded_template: Dict[str, Any]) ->
     # With a different state -- name should be the same as the state:
     current_state = {
         "name": "default",
-        "recordingGroup": {"allSupported": False, "includeGlobalResourceTypes": False, "resourceTypes": ["AWS::EC2::SecurityGroup"]},
+        "recordingGroup": {
+            "allSupported": False,
+            "includeGlobalResourceTypes": False,
+            "resourceTypes": ["AWS::EC2::SecurityGroup"],
+            "exclusionByResourceTypes": {"resourceTypes": []},
+            "recordingStrategy": {"useOnly": "INCLUSION_BY_RESOURCE_TYPES"},
+        },
         "roleARN": "arn:aws:iam::000000000001:role/MyConfigRole",
     }
     assert _make_configuration_recorder_payload(current_state, working_template["recorder_configuration"], "000000000001", "us-east-1") == {
         "name": "default",
-        "recordingGroup": {"allSupported": True, "includeGlobalResourceTypes": True, "resourceTypes": []},
+        "recordingGroup": {
+            "allSupported": True,
+            "includeGlobalResourceTypes": True,
+            "resourceTypes": [],
+            "exclusionByResourceTypes": {"resourceTypes": []},
+            "recordingStrategy": {"useOnly": "ALL_SUPPORTED_RESOURCE_TYPES"},
+        },
         "roleARN": "arn:aws:iam::000000000001:role/MyConfigRole",
     }
 
     # With specific resource types supplied (in both state and template):
     current_state = {
         "name": "default",
-        "recordingGroup": {"allSupported": False, "includeGlobalResourceTypes": False, "resourceTypes": ["AWS::EC2::SecurityGroup", "AWS::S3::Bucket"]},
+        "recordingGroup": {
+            "allSupported": False,
+            "includeGlobalResourceTypes": False,
+            "resourceTypes": ["AWS::EC2::SecurityGroup", "AWS::S3::Bucket"],
+            "exclusionByResourceTypes": {"resourceTypes": []},
+            "recordingStrategy": {"useOnly": "INCLUSION_BY_RESOURCE_TYPES"},
+        },
         "roleARN": "arn:aws:iam::000000000001:role/MyConfigRole",
     }
-    working_template["recorder_configuration"]["recording_group"] = {"resource_types": ["AWS::EC2::SecurityGroup", "AWS::S3::Bucket"]}
+    working_template["recorder_configuration"]["recording_group"] = {"record_specific_resources": ["AWS::EC2::SecurityGroup", "AWS::S3::Bucket"]}
     assert not _make_configuration_recorder_payload(current_state, working_template["recorder_configuration"], "000000000001", "us-east-1")
+
+    # Same as above only with exclusion:
+    working_template["recorder_configuration"]["recording_group"] = {"record_everything_except": ["AWS::EC2::Instance"]}
+    assert _make_configuration_recorder_payload(current_state, working_template["recorder_configuration"], "000000000001", "us-east-1") == {
+        "name": "default",
+        "recordingGroup": {
+            "allSupported": False,
+            "includeGlobalResourceTypes": False,
+            "resourceTypes": [],
+            "exclusionByResourceTypes": {"resourceTypes": ["AWS::EC2::Instance"]},
+            "recordingStrategy": {"useOnly": "EXCLUSION_BY_RESOURCE_TYPES"},
+        },
+        "roleARN": "arn:aws:iam::000000000001:role/MyConfigRole",
+    }
 
 
 def test_make_delivery_channel_payload(loaded_template: Dict[str, Any]) -> None:
@@ -239,7 +288,13 @@ def test_determine_workload(loaded_template: Dict[str, Any]) -> None:
     assert workload == {
         "ConfigurationRecorder": {
             "roleARN": "arn:aws:iam::000000000001:role/MyConfigRole",
-            "recordingGroup": {"allSupported": True, "includeGlobalResourceTypes": True, "resourceTypes": []},
+            "recordingGroup": {
+                "allSupported": True,
+                "includeGlobalResourceTypes": True,
+                "resourceTypes": [],
+                "exclusionByResourceTypes": {"resourceTypes": []},
+                "recordingStrategy": {"useOnly": "ALL_SUPPORTED_RESOURCE_TYPES"},
+            },
             "name": "default",
         },
         "DeliveryChannel": {"s3BucketName": "all-bucket", "configSnapshotDeliveryProperties": {"deliveryFrequency": "TwentyFour_Hours"}, "name": "default"},
@@ -251,7 +306,13 @@ def test_determine_workload(loaded_template: Dict[str, Any]) -> None:
     workload = determine_workload(current_state, loaded_template["default_configuration"], "000000000001", "us-east-2")
     assert workload["ConfigurationRecorder"] == {
         "roleARN": "arn:aws:iam::000000000001:role/MyConfigRole",
-        "recordingGroup": {"allSupported": True, "includeGlobalResourceTypes": False, "resourceTypes": []},
+        "recordingGroup": {
+            "allSupported": True,
+            "includeGlobalResourceTypes": False,
+            "resourceTypes": [],
+            "exclusionByResourceTypes": {"resourceTypes": []},
+            "recordingStrategy": {"useOnly": "ALL_SUPPORTED_RESOURCE_TYPES"},
+        },
         "name": "default",
     }
 
@@ -259,7 +320,13 @@ def test_determine_workload(loaded_template: Dict[str, Any]) -> None:
     current_state = {
         "ConfigurationRecorder": {
             "roleARN": "arn:aws:iam::000000000001:role/MyConfigRole",
-            "recordingGroup": {"allSupported": True, "includeGlobalResourceTypes": True, "resourceTypes": []},
+            "recordingGroup": {
+                "allSupported": True,
+                "includeGlobalResourceTypes": True,
+                "resourceTypes": [],
+                "exclusionByResourceTypes": {"resourceTypes": []},
+                "recordingStrategy": {"useOnly": "ALL_SUPPORTED_RESOURCE_TYPES"},
+            },
             "name": "default",
         },
         "DeliveryChannel": {"s3BucketName": "all-bucket", "configSnapshotDeliveryProperties": {"deliveryFrequency": "TwentyFour_Hours"}, "name": "default"},
@@ -287,35 +354,41 @@ def test_log_summary(loaded_template: Dict[str, Any]) -> None:
         # Everything is wrong:
         logs_should_be = [
             "[🙅‍♂️] Configuration Recorder",
+            "[🧾] Here is the diff of the Configuration Recorder:",
             "[🙅‍♂️] Delivery Channel",
+            "[🧾] Here is the diff of the Delivery Channel:",
             "[🙅‍♂️] Retention Configuration",
+            "[🧾] Here is the diff of the Retention Configuration:",
             "[🙅‍♂️] The recorder needs to be enabled",
         ]
-        assert _log_summary(workload)
+        assert _log_summary(workload, current_state)
         for index, value in enumerate(logs_should_be):
             assert value in mocked_logger.info.call_args_list[index][0][0]
         mocked_logger.reset_mock()  # Always reset after each section.
 
         # Recorder fixed:
         logs_should_be[0] = "[🆗] Configuration Recorder"
+        logs_should_be.remove("[🧾] Here is the diff of the Configuration Recorder:")
         workload["ConfigurationRecorder"] = {}
-        assert _log_summary(workload)
+        assert _log_summary(workload, current_state)
         for index, value in enumerate(logs_should_be):
             assert value in mocked_logger.info.call_args_list[index][0][0]
         mocked_logger.reset_mock()
 
         # Delivery Channel Fixed
         logs_should_be[1] = "[🆗] Delivery Channel"
+        logs_should_be.remove("[🧾] Here is the diff of the Delivery Channel:")
         workload["DeliveryChannel"] = {}
-        assert _log_summary(workload)
+        assert _log_summary(workload, current_state)
         for index, value in enumerate(logs_should_be):
             assert value in mocked_logger.info.call_args_list[index][0][0]
         mocked_logger.reset_mock()
 
         # Retention Configuration Fixed
         logs_should_be[2] = "[🆗] Retention Configuration"
+        logs_should_be.remove("[🧾] Here is the diff of the Retention Configuration:")
         workload["RetentionConfig"] = {}
-        assert _log_summary(workload)
+        assert _log_summary(workload, current_state)
         for index, value in enumerate(logs_should_be):
             assert value in mocked_logger.info.call_args_list[index][0][0]
         mocked_logger.reset_mock()
@@ -323,7 +396,7 @@ def test_log_summary(loaded_template: Dict[str, Any]) -> None:
         # Make it so that the recorder needs to stopped:
         workload["EnableRecording"] = RecorderAction.STOP_RECORDING
         logs_should_be[3] = "[🙅‍♂️] The recorder needs to be disabled"
-        assert _log_summary(workload)
+        assert _log_summary(workload, current_state)
         for index, value in enumerate(logs_should_be):
             assert value in mocked_logger.info.call_args_list[index][0][0]
         mocked_logger.reset_mock()
@@ -331,7 +404,7 @@ def test_log_summary(loaded_template: Dict[str, Any]) -> None:
         # Recorder status is fixed:
         workload["EnableRecording"] = RecorderAction.DO_NOTHING
         logs_should_be[3] = "[🆗] The recorder's status is in sync"
-        assert not _log_summary(workload)
+        assert not _log_summary(workload, current_state)
         for index, value in enumerate(logs_should_be):
             assert value in mocked_logger.info.call_args_list[index][0][0]
         mocked_logger.reset_mock()
@@ -344,7 +417,8 @@ def test_sync_config(loaded_template: Dict[str, Any], aws_config: BaseClient) ->
     with mock.patch("starfleet.worker_ships.plugins.aws_config.logic.LOGGER") as mocked_logger:
         # First test with nothing to do:
         workload = {"ConfigurationRecorder": {}, "DeliveryChannel": {}, "EnableRecording": RecorderAction.DO_NOTHING, "RetentionConfig": {}}
-        alert_text = sync_config(workload, {}, "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", False)
+        current_state = {"ConfigurationRecorder": {}, "DeliveryChannel": {}, "RecorderStatus": {}, "RetentionConfig": {}}
+        alert_text = sync_config(workload, current_state, {}, "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", False)
         # It will be the last logged item:
         assert (
             mocked_logger.info.call_args_list[len(mocked_logger.call_args_list) - 1][0][0]
@@ -354,9 +428,10 @@ def test_sync_config(loaded_template: Dict[str, Any], aws_config: BaseClient) ->
         mocked_logger.reset_mock()
 
         # Then test with work but with commit disabled:
-        current_state = {"ConfigurationRecorder": {}, "DeliveryChannel": {}, "RecorderStatus": {}, "RetentionConfig": {}}
         workload = determine_workload(current_state, loaded_template["default_configuration"], "000000000001", "us-east-1")
-        alert_text = sync_config(workload, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", False)
+        alert_text = sync_config(
+            workload, current_state, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", False
+        )
         assert (
             mocked_logger.info.call_args_list[len(mocked_logger.call_args_list) - 1][0][0]
             == "[⏭️] There is work to do but because commit is disabled, no action is being taken in 000000000001/us-east-1."
@@ -365,7 +440,9 @@ def test_sync_config(loaded_template: Dict[str, Any], aws_config: BaseClient) ->
         mocked_logger.reset_mock()
 
     # Commit is enabled... Let's gooooooo
-    alert_text = sync_config(workload, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", True)
+    alert_text = sync_config(
+        workload, current_state, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", True
+    )
 
     # Verify that everything is all good by using our existing get_current_state function:
     current_state = get_current_state("000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig")
@@ -373,12 +450,15 @@ def test_sync_config(loaded_template: Dict[str, Any], aws_config: BaseClient) ->
     assert workload == {"ConfigurationRecorder": {}, "DeliveryChannel": {}, "EnableRecording": RecorderAction.DO_NOTHING, "RetentionConfig": {}}
     assert (
         alert_text
-        == "> ✅  Updated the Configuration Recorder\n> ✅  Updated the Delivery Channel\n> ✅  Updated the Retention Configuration\n"
-        + "> ✅  Started the Configuration Recorder\n\n\nCheck out the Lambda logs for more verbose details."
+        == "> 📼  Updated the Configuration Recorder. See the logs for details.\n> 🚚  Updated the Delivery Channel. See the logs for details.\n"
+        + "> 🗄  Updated the Retention Configuration. See the logs for details.\n> ⏺️  Started the Configuration Recorder.\n\n\n"
+        + "Check out the Lambda logs for more verbose details."
     )
 
     # Let's try stopping the recorder (this also tests out what happens if the other fields are false):
     workload["EnableRecording"] = RecorderAction.STOP_RECORDING
-    alert_text = sync_config(workload, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", True)
+    alert_text = sync_config(
+        workload, current_state, loaded_template["default_configuration"], "000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig", True
+    )
     assert not get_current_state("000000000001", "us-east-1", "AssumeThisRole", "StarfleetAwsConfig")["RecorderStatus"]["recording"]
-    assert alert_text == "> ✅  Stopped the Configuration Recorder\n\n\nCheck out the Lambda logs for more verbose details."
+    assert alert_text == "> 🛑  Stopped the Configuration Recorder.\n\n\nCheck out the Lambda logs for more verbose details."
