@@ -1,0 +1,3412 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://gemini-oss.github.io/starfleet/reference/starfleet/worker_ships/plugins/github_sync/ship/">
+      
+      
+        <link rel="prev" href="../auth/">
+      
+      
+        <link rel="next" href="../utils/">
+      
+      <link rel="icon" href="../../../../../../logo_files/chmmr.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
+    
+    
+      
+        <title>ship - ✨Starfleet✨</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../../assets/stylesheets/main.0d440cfe.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#starfleet.worker_ships.plugins.github_sync.ship" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../../../.." title="✨Starfleet✨" class="md-header__button md-logo" aria-label="✨Starfleet✨" data-md-component="logo">
+      
+  <img src="../../../../../../logo_files/Logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ✨Starfleet✨
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ship
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gemini-oss/starfleet" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../../../../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../../architecture/Overview/" class="md-tabs__link">
+        Architecture
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../../installation/Overview/" class="md-tabs__link">
+        Installation Guide
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../../userGuide/Overview/" class="md-tabs__link">
+        User Guide
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../../developerGuide/Overview/" class="md-tabs__link">
+        Developer Guide
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../../../Links/" class="md-tabs__link md-tabs__link--active">
+        Extras
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../../../.." title="✨Starfleet✨" class="md-nav__button md-logo" aria-label="✨Starfleet✨" data-md-component="logo">
+      
+  <img src="../../../../../../logo_files/Logo.png" alt="logo">
+
+    </a>
+    ✨Starfleet✨
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gemini-oss/starfleet" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../architecture/Overview/" class="md-nav__link">
+        Architecture Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../architecture/WorkerShips/" class="md-nav__link">
+        Worker Ships
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../architecture/Configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../architecture/PayloadTemplates/" class="md-nav__link">
+        Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../architecture/AccountIndex/" class="md-nav__link">
+        Account Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../architecture/ResidentIAMRole/" class="md-nav__link">
+        Resident IAM Role
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../architecture/Starbase/" class="md-nav__link">
+        Starbase
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../architecture/CLI/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../architecture/Secrets/" class="md-nav__link">
+        Secrets Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../architecture/Alerts/" class="md-nav__link">
+        Alerts & Notifications
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          Installation Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Installation Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../installation/Overview/" class="md-nav__link">
+        Installation Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../installation/IAM/" class="md-nav__link">
+        Set up IAM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../installation/PrepareConfiguration/" class="md-nav__link">
+        Prepare Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../installation/PreparePayload/" class="md-nav__link">
+        Prepare Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../installation/RunSAM/" class="md-nav__link">
+        Run AWS SAM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../installation/MakeAccountIndex/" class="md-nav__link">
+        Make the Account Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../installation/WrapUp/" class="md-nav__link">
+        Wrapping Up
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          User Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          User Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/Overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/PayloadTemplates/" class="md-nav__link">
+        Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/Starbase/" class="md-nav__link">
+        Starbase
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/Secrets/" class="md-nav__link">
+        Secrets Manager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/Slack/" class="md-nav__link">
+        Slack Alerts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+          Account Index Generator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_6">
+          <span class="md-nav__icon md-icon"></span>
+          Account Index Generator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/AccountIndexGenerator/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+          AWS Config Worker
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_7">
+          <span class="md-nav__icon md-icon"></span>
+          AWS Config Worker
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/awsConfig/AWSConfigWorker/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/awsConfig/Installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/awsConfig/Template/" class="md-nav__link">
+        Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/awsConfig/CLI/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+          GitHub Repo Sync Worker
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_8">
+          <span class="md-nav__icon md-icon"></span>
+          GitHub Repo Sync Worker
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/GitHubSync/Overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/GitHubSync/ConfigureGitHubApp/" class="md-nav__link">
+        GitHub App Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/GitHubSync/InstallationAndConfiguration/" class="md-nav__link">
+        Installation and Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/GitHubSync/Template/" class="md-nav__link">
+        Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../userGuide/GitHubSync/CLI/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          Developer Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Developer Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/Overview/" class="md-nav__link">
+        Developer Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+          Primary Components
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          Primary Components
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/primaryComponents/Loggers/" class="md-nav__link">
+        Loggers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/primaryComponents/ConfigurationManager/" class="md-nav__link">
+        Configuration Manager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2_3" id="__nav_5_2_3_label" tabindex="0">
+          Worker Ships
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_2_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          Worker Ships
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/primaryComponents/workerShips/Overview/" class="md-nav__link">
+        Overview - Ship Schematics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/primaryComponents/workerShips/LambdaEntrypoints/" class="md-nav__link">
+        Lambda Entrypoints
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/primaryComponents/workerShips/CLI/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/primaryComponents/workerShips/Loader/" class="md-nav__link">
+        Worker Ship Loader
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/primaryComponents/AccountIndexer/" class="md-nav__link">
+        Account Indexer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/primaryComponents/SecretsManager/" class="md-nav__link">
+        Secrets Manager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/primaryComponents/Notifications/" class="md-nav__link">
+        Notifications
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/SAMConfiguration/" class="md-nav__link">
+        AWS SAM Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/CheckList/" class="md-nav__link">
+        Check List
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../developerGuide/GeneratingDocs/" class="md-nav__link">
+        Generating Documentation
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          Extras
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Extras
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Links/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../../../Attributions/" class="md-nav__link">
+        Attributions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+          Code Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          Code Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1" checked>
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../../../">starfleet</a>
+          
+            <label for="__nav_6_3_1">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_1_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          starfleet
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_1" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../../../account_index/">account_index</a>
+          
+            <label for="__nav_6_3_1_1">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_1_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_1">
+          <span class="md-nav__icon md-icon"></span>
+          account_index
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../account_index/loader/" class="md-nav__link">
+        loader
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_1_2" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../../../account_index/plugins/">plugins</a>
+          
+            <label for="__nav_6_3_1_1_2">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_6_3_1_1_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_1_2">
+          <span class="md-nav__icon md-icon"></span>
+          plugins
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_1_2_1" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../../../account_index/plugins/starfleet_default_index/">starfleet_default_index</a>
+          
+            <label for="__nav_6_3_1_1_2_1">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_6_3_1_1_2_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_1_2_1">
+          <span class="md-nav__icon md-icon"></span>
+          starfleet_default_index
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../account_index/plugins/starfleet_default_index/ship/" class="md-nav__link">
+        ship
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../account_index/resolvers/" class="md-nav__link">
+        resolvers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../account_index/schematics/" class="md-nav__link">
+        schematics
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_2" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../../../cli/">cli</a>
+          
+            <label for="__nav_6_3_1_2">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_1_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_2">
+          <span class="md-nav__icon md-icon"></span>
+          cli
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../cli/components/" class="md-nav__link">
+        components
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../cli/entrypoint/" class="md-nav__link">
+        entrypoint
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_3" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../../../starbase/">starbase</a>
+          
+            <label for="__nav_6_3_1_3">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_1_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_3">
+          <span class="md-nav__icon md-icon"></span>
+          starbase
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../starbase/entrypoints/" class="md-nav__link">
+        entrypoints
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../starbase/main/" class="md-nav__link">
+        main
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../starbase/utils/" class="md-nav__link">
+        utils
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../startup/" class="md-nav__link">
+        startup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_5" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../../../utils/">utils</a>
+          
+            <label for="__nav_6_3_1_5">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_1_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_5">
+          <span class="md-nav__icon md-icon"></span>
+          utils
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../utils/config_schema/" class="md-nav__link">
+        config_schema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../utils/configuration/" class="md-nav__link">
+        configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../utils/logging/" class="md-nav__link">
+        logging
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../utils/plugin_loader/" class="md-nav__link">
+        plugin_loader
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../utils/secrets/" class="md-nav__link">
+        secrets
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../utils/slack/" class="md-nav__link">
+        slack
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_6" checked>
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../../">worker_ships</a>
+          
+            <label for="__nav_6_3_1_6">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_1_6_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6_3_1_6">
+          <span class="md-nav__icon md-icon"></span>
+          worker_ships
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../base_payload_schemas/" class="md-nav__link">
+        base_payload_schemas
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cli_utils/" class="md-nav__link">
+        cli_utils
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../lambda_utils/" class="md-nav__link">
+        lambda_utils
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../loader/" class="md-nav__link">
+        loader
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../niceties/" class="md-nav__link">
+        niceties
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_6_6" checked>
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../">plugins</a>
+          
+            <label for="__nav_6_3_1_6_6">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_6_3_1_6_6_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6_3_1_6_6">
+          <span class="md-nav__icon md-icon"></span>
+          plugins
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_6_6_1" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../account_index_generator/">account_index_generator</a>
+          
+            <label for="__nav_6_3_1_6_6_1">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_6_3_1_6_6_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_6_6_1">
+          <span class="md-nav__icon md-icon"></span>
+          account_index_generator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../account_index_generator/ship/" class="md-nav__link">
+        ship
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../account_index_generator/utils/" class="md-nav__link">
+        utils
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_6_6_2" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../aws_config/">aws_config</a>
+          
+            <label for="__nav_6_3_1_6_6_2">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_6_3_1_6_6_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_6_6_2">
+          <span class="md-nav__icon md-icon"></span>
+          aws_config
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../aws_config/logic/" class="md-nav__link">
+        logic
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../aws_config/schemas/" class="md-nav__link">
+        schemas
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../aws_config/ship/" class="md-nav__link">
+        ship
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_6_6_3" checked>
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../">github_sync</a>
+          
+            <label for="__nav_6_3_1_6_6_3">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_6_3_1_6_6_3_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6_3_1_6_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          github_sync
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../auth/" class="md-nav__link">
+        auth
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          ship
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        ship
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship" class="md-nav__link">
+    starfleet.worker_ships.plugins.github_sync.ship
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncPayloadTemplate" class="md-nav__link">
+    GitHubSyncPayloadTemplate
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncWorkerShip" class="md-nav__link">
+    GitHubSyncWorkerShip
+  </a>
+  
+    <nav class="md-nav" aria-label="GitHubSyncWorkerShip">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncWorkerShip.execute" class="md-nav__link">
+    execute()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.download" class="md-nav__link">
+    download()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.get_installation_token" class="md-nav__link">
+    get_installation_token()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.lambda_handler" class="md-nav__link">
+    lambda_handler()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.run" class="md-nav__link">
+    run()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.sync_github" class="md-nav__link">
+    sync_github()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../utils/" class="md-nav__link">
+        utils
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ship_schematics/" class="md-nav__link">
+        ship_schematics
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship" class="md-nav__link">
+    starfleet.worker_ships.plugins.github_sync.ship
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncPayloadTemplate" class="md-nav__link">
+    GitHubSyncPayloadTemplate
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncWorkerShip" class="md-nav__link">
+    GitHubSyncWorkerShip
+  </a>
+  
+    <nav class="md-nav" aria-label="GitHubSyncWorkerShip">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncWorkerShip.execute" class="md-nav__link">
+    execute()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.download" class="md-nav__link">
+    download()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.get_installation_token" class="md-nav__link">
+    get_installation_token()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.lambda_handler" class="md-nav__link">
+    lambda_handler()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.run" class="md-nav__link">
+    run()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.plugins.github_sync.ship.sync_github" class="md-nav__link">
+    sync_github()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+  <h1>ship</h1>
+
+<div class="doc doc-object doc-module">
+
+
+<a id="starfleet.worker_ships.plugins.github_sync.ship"></a>
+  <div class="doc doc-contents first">
+  
+      <p>Starfleet's worker for syncing a GitHub repository contents to S3</p>
+<p>This is a worker ship that will periodically verify that a GitHub repository's contents are identical to that
+of an S3 bucket. It will add, remove, and update any file in S3 that is not in the corresponding GitHub repo.</p>
+<p>This is primarily used for syncing Starfleet templates to S3 for CI/CD, but can be used for any other purpose.</p>
+<p>:Module: starfleet.worker_ships.plugins.github_sync.ship
+:Copyright: (c) 2023 by Gemini Trust Company, LLC., see AUTHORS for more info
+:License: See the LICENSE file for details
+:Author: Mike Grima <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#109;&#105;&#99;&#104;&#97;&#101;&#108;&#46;&#103;&#114;&#105;&#109;&#97;&#64;&#103;&#101;&#109;&#105;&#110;&#105;&#46;&#99;&#111;&#109;">&#109;&#105;&#99;&#104;&#97;&#101;&#108;&#46;&#103;&#114;&#105;&#109;&#97;&#64;&#103;&#101;&#109;&#105;&#110;&#105;&#46;&#99;&#111;&#109;</a></p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncPayloadTemplate" class="doc doc-heading">
+        <code>GitHubSyncPayloadTemplate</code>
+
+
+<a href="#starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncPayloadTemplate" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="starfleet.worker_ships.base_payload_schemas.WorkerShipPayloadBaseTemplate" href="../../../base_payload_schemas/#starfleet.worker_ships.base_payload_schemas.WorkerShipPayloadBaseTemplate">WorkerShipPayloadBaseTemplate</a></code></p>
+
+  
+      <p>The payload for the GitHubSyncWorker.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>starfleet/worker_ships/plugins/github_sync/ship.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">GitHubSyncPayloadTemplate</span><span class="p">(</span><span class="n">WorkerShipPayloadBaseTemplate</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The payload for the GitHubSyncWorker.&quot;&quot;&quot;</span>
+
+    <span class="n">organization</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;Organization&quot;</span><span class="p">)</span>
+    <span class="n">repository</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;Repository&quot;</span><span class="p">)</span>
+    <span class="n">branch_name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;BranchName&quot;</span><span class="p">)</span>
+    <span class="n">github_app_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;GitHubAppId&quot;</span><span class="p">)</span>
+    <span class="n">github_installation_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;GitHubInstallationId&quot;</span><span class="p">)</span>
+    <span class="n">bucket_name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;BucketName&quot;</span><span class="p">)</span>
+    <span class="n">bucket_region</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="o">.</span><span class="n">OneOf</span><span class="p">(</span><span class="n">boto3</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">get_available_regions</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">)),</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;BucketRegion&quot;</span><span class="p">)</span>
+    <span class="n">extract_zip_contents</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;ExtractZipContents&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Optionals</span>
+    <span class="n">include_repo_paths</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">load_default</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;^.+$&quot;</span><span class="p">],</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;IncludeRepoPaths&quot;</span><span class="p">)</span>  <span class="c1"># Default is for all paths</span>
+    <span class="n">exclude_repo_paths</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">load_default</span><span class="o">=</span><span class="p">[],</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;ExcludeRepoPaths&quot;</span><span class="p">)</span>
+    <span class="n">key_prefix</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;KeyPrefix&quot;</span><span class="p">)</span>
+    <span class="n">delete_missing_files</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">load_default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;DeleteMissingFiles&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncWorkerShip" class="doc doc-heading">
+        <code>GitHubSyncWorkerShip</code>
+
+
+<a href="#starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncWorkerShip" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="starfleet.worker_ships.ship_schematics.StarfleetWorkerShip" href="../../../ship_schematics/#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip">StarfleetWorkerShip</a></code></p>
+
+  
+      <p>This is a worker that will periodically sync the contents of a GitHub repository to S3.</p>
+<p>This will use the Base Configuration template as there isn't really much to configure. This will, however, need to make use of the SecretsManager singleton to
+obtain the GitHub application private key.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>starfleet/worker_ships/plugins/github_sync/ship.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">GitHubSyncWorkerShip</span><span class="p">(</span><span class="n">StarfleetWorkerShip</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a worker that will periodically sync the contents of a GitHub repository to S3.</span>
+
+<span class="sd">    This will use the Base Configuration template as there isn&#39;t really much to configure. This will, however, need to make use of the SecretsManager singleton to</span>
+<span class="sd">    obtain the GitHub application private key.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">payload_template_class</span> <span class="o">=</span> <span class="n">GitHubSyncPayloadTemplate</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the payload to sync the given repo to S3.&quot;&quot;&quot;</span>
+        <span class="c1"># Step 1: Get the required components from the payload:</span>
+        <span class="n">organization</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;organization&quot;</span><span class="p">]</span>
+        <span class="n">app_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;github_app_id&quot;</span><span class="p">]</span>
+        <span class="n">installation_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;github_installation_id&quot;</span><span class="p">]</span>
+        <span class="n">directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;dir_path&quot;</span><span class="p">]</span>
+        <span class="n">repo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;repository&quot;</span><span class="p">]</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;branch_name&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Step 2: Download the repo:</span>
+        <span class="n">download_repo</span><span class="p">(</span><span class="n">organization</span><span class="p">,</span> <span class="n">app_id</span><span class="p">,</span> <span class="n">installation_id</span><span class="p">,</span> <span class="n">repo</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>  <span class="c1"># pylint: disable=too-many-function-args</span>
+
+        <span class="c1"># Step 3: If we have it configured to extract the zip contents, then we need to extract the contents:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;extract_zip_contents&quot;</span><span class="p">]:</span>
+            <span class="n">extracted_directory</span> <span class="o">=</span> <span class="n">extract_repo</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">repo</span><span class="p">)</span>
+            <span class="n">directory</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">extracted_directory</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Update the path of the files to diff to the extracted path</span>
+
+        <span class="c1"># If we are just downloading (CLI) and doing nothing more, then we are done:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;download_only&quot;</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Step 4: Collect what we have locally and what&#39;s in S3:</span>
+        <span class="n">include_repo_paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;include_repo_paths&quot;</span><span class="p">]</span>
+        <span class="n">exclude_repo_paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;exclude_repo_paths&quot;</span><span class="p">]</span>
+        <span class="n">bucket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;bucket_name&quot;</span><span class="p">]</span>
+        <span class="n">bucket_region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;bucket_region&quot;</span><span class="p">]</span>
+        <span class="n">key_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;key_prefix&quot;</span><span class="p">)</span>
+        <span class="n">local_files</span> <span class="o">=</span> <span class="n">collect_files_for_diff</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">include_repo_paths</span><span class="p">,</span> <span class="n">exclude_repo_paths</span><span class="p">)</span>
+        <span class="n">s3_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">bucket_region</span><span class="p">)</span>
+        <span class="n">s3_files</span> <span class="o">=</span> <span class="n">collect_s3_files_for_diff</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">s3_client</span><span class="p">,</span> <span class="n">key_prefix</span><span class="o">=</span><span class="n">key_prefix</span><span class="p">)</span>
+
+        <span class="c1"># Step 5: Perform a diff of what we have locally with what&#39;s in S3 - after this, s3_files will contain leftover for deletion if present</span>
+        <span class="n">missing_files</span><span class="p">,</span> <span class="n">different_files</span> <span class="o">=</span> <span class="n">diff_local_with_s3</span><span class="p">(</span><span class="n">local_files</span><span class="p">,</span> <span class="n">s3_files</span><span class="p">)</span>
+
+        <span class="c1"># Step 6: Upload the files that need to be uploaded (if commit):</span>
+        <span class="n">upload_files</span> <span class="o">=</span> <span class="n">missing_files</span> <span class="o">+</span> <span class="n">different_files</span>
+        <span class="n">delete_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">s3_files</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">commit</span><span class="p">:</span>
+            <span class="n">alert_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">upload_files</span> <span class="ow">or</span> <span class="n">delete_files</span><span class="p">:</span>
+                <span class="n">alert_message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Starfleet&#39;s GitHub -&gt; S3 sync job: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;template_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> has made the following changes:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+            <span class="k">if</span> <span class="n">upload_files</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">missing_files</span><span class="p">:</span>
+                    <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;&gt; *🆕  The following new files were uploaded:*</span><span class="se">\n</span><span class="s2">&gt;```</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot; - </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">missing</span> <span class="ow">in</span> <span class="n">missing_files</span><span class="p">])</span>
+                    <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">```</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+                <span class="k">if</span> <span class="n">different_files</span><span class="p">:</span>
+                    <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;&gt; *✨  The following modified files were uploaded:*</span><span class="se">\n</span><span class="s2">&gt;```</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot; - </span><span class="si">{</span><span class="n">different</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">different</span> <span class="ow">in</span> <span class="n">different_files</span><span class="p">])</span>
+                    <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">```</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[🪣] Uploading </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">upload_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> file(s) to S3...&quot;</span><span class="p">)</span>
+                <span class="n">upload_to_s3</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">upload_files</span><span class="p">,</span> <span class="n">s3_client</span><span class="p">,</span> <span class="n">key_prefix</span><span class="o">=</span><span class="n">key_prefix</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[🆗] No new or modified files to upload to S3.&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Step 7: Delete the excess (if enabled and if commit)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;delete_missing_files&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">delete_files</span><span class="p">:</span>
+                <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;&gt; *🗑  The following files have been deleted:*</span><span class="se">\n</span><span class="s2">&gt;```</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot; - </span><span class="si">{</span><span class="n">remove</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">remove</span> <span class="ow">in</span> <span class="n">delete_files</span><span class="p">])</span>
+                <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">```&quot;</span>
+
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[🗑️] Deleting </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">delete_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> file(s) from S3...&quot;</span><span class="p">)</span>
+                <span class="n">delete_from_s3</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">delete_files</span><span class="p">,</span> <span class="n">s3_client</span><span class="p">,</span> <span class="n">key_prefix</span><span class="o">=</span><span class="n">key_prefix</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[🆗] No files to delete.&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">alert_message</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">send_alert</span><span class="p">(</span><span class="n">AlertPriority</span><span class="o">.</span><span class="n">IMPORTANT</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Starfleet GitHub -&gt; S3 Sync Job for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;template_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">alert_message</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[⏭️] Commit is not enabled so not doing anything.&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncWorkerShip.execute" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">execute</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+<a href="#starfleet.worker_ships.plugins.github_sync.ship.GitHubSyncWorkerShip.execute" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Execute the payload to sync the given repo to S3.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/plugins/github_sync/ship.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Execute the payload to sync the given repo to S3.&quot;&quot;&quot;</span>
+    <span class="c1"># Step 1: Get the required components from the payload:</span>
+    <span class="n">organization</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;organization&quot;</span><span class="p">]</span>
+    <span class="n">app_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;github_app_id&quot;</span><span class="p">]</span>
+    <span class="n">installation_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;github_installation_id&quot;</span><span class="p">]</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;dir_path&quot;</span><span class="p">]</span>
+    <span class="n">repo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;repository&quot;</span><span class="p">]</span>
+    <span class="n">branch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;branch_name&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Step 2: Download the repo:</span>
+    <span class="n">download_repo</span><span class="p">(</span><span class="n">organization</span><span class="p">,</span> <span class="n">app_id</span><span class="p">,</span> <span class="n">installation_id</span><span class="p">,</span> <span class="n">repo</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>  <span class="c1"># pylint: disable=too-many-function-args</span>
+
+    <span class="c1"># Step 3: If we have it configured to extract the zip contents, then we need to extract the contents:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;extract_zip_contents&quot;</span><span class="p">]:</span>
+        <span class="n">extracted_directory</span> <span class="o">=</span> <span class="n">extract_repo</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">repo</span><span class="p">)</span>
+        <span class="n">directory</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">extracted_directory</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Update the path of the files to diff to the extracted path</span>
+
+    <span class="c1"># If we are just downloading (CLI) and doing nothing more, then we are done:</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;download_only&quot;</span><span class="p">):</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Step 4: Collect what we have locally and what&#39;s in S3:</span>
+    <span class="n">include_repo_paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;include_repo_paths&quot;</span><span class="p">]</span>
+    <span class="n">exclude_repo_paths</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;exclude_repo_paths&quot;</span><span class="p">]</span>
+    <span class="n">bucket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;bucket_name&quot;</span><span class="p">]</span>
+    <span class="n">bucket_region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;bucket_region&quot;</span><span class="p">]</span>
+    <span class="n">key_prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;key_prefix&quot;</span><span class="p">)</span>
+    <span class="n">local_files</span> <span class="o">=</span> <span class="n">collect_files_for_diff</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">include_repo_paths</span><span class="p">,</span> <span class="n">exclude_repo_paths</span><span class="p">)</span>
+    <span class="n">s3_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">bucket_region</span><span class="p">)</span>
+    <span class="n">s3_files</span> <span class="o">=</span> <span class="n">collect_s3_files_for_diff</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">s3_client</span><span class="p">,</span> <span class="n">key_prefix</span><span class="o">=</span><span class="n">key_prefix</span><span class="p">)</span>
+
+    <span class="c1"># Step 5: Perform a diff of what we have locally with what&#39;s in S3 - after this, s3_files will contain leftover for deletion if present</span>
+    <span class="n">missing_files</span><span class="p">,</span> <span class="n">different_files</span> <span class="o">=</span> <span class="n">diff_local_with_s3</span><span class="p">(</span><span class="n">local_files</span><span class="p">,</span> <span class="n">s3_files</span><span class="p">)</span>
+
+    <span class="c1"># Step 6: Upload the files that need to be uploaded (if commit):</span>
+    <span class="n">upload_files</span> <span class="o">=</span> <span class="n">missing_files</span> <span class="o">+</span> <span class="n">different_files</span>
+    <span class="n">delete_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">s3_files</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">commit</span><span class="p">:</span>
+        <span class="n">alert_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">upload_files</span> <span class="ow">or</span> <span class="n">delete_files</span><span class="p">:</span>
+            <span class="n">alert_message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;Starfleet&#39;s GitHub -&gt; S3 sync job: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;template_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> has made the following changes:</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">upload_files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">missing_files</span><span class="p">:</span>
+                <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;&gt; *🆕  The following new files were uploaded:*</span><span class="se">\n</span><span class="s2">&gt;```</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot; - </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">missing</span> <span class="ow">in</span> <span class="n">missing_files</span><span class="p">])</span>
+                <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">```</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+            <span class="k">if</span> <span class="n">different_files</span><span class="p">:</span>
+                <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;&gt; *✨  The following modified files were uploaded:*</span><span class="se">\n</span><span class="s2">&gt;```</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot; - </span><span class="si">{</span><span class="n">different</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">different</span> <span class="ow">in</span> <span class="n">different_files</span><span class="p">])</span>
+                <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">```</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[🪣] Uploading </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">upload_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> file(s) to S3...&quot;</span><span class="p">)</span>
+            <span class="n">upload_to_s3</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">directory</span><span class="p">,</span> <span class="n">upload_files</span><span class="p">,</span> <span class="n">s3_client</span><span class="p">,</span> <span class="n">key_prefix</span><span class="o">=</span><span class="n">key_prefix</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[🆗] No new or modified files to upload to S3.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Step 7: Delete the excess (if enabled and if commit)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;delete_missing_files&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">delete_files</span><span class="p">:</span>
+            <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;&gt; *🗑  The following files have been deleted:*</span><span class="se">\n</span><span class="s2">&gt;```</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot; - </span><span class="si">{</span><span class="n">remove</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">remove</span> <span class="ow">in</span> <span class="n">delete_files</span><span class="p">])</span>
+            <span class="n">alert_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">```&quot;</span>
+
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[🗑️] Deleting </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">delete_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> file(s) from S3...&quot;</span><span class="p">)</span>
+            <span class="n">delete_from_s3</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">delete_files</span><span class="p">,</span> <span class="n">s3_client</span><span class="p">,</span> <span class="n">key_prefix</span><span class="o">=</span><span class="n">key_prefix</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[🆗] No files to delete.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">alert_message</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">send_alert</span><span class="p">(</span><span class="n">AlertPriority</span><span class="o">.</span><span class="n">IMPORTANT</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Starfleet GitHub -&gt; S3 Sync Job for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s1">&#39;template_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">alert_message</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[⏭️] Commit is not enabled so not doing anything.&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="starfleet.worker_ships.plugins.github_sync.ship.download" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">download</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+<a href="#starfleet.worker_ships.plugins.github_sync.ship.download" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This is a helpful debugging command to download the repository. This will extract the contents if the payload specifies the <code>ExtractZipContents</code> flag set to <code>True</code>.
+You simply provide the payload template and the location for where you want the repo to be downloaded (and optionally extracted),
+and it will be saved to that path as <code>REPO_NAME.zip</code> (and extracted as <code>REPO_NAME-COMMIT-HASH/</code>).</p>
+<p>The commit flag doesn't do anything for this command.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/plugins/github_sync/ship.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@sync_github</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">StarfleetSingleInvokeCommand</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;--save-dir&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;A local directory to save the zip in.&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa # pylint: disable=unused-argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a helpful debugging command to download the repository. This will extract the contents if the payload specifies the `ExtractZipContents` flag set to `True`.</span>
+<span class="sd">    You simply provide the payload template and the location for where you want the repo to be downloaded (and optionally extracted),</span>
+<span class="sd">    and it will be saved to that path as `REPO_NAME.zip` (and extracted as `REPO_NAME-COMMIT-HASH/`).</span>
+
+<span class="sd">    The commit flag doesn&#39;t do anything for this command.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the app ID and the installation ID out of the payload:</span>
+    <span class="n">worker</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span>
+
+    <span class="c1"># Shove the path into the payload:</span>
+    <span class="n">worker</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;dir_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">save_dir</span>
+
+    <span class="c1"># This command will NOT extract the zip contents or do any additional work:</span>
+    <span class="n">worker</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;download_only&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Run it. This will not delete</span>
+    <span class="n">worker</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[✅] Done!&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="starfleet.worker_ships.plugins.github_sync.ship.get_installation_token" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_installation_token</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+<a href="#starfleet.worker_ships.plugins.github_sync.ship.get_installation_token" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This returns the installation token for the given organization, application id, and installation id provided in the payload template.
+This is mostly used for local testing and debugging.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/plugins/github_sync/ship.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@sync_github</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">StarfleetSingleInvokeCommand</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="k">def</span> <span class="nf">get_installation_token</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa # pylint: disable=unused-argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This returns the installation token for the given organization, application id, and installation id provided in the payload template.</span>
+<span class="sd">    This is mostly used for local testing and debugging.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the app ID and the installation ID out of the payload:</span>
+    <span class="n">worker</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span>
+    <span class="n">organization</span> <span class="o">=</span> <span class="n">worker</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;organization&quot;</span><span class="p">]</span>
+    <span class="n">app_id</span> <span class="o">=</span> <span class="n">worker</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;github_app_id&quot;</span><span class="p">]</span>
+    <span class="n">installation_id</span> <span class="o">=</span> <span class="n">worker</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;github_installation_id&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Get the token:</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="n">GITHUB_AUTH_MANGER</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">organization</span><span class="p">,</span> <span class="n">app_id</span><span class="p">,</span> <span class="n">installation_id</span><span class="p">)</span>
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[🔑] Starfleet installation token header for organization: </span><span class="si">{</span><span class="n">organization</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="starfleet.worker_ships.plugins.github_sync.ship.lambda_handler" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">worker</span><span class="p">,</span> <span class="n">commit</span><span class="p">)</span></code>
+
+<a href="#starfleet.worker_ships.plugins.github_sync.ship.lambda_handler" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This is the Lambda entrypoint for the GitHubSyncWorkerShip event from the Starbase.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/plugins/github_sync/ship.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@worker_lambda</span><span class="p">(</span><span class="n">GitHubSyncWorkerShip</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">context</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">worker</span><span class="p">:</span> <span class="n">GitHubSyncWorkerShipInstance</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa pylint: disable=W0613</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is the Lambda entrypoint for the GitHubSyncWorkerShip event from the Starbase.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;Records&quot;</span><span class="p">]:</span>
+        <span class="c1"># Load the payload:</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">record</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">])</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[⚙️] Processing Payload: </span><span class="si">{</span><span class="n">payload</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">worker</span><span class="o">.</span><span class="n">load_template</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+
+        <span class="c1"># Make the temporary directory:</span>
+        <span class="k">with</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">temp_dir_path</span><span class="p">:</span>
+            <span class="n">worker</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;dir_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_dir_path</span>
+
+            <span class="c1"># Process it!</span>
+            <span class="n">worker</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="n">commit</span><span class="p">)</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[✅] Done!&quot;</span><span class="p">)</span>
+
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[🏁] Completed syncing GitHub repository to S3.&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="starfleet.worker_ships.plugins.github_sync.ship.run" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">run</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">commit</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+<a href="#starfleet.worker_ships.plugins.github_sync.ship.run" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This will run the syncing of the repository against the payload's specified S3 bucket.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/plugins/github_sync/ship.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@sync_github</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">StarfleetSingleInvokeCommand</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span>
+    <span class="s2">&quot;--save-dir&quot;</span><span class="p">,</span>
+    <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">help</span><span class="o">=</span><span class="s2">&quot;An optional local directory to save and retain the contents within. &quot;</span> <span class="s2">&quot;If not supplied, then this will create a temporary directory and delete it.&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa # pylint: disable=unused-argument</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This will run the syncing of the repository against the payload&#39;s specified S3 bucket.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">commit</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;[⚠️] Commit flag is disabled: not writing anything to S3!&quot;</span><span class="p">)</span>
+
+    <span class="c1"># If we did not get a save directory provided, then we are going to create a temporary one:</span>
+    <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">save_dir</span> <span class="k">else</span> <span class="kc">None</span>  <span class="c1"># pylint: disable=consider-using-with</span>
+    <span class="n">working_directory</span> <span class="o">=</span> <span class="n">save_dir</span> <span class="ow">or</span> <span class="n">temp_dir</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">worker</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span>
+        <span class="n">worker</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;dir_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">working_directory</span>
+        <span class="n">worker</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="n">commit</span><span class="p">)</span>
+
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">temp_dir</span><span class="p">:</span>
+            <span class="n">temp_dir</span><span class="o">.</span><span class="n">cleanup</span><span class="p">()</span>
+
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;[✅] Done!&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="starfleet.worker_ships.plugins.github_sync.ship.sync_github" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">sync_github</span><span class="p">(</span><span class="n">ctx</span><span class="p">)</span></code>
+
+<a href="#starfleet.worker_ships.plugins.github_sync.ship.sync_github" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This is the worker ship for syncing a GitHub repo with S3.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/plugins/github_sync/ship.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@click</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">pass_context</span>
+<span class="k">def</span> <span class="nf">sync_github</span><span class="p">(</span><span class="n">ctx</span><span class="p">:</span> <span class="n">Context</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is the worker ship for syncing a GitHub repo with S3.&quot;&quot;&quot;</span>
+    <span class="n">ctx</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">GitHubSyncWorkerShip</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../auth/" class="md-footer__link md-footer__link--prev" aria-label="Previous: auth" rel="prev">
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Previous
+                </span>
+                auth
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../utils/" class="md-footer__link md-footer__link--next" aria-label="Next: utils" rel="next">
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Next
+                </span>
+                utils
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023 - <a href="https://gemini.com/careers">Gemini Trust Company, LLC</a><br/>See the <a href="https://gemini-oss.github.io/starfleet/Attributions">attributions page</a> for additional copyrights.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/gemini-oss" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../../../../..", "features": ["navigation.sections", "navigation.footer", "navigation.tabs", "content.code.copy"], "search": "../../../../../../assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../../../assets/javascripts/bundle.4b2c34cd.min.js"></script>
+      
+    
+  </body>
+</html>

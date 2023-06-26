@@ -1,0 +1,3659 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://gemini-oss.github.io/starfleet/reference/starfleet/worker_ships/ship_schematics/">
+      
+      
+        <link rel="prev" href="../plugins/github_sync/utils/">
+      
+      
+      <link rel="icon" href="../../../../logo_files/chmmr.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.12">
+    
+    
+      
+        <title>ship_schematics - ✨Starfleet✨</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.0d440cfe.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#starfleet.worker_ships.ship_schematics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="✨Starfleet✨" class="md-header__button md-logo" aria-label="✨Starfleet✨" data-md-component="logo">
+      
+  <img src="../../../../logo_files/Logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ✨Starfleet✨
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ship_schematics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gemini-oss/starfleet" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../architecture/Overview/" class="md-tabs__link">
+        Architecture
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../installation/Overview/" class="md-tabs__link">
+        Installation Guide
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../userGuide/Overview/" class="md-tabs__link">
+        User Guide
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../developerGuide/Overview/" class="md-tabs__link">
+        Developer Guide
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../Links/" class="md-tabs__link md-tabs__link--active">
+        Extras
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="✨Starfleet✨" class="md-nav__button md-logo" aria-label="✨Starfleet✨" data-md-component="logo">
+      
+  <img src="../../../../logo_files/Logo.png" alt="logo">
+
+    </a>
+    ✨Starfleet✨
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gemini-oss/starfleet" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          Architecture
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Architecture
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../architecture/Overview/" class="md-nav__link">
+        Architecture Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../architecture/WorkerShips/" class="md-nav__link">
+        Worker Ships
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../architecture/Configuration/" class="md-nav__link">
+        Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../architecture/PayloadTemplates/" class="md-nav__link">
+        Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../architecture/AccountIndex/" class="md-nav__link">
+        Account Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../architecture/ResidentIAMRole/" class="md-nav__link">
+        Resident IAM Role
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../architecture/Starbase/" class="md-nav__link">
+        Starbase
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../architecture/CLI/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../architecture/Secrets/" class="md-nav__link">
+        Secrets Management
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../architecture/Alerts/" class="md-nav__link">
+        Alerts & Notifications
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          Installation Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Installation Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../installation/Overview/" class="md-nav__link">
+        Installation Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../installation/IAM/" class="md-nav__link">
+        Set up IAM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../installation/PrepareConfiguration/" class="md-nav__link">
+        Prepare Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../installation/PreparePayload/" class="md-nav__link">
+        Prepare Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../installation/RunSAM/" class="md-nav__link">
+        Run AWS SAM
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../installation/MakeAccountIndex/" class="md-nav__link">
+        Make the Account Index
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../installation/WrapUp/" class="md-nav__link">
+        Wrapping Up
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          User Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          User Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/Overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/PayloadTemplates/" class="md-nav__link">
+        Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/Starbase/" class="md-nav__link">
+        Starbase
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/Secrets/" class="md-nav__link">
+        Secrets Manager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/Slack/" class="md-nav__link">
+        Slack Alerts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+          Account Index Generator
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_6">
+          <span class="md-nav__icon md-icon"></span>
+          Account Index Generator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/AccountIndexGenerator/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+          AWS Config Worker
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_7">
+          <span class="md-nav__icon md-icon"></span>
+          AWS Config Worker
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/awsConfig/AWSConfigWorker/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/awsConfig/Installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/awsConfig/Template/" class="md-nav__link">
+        Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/awsConfig/CLI/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+          GitHub Repo Sync Worker
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_8">
+          <span class="md-nav__icon md-icon"></span>
+          GitHub Repo Sync Worker
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/GitHubSync/Overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/GitHubSync/ConfigureGitHubApp/" class="md-nav__link">
+        GitHub App Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/GitHubSync/InstallationAndConfiguration/" class="md-nav__link">
+        Installation and Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/GitHubSync/Template/" class="md-nav__link">
+        Payload Templates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../userGuide/GitHubSync/CLI/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          Developer Guide
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Developer Guide
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/Overview/" class="md-nav__link">
+        Developer Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+          Primary Components
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          Primary Components
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/primaryComponents/Loggers/" class="md-nav__link">
+        Loggers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/primaryComponents/ConfigurationManager/" class="md-nav__link">
+        Configuration Manager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2_3" id="__nav_5_2_3_label" tabindex="0">
+          Worker Ships
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_5_2_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          Worker Ships
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/primaryComponents/workerShips/Overview/" class="md-nav__link">
+        Overview - Ship Schematics
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/primaryComponents/workerShips/LambdaEntrypoints/" class="md-nav__link">
+        Lambda Entrypoints
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/primaryComponents/workerShips/CLI/" class="md-nav__link">
+        CLI
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/primaryComponents/workerShips/Loader/" class="md-nav__link">
+        Worker Ship Loader
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/primaryComponents/AccountIndexer/" class="md-nav__link">
+        Account Indexer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/primaryComponents/SecretsManager/" class="md-nav__link">
+        Secrets Manager
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/primaryComponents/Notifications/" class="md-nav__link">
+        Notifications
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/SAMConfiguration/" class="md-nav__link">
+        AWS SAM Configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/CheckList/" class="md-nav__link">
+        Check List
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../developerGuide/GeneratingDocs/" class="md-nav__link">
+        Generating Documentation
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          Extras
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Extras
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../Links/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../Attributions/" class="md-nav__link">
+        Attributions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+          Code Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          Code Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1" checked>
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../">starfleet</a>
+          
+            <label for="__nav_6_3_1">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_6_3_1_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          starfleet
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_1" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../account_index/">account_index</a>
+          
+            <label for="__nav_6_3_1_1">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_1_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_1">
+          <span class="md-nav__icon md-icon"></span>
+          account_index
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../account_index/loader/" class="md-nav__link">
+        loader
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_1_2" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../account_index/plugins/">plugins</a>
+          
+            <label for="__nav_6_3_1_1_2">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_6_3_1_1_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_1_2">
+          <span class="md-nav__icon md-icon"></span>
+          plugins
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_1_2_1" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../account_index/plugins/starfleet_default_index/">starfleet_default_index</a>
+          
+            <label for="__nav_6_3_1_1_2_1">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_6_3_1_1_2_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_1_2_1">
+          <span class="md-nav__icon md-icon"></span>
+          starfleet_default_index
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../account_index/plugins/starfleet_default_index/ship/" class="md-nav__link">
+        ship
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../account_index/resolvers/" class="md-nav__link">
+        resolvers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../account_index/schematics/" class="md-nav__link">
+        schematics
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_2" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../cli/">cli</a>
+          
+            <label for="__nav_6_3_1_2">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_1_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_2">
+          <span class="md-nav__icon md-icon"></span>
+          cli
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/components/" class="md-nav__link">
+        components
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/entrypoint/" class="md-nav__link">
+        entrypoint
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_3" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../starbase/">starbase</a>
+          
+            <label for="__nav_6_3_1_3">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_1_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_3">
+          <span class="md-nav__icon md-icon"></span>
+          starbase
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../starbase/entrypoints/" class="md-nav__link">
+        entrypoints
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../starbase/main/" class="md-nav__link">
+        main
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../starbase/utils/" class="md-nav__link">
+        utils
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../startup/" class="md-nav__link">
+        startup
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_5" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../utils/">utils</a>
+          
+            <label for="__nav_6_3_1_5">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_1_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_5">
+          <span class="md-nav__icon md-icon"></span>
+          utils
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/config_schema/" class="md-nav__link">
+        config_schema
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/configuration/" class="md-nav__link">
+        configuration
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/logging/" class="md-nav__link">
+        logging
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/plugin_loader/" class="md-nav__link">
+        plugin_loader
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/secrets/" class="md-nav__link">
+        secrets
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/slack/" class="md-nav__link">
+        slack
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_6" checked>
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../">worker_ships</a>
+          
+            <label for="__nav_6_3_1_6">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_6_3_1_6_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_6_3_1_6">
+          <span class="md-nav__icon md-icon"></span>
+          worker_ships
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../base_payload_schemas/" class="md-nav__link">
+        base_payload_schemas
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli_utils/" class="md-nav__link">
+        cli_utils
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../lambda_utils/" class="md-nav__link">
+        lambda_utils
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../loader/" class="md-nav__link">
+        loader
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../niceties/" class="md-nav__link">
+        niceties
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_6_6" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../plugins/">plugins</a>
+          
+            <label for="__nav_6_3_1_6_6">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_6_3_1_6_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_6_6">
+          <span class="md-nav__icon md-icon"></span>
+          plugins
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_6_6_1" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../plugins/account_index_generator/">account_index_generator</a>
+          
+            <label for="__nav_6_3_1_6_6_1">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_6_3_1_6_6_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_6_6_1">
+          <span class="md-nav__icon md-icon"></span>
+          account_index_generator
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/account_index_generator/ship/" class="md-nav__link">
+        ship
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/account_index_generator/utils/" class="md-nav__link">
+        utils
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_6_6_2" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../plugins/aws_config/">aws_config</a>
+          
+            <label for="__nav_6_3_1_6_6_2">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_6_3_1_6_6_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_6_6_2">
+          <span class="md-nav__icon md-icon"></span>
+          aws_config
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/aws_config/logic/" class="md-nav__link">
+        logic
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/aws_config/schemas/" class="md-nav__link">
+        schemas
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/aws_config/ship/" class="md-nav__link">
+        ship
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3_1_6_6_3" >
+      
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../plugins/github_sync/">github_sync</a>
+          
+            <label for="__nav_6_3_1_6_6_3">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_6_3_1_6_6_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3_1_6_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          github_sync
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/github_sync/auth/" class="md-nav__link">
+        auth
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/github_sync/ship/" class="md-nav__link">
+        ship
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/github_sync/utils/" class="md-nav__link">
+        utils
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          ship_schematics
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        ship_schematics
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics" class="md-nav__link">
+    starfleet.worker_ships.ship_schematics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.AlertConfiguration" class="md-nav__link">
+    AlertConfiguration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.AlertPriority" class="md-nav__link">
+    AlertPriority
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.EventBridgeFrequency" class="md-nav__link">
+    EventBridgeFrequency
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.FanOutStrategy" class="md-nav__link">
+    FanOutStrategy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.InvocationSource" class="md-nav__link">
+    InvocationSource
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip" class="md-nav__link">
+    StarfleetWorkerShip
+  </a>
+  
+    <nav class="md-nav" aria-label="StarfleetWorkerShip">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.worker_ship_name" class="md-nav__link">
+    worker_ship_name
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.execute" class="md-nav__link">
+    execute()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.get_worker_ship_name" class="md-nav__link">
+    get_worker_ship_name()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.load_template" class="md-nav__link">
+    load_template()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.send_alert" class="md-nav__link">
+    send_alert()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate" class="md-nav__link">
+    WorkerShipBaseConfigurationTemplate
+  </a>
+  
+    <nav class="md-nav" aria-label="WorkerShipBaseConfigurationTemplate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate.Meta" class="md-nav__link">
+    Meta
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate.validate_eventbridge_timed_frequencies" class="md-nav__link">
+    validate_eventbridge_timed_frequencies()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics" class="md-nav__link">
+    starfleet.worker_ships.ship_schematics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.AlertConfiguration" class="md-nav__link">
+    AlertConfiguration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.AlertPriority" class="md-nav__link">
+    AlertPriority
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.EventBridgeFrequency" class="md-nav__link">
+    EventBridgeFrequency
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.FanOutStrategy" class="md-nav__link">
+    FanOutStrategy
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.InvocationSource" class="md-nav__link">
+    InvocationSource
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip" class="md-nav__link">
+    StarfleetWorkerShip
+  </a>
+  
+    <nav class="md-nav" aria-label="StarfleetWorkerShip">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.worker_ship_name" class="md-nav__link">
+    worker_ship_name
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.execute" class="md-nav__link">
+    execute()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.get_worker_ship_name" class="md-nav__link">
+    get_worker_ship_name()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.load_template" class="md-nav__link">
+    load_template()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.send_alert" class="md-nav__link">
+    send_alert()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate" class="md-nav__link">
+    WorkerShipBaseConfigurationTemplate
+  </a>
+  
+    <nav class="md-nav" aria-label="WorkerShipBaseConfigurationTemplate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate.Meta" class="md-nav__link">
+    Meta
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate.validate_eventbridge_timed_frequencies" class="md-nav__link">
+    validate_eventbridge_timed_frequencies()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+
+  <h1>ship_schematics</h1>
+
+<div class="doc doc-object doc-module">
+
+
+<a id="starfleet.worker_ships.ship_schematics"></a>
+  <div class="doc doc-contents first">
+  
+      <p>Starfleet's worker ship definitions</p>
+<p>This defines the base classes and components for all of Starfleet's "worker plugins". The worker plugins are plugins
+that are loaded on start-up, and do the actual given task in Starfleet.</p>
+<p>All ship plugins <em>must</em> implement the components defined here. Documentation for this follows. Also very helpful
+to see existing ship plugins to get ideas on how to make your own.</p>
+<p>:Module: starfleet.worker_ships.ship_schematics
+:Copyright: (c) 2022 by Gemini Trust Company, LLC., see AUTHORS for more info
+:License: See the LICENSE file for details
+:Author: Mike Grima <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#109;&#105;&#99;&#104;&#97;&#101;&#108;&#46;&#103;&#114;&#105;&#109;&#97;&#64;&#103;&#101;&#109;&#105;&#110;&#105;&#46;&#99;&#111;&#109;">&#109;&#105;&#99;&#104;&#97;&#101;&#108;&#46;&#103;&#114;&#105;&#109;&#97;&#64;&#103;&#101;&#109;&#105;&#110;&#105;&#46;&#99;&#111;&#109;</a></p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="starfleet.worker_ships.ship_schematics.AlertConfiguration" class="doc doc-heading">
+        <code>AlertConfiguration</code>
+
+
+<a href="#starfleet.worker_ships.ship_schematics.AlertConfiguration" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="marshmallow.Schema">Schema</span></code></p>
+
+  
+      <p>This defines a schema for a worker's configuration defining details about what alerts should be emitted.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AlertConfiguration</span><span class="p">(</span><span class="n">Schema</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This defines a schema for a worker&#39;s configuration defining details about what alerts should be emitted.&quot;&quot;&quot;</span>
+
+    <span class="n">channel_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;ChannelId&quot;</span><span class="p">)</span>
+    <span class="n">alert_priority</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="n">validate</span><span class="o">.</span><span class="n">OneOf</span><span class="p">([</span><span class="n">priority</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">priority</span> <span class="ow">in</span> <span class="n">AlertPriority</span><span class="p">]),</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;AlertPriority&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="starfleet.worker_ships.ship_schematics.AlertPriority" class="doc doc-heading">
+        <code>AlertPriority</code>
+
+
+<a href="#starfleet.worker_ships.ship_schematics.AlertPriority" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="enum.Enum">Enum</span></code></p>
+
+  
+      <p>These are the valid values for the types of alerts that should be emitted (if at all).</p>
+<p>This is somewhat similar to the way that Python logging levels work in that levels encompass other levels. For example this goes by ranking from
+least noisy to most noisy. If you select PROBLEM, then you will only receive alerts that are a PROBLEM. If you select INFORMATIONAL, then you will
+receive alerts that are INFORMATIONAL, SUCCESS, IMPORTANT, and PROBLEM.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AlertPriority</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    These are the valid values for the types of alerts that should be emitted (if at all).</span>
+
+<span class="sd">    This is somewhat similar to the way that Python logging levels work in that levels encompass other levels. For example this goes by ranking from</span>
+<span class="sd">    least noisy to most noisy. If you select PROBLEM, then you will only receive alerts that are a PROBLEM. If you select INFORMATIONAL, then you will</span>
+<span class="sd">    receive alerts that are INFORMATIONAL, SUCCESS, IMPORTANT, and PROBLEM.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">NONE</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Alert nothing</span>
+    <span class="n">PROBLEM</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># For errors or other items of significance to note (typically used for &quot;bad&quot; things)</span>
+    <span class="n">IMPORTANT</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># For information that is important but not necessarily an error</span>
+    <span class="n">SUCCESS</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># For information that would highlight that something was successful</span>
+    <span class="n">INFORMATIONAL</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># For informational messages</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="starfleet.worker_ships.ship_schematics.EventBridgeFrequency" class="doc doc-heading">
+        <code>EventBridgeFrequency</code>
+
+
+<a href="#starfleet.worker_ships.ship_schematics.EventBridgeFrequency" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="enum.Enum">Enum</span></code></p>
+
+  
+      <p>These are the valid values for EventBridge Event timed invocation frequencies.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">EventBridgeFrequency</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;These are the valid values for EventBridge Event timed invocation frequencies.&quot;&quot;&quot;</span>
+
+    <span class="n">FIVE_MIN</span> <span class="o">=</span> <span class="s2">&quot;FIVE_MIN&quot;</span>  <span class="c1"># Every 5 min</span>
+    <span class="n">FIFTEEN_MIN</span> <span class="o">=</span> <span class="s2">&quot;FIFTEEN_MIN&quot;</span>  <span class="c1"># Every 15 min</span>
+    <span class="n">THIRTY_MIN</span> <span class="o">=</span> <span class="s2">&quot;THIRTY_MIN&quot;</span>  <span class="c1"># Every 30 min / half-hourly</span>
+    <span class="n">HOURLY</span> <span class="o">=</span> <span class="s2">&quot;HOURLY&quot;</span>  <span class="c1"># Every 60 min / hourly</span>
+    <span class="n">SIX_HOURLY</span> <span class="o">=</span> <span class="s2">&quot;SIX_HOURLY&quot;</span>  <span class="c1"># Every 6 hours</span>
+    <span class="n">TWELVE_HOURLY</span> <span class="o">=</span> <span class="s2">&quot;TWELVE_HOURLY&quot;</span>  <span class="c1"># Every 12 hours / half-daily</span>
+    <span class="n">DAILY</span> <span class="o">=</span> <span class="s2">&quot;DAILY&quot;</span>  <span class="c1"># Once a day / every 24 hours</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="starfleet.worker_ships.ship_schematics.FanOutStrategy" class="doc doc-heading">
+        <code>FanOutStrategy</code>
+
+
+<a href="#starfleet.worker_ships.ship_schematics.FanOutStrategy" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="enum.Enum">Enum</span></code></p>
+
+  
+      <p>This is an Enum that informs the Starbase on how to divvy out the workload.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">FanOutStrategy</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is an Enum that informs the Starbase on how to divvy out the workload.&quot;&quot;&quot;</span>
+
+    <span class="n">SINGLE_INVOCATION</span> <span class="o">=</span> <span class="s2">&quot;SINGLE_INVOCATION&quot;</span>  <span class="c1"># This means that there is 1 Lambda function required to complete the task.</span>
+    <span class="n">ACCOUNT</span> <span class="o">=</span> <span class="s2">&quot;ACCOUNT&quot;</span>  <span class="c1"># This means that there should be 1 Lambda function for each account to complete the task.</span>
+    <span class="n">ACCOUNT_REGION</span> <span class="o">=</span> <span class="s2">&quot;ACCOUNT_REGION&quot;</span>  <span class="c1"># This means that there is 1 Lambda function for each account AND enabled region pair to complete the task.</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="starfleet.worker_ships.ship_schematics.InvocationSource" class="doc doc-heading">
+        <code>InvocationSource</code>
+
+
+<a href="#starfleet.worker_ships.ship_schematics.InvocationSource" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="enum.Enum">Enum</span></code></p>
+
+  
+      <p>This is an Enum that defines the type of invocation for a given Starfleet worker. This defines the
+allowable sources that can invoke the worker. This is used by the Starbase to determine if a given
+worker should be tasked.</p>
+<p>These also correspond to a configuration that each worker is required to have.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvocationSource</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is an Enum that defines the type of invocation for a given Starfleet worker. This defines the</span>
+<span class="sd">    allowable sources that can invoke the worker. This is used by the Starbase to determine if a given</span>
+<span class="sd">    worker should be tasked.</span>
+
+<span class="sd">    These also correspond to a configuration that each worker is required to have.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">S3</span> <span class="o">=</span> <span class="s2">&quot;S3&quot;</span>  <span class="c1"># This doesn&#39;t require any additional configuration (already part of the base worker configuration template)</span>
+    <span class="n">SQS</span> <span class="o">=</span> <span class="s2">&quot;SQS&quot;</span>  <span class="c1"># This doesn&#39;t require any additional configuration (already part of the base worker configuration template)</span>
+
+    <span class="c1"># This is a EventBridge Events rule. If specified, you will need to provide more configuration details in EventBridgeTimedEventFrequency</span>
+    <span class="n">EVENTBRIDGE_TIMED_EVENT</span> <span class="o">=</span> <span class="s2">&quot;EVENTBRIDGE_TIMED_EVENT&quot;</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="starfleet.worker_ships.ship_schematics.StarfleetWorkerShip" class="doc doc-heading">
+        <code>StarfleetWorkerShip</code>
+
+
+<a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>The base class for Starfleet worker ship plugins. All the attributes here should either be defined statically or in the <strong>init</strong> of the subclass.</p>
+<p>The instantiated object type hint is <code>StarFleetWorkerShipInstance</code>.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">StarfleetWorkerShip</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The base class for Starfleet worker ship plugins. All the attributes here should either be defined statically or in the __init__ of the subclass.</span>
+
+<span class="sd">    The instantiated object type hint is `StarFleetWorkerShipInstance`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># This is the template class for the worker ship. All worker ship payload templates need to be defined.</span>
+    <span class="n">payload_template_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">WorkerShipPayloadBaseTemplate</span><span class="p">]</span> <span class="o">=</span> <span class="n">WorkerShipPayloadBaseTemplate</span>  <span class="c1"># Default to the base</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="n">WorkerShipPayloadBaseTemplateInstance</span>
+    <span class="n">configuration_template_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">WorkerShipBaseConfigurationTemplate</span><span class="p">]</span> <span class="o">=</span> <span class="n">WorkerShipBaseConfigurationTemplate</span>  <span class="c1"># Default to the base</span>
+
+    <span class="c1"># This is the fan out strategy for the worker. This is very important and defines the type of job the worker is supposed to do (this also influences the template type).</span>
+    <span class="n">fan_out_strategy</span><span class="p">:</span> <span class="n">FanOutStrategy</span> <span class="o">=</span> <span class="n">FanOutStrategy</span><span class="o">.</span><span class="n">SINGLE_INVOCATION</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_worker_ship_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;StarfleetWorkerShip&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Static method to return the worker ship name.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Default constructor. By default, this will set empty alerting details -- for sending messages to Slack with a priority of NONE.&quot;&quot;&quot;</span>
+        <span class="c1"># By default, do not set an alert priority. This will be set later if required by the @worker_lambda decorator.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alert_priority</span> <span class="o">=</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">NONE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alert_channel</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># This is the name for the worker ship plugin (this should be UpperCamelCase). This is also the name of the Configuration section for the given worker ship plugin.</span>
+    <span class="c1"># You can override this if you want in your own subclass to just be a flat string, but by default this is a property that returns the name of the class.</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">worker_ship_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the name of the worker ship, which is by default the name of the class.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_worker_ship_name</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">load_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_template</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This will load the template and store it in the loaded_template attribute. This will raise</span>
+<span class="sd">        exceptions if there are validation errors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload_template_class</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">raw_template</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This will execute the job from the payload.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;pew pew pew&quot;</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="k">def</span> <span class="nf">send_alert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message_priority</span><span class="p">:</span> <span class="n">AlertPriority</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This will do the work to send an alert to the Alerting plugin (Slack) if it is configured.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alert_priority</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="n">message_priority</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">NONE</span><span class="o">.</span><span class="n">value</span>
+        <span class="p">):</span>  <span class="c1"># the `&gt; None` part is done to prevent NONE being passed in to the message_priority</span>
+            <span class="c1"># Send the message</span>
+            <span class="k">if</span> <span class="n">message_priority</span> <span class="o">==</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">INFORMATIONAL</span><span class="p">:</span>
+                <span class="n">SLACK_CLIENT</span><span class="o">.</span><span class="n">post_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alert_channel</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">message_priority</span> <span class="o">==</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+                <span class="n">SLACK_CLIENT</span><span class="o">.</span><span class="n">post_success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alert_channel</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">message_priority</span> <span class="o">==</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">IMPORTANT</span><span class="p">:</span>
+                <span class="n">SLACK_CLIENT</span><span class="o">.</span><span class="n">post_important</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alert_channel</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">message_priority</span> <span class="o">==</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">PROBLEM</span><span class="p">:</span>
+                <span class="n">SLACK_CLIENT</span><span class="o">.</span><span class="n">post_problem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alert_channel</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.worker_ship_name" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">worker_ship_name</span><span class="p">:</span> <span class="nb">str</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.worker_ship_name" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Returns the name of the worker ship, which is by default the name of the class.</p>
+  </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">()</span></code>
+
+<a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.__init__" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Default constructor. By default, this will set empty alerting details -- for sending messages to Slack with a priority of NONE.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Default constructor. By default, this will set empty alerting details -- for sending messages to Slack with a priority of NONE.&quot;&quot;&quot;</span>
+    <span class="c1"># By default, do not set an alert priority. This will be set later if required by the @worker_lambda decorator.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">alert_priority</span> <span class="o">=</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">NONE</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">alert_channel</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.execute" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">execute</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+<a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.execute" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This will execute the job from the payload.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">commit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This will execute the job from the payload.&quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;pew pew pew&quot;</span><span class="p">)</span>  <span class="c1"># pragma: no cover</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.get_worker_ship_name" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_worker_ship_name</span><span class="p">()</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+<a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.get_worker_ship_name" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Static method to return the worker ship name.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">get_worker_ship_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="s2">&quot;StarfleetWorkerShip&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Static method to return the worker ship name.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.load_template" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">load_template</span><span class="p">(</span><span class="n">raw_template</span><span class="p">)</span></code>
+
+<a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.load_template" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This will load the template and store it in the loaded_template attribute. This will raise
+exceptions if there are validation errors.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_template</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This will load the template and store it in the loaded_template attribute. This will raise</span>
+<span class="sd">    exceptions if there are validation errors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">payload_template_class</span><span class="p">()</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">raw_template</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.send_alert" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">send_alert</span><span class="p">(</span><span class="n">message_priority</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">)</span></code>
+
+<a href="#starfleet.worker_ships.ship_schematics.StarfleetWorkerShip.send_alert" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This will do the work to send an alert to the Alerting plugin (Slack) if it is configured.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">send_alert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message_priority</span><span class="p">:</span> <span class="n">AlertPriority</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This will do the work to send an alert to the Alerting plugin (Slack) if it is configured.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alert_priority</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="n">message_priority</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">NONE</span><span class="o">.</span><span class="n">value</span>
+    <span class="p">):</span>  <span class="c1"># the `&gt; None` part is done to prevent NONE being passed in to the message_priority</span>
+        <span class="c1"># Send the message</span>
+        <span class="k">if</span> <span class="n">message_priority</span> <span class="o">==</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">INFORMATIONAL</span><span class="p">:</span>
+            <span class="n">SLACK_CLIENT</span><span class="o">.</span><span class="n">post_info</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alert_channel</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">message_priority</span> <span class="o">==</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+            <span class="n">SLACK_CLIENT</span><span class="o">.</span><span class="n">post_success</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alert_channel</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">message_priority</span> <span class="o">==</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">IMPORTANT</span><span class="p">:</span>
+            <span class="n">SLACK_CLIENT</span><span class="o">.</span><span class="n">post_important</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alert_channel</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">message_priority</span> <span class="o">==</span> <span class="n">AlertPriority</span><span class="o">.</span><span class="n">PROBLEM</span><span class="p">:</span>
+            <span class="n">SLACK_CLIENT</span><span class="o">.</span><span class="n">post_problem</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alert_channel</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">body_markdown</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate" class="doc doc-heading">
+        <code>WorkerShipBaseConfigurationTemplate</code>
+
+
+<a href="#starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="marshmallow.Schema">Schema</span></code></p>
+
+  
+      <p>This is the base worker ship configuration template schema that illustrates how the worker should be configured.
+This is <em>only</em> used for validation purposes. The worker configuration will live with the global configuration and should
+be referenced by the STARFLEET_CONFIGURATION instance in starfleet.utils.configuration.</p>
+<p>Note: All configuration file YAMLs should be written in UpperCamelCase, but programmatically referenced in the Python Marshmallow
+object in snake_case.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">WorkerShipBaseConfigurationTemplate</span><span class="p">(</span><span class="n">Schema</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is the base worker ship configuration template schema that illustrates how the worker should be configured.</span>
+<span class="sd">    This is _only_ used for validation purposes. The worker configuration will live with the global configuration and should</span>
+<span class="sd">    be referenced by the STARFLEET_CONFIGURATION instance in starfleet.utils.configuration.</span>
+
+<span class="sd">    Note: All configuration file YAMLs should be written in UpperCamelCase, but programmatically referenced in the Python Marshmallow</span>
+<span class="sd">    object in snake_case.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># All ships must define an `Enabled = True` for the plugin to be used:</span>
+    <span class="n">enabled</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;Enabled&quot;</span><span class="p">)</span>
+
+    <span class="c1"># All ships must define an S3 template path, which includes the S3 bucket that contains the template, and the prefix for where the templates live:</span>
+    <span class="n">template_prefix</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;TemplatePrefix&quot;</span><span class="p">)</span>
+    <span class="c1"># ^^ the template prefix will list out object names with that prefix. Any YAML file (*.yaml) in that prefix is used.</span>
+    <span class="c1"># If this is the direct template itself (ending in .yaml), then no search in S3 is needed. If it&#39;s not, then the Starbase will list all objects under that prefix</span>
+    <span class="c1"># to obtain all the YAML templates. Be mindful of quantity of objects since that will slow things down (this should be good for &lt; 1000 objects per single-digit workers).</span>
+
+    <span class="c1"># This is the SQS queue URL that will be used to invoke this function. This is used by the Starbase to know where to message the ship invocation action:</span>
+    <span class="n">invocation_queue_url</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Url</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">schemes</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;https&quot;</span><span class="p">},</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;InvocationQueueUrl&quot;</span><span class="p">)</span>
+
+    <span class="c1"># This is the invocation sources. This needs to be specified.</span>
+    <span class="n">invocation_sources</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">fields</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span><span class="n">InvocationSource</span><span class="p">),</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;InvocationSources&quot;</span><span class="p">)</span>
+
+    <span class="c1"># If a EventBridgeTimed event is specified, then you need to add details on the invocation frequency (this manually configured below):</span>
+    <span class="n">eventbridge_timed_frequency</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span><span class="n">EventBridgeFrequency</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;EventBridgeTimedFrequency&quot;</span><span class="p">)</span>
+
+    <span class="c1"># This is an (Optional) SNS topic ARN that gets Starbase to invoke this Lambda function. The purpose for this is really for multistage</span>
+    <span class="c1"># workflows (or externally invoked workflows) where the Starbase needs to perform fan-out operations (to be placed on the InvocationQueueUrl above)</span>
+    <span class="n">starbase_invocation_topic_arn</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;StarbaseInvocationTopicArn&quot;</span><span class="p">)</span>
+
+    <span class="c1"># This is an optional alert configuration (i.e. for sending to Slack) that a worker that opts in to can use to send alerts to.</span>
+    <span class="n">alert_configuration</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Nested</span><span class="p">(</span><span class="n">AlertConfiguration</span><span class="p">(),</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">data_key</span><span class="o">=</span><span class="s2">&quot;AlertConfiguration&quot;</span><span class="p">)</span>
+
+    <span class="nd">@post_load</span>
+    <span class="k">def</span> <span class="nf">validate_eventbridge_timed_frequencies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># pylint: disable=W0613</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This will perform the custom validation where if EVENTBRIDGE_TIMED_EVENT is in the InvocationSources, that an accompanying EventBridgeTimedFrequency is provided.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">InvocationSource</span><span class="o">.</span><span class="n">EVENTBRIDGE_TIMED_EVENT</span> <span class="ow">in</span> <span class="n">in_data</span><span class="p">[</span><span class="s2">&quot;invocation_sources&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">in_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eventbridge_timed_frequency&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;A EventBridgeTimedFrequency is required when specifying an invocation event of EVENTBRIDGE_TIMED_EVENT.&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">in_data</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;By default, we will include unknown values without raising an error.&quot;&quot;&quot;</span>
+
+        <span class="n">unknown</span> <span class="o">=</span> <span class="n">INCLUDE</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate.Meta" class="doc doc-heading">
+        <code>Meta</code>
+
+
+<a href="#starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate.Meta" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>By default, we will include unknown values without raising an error.</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;By default, we will include unknown values without raising an error.&quot;&quot;&quot;</span>
+
+    <span class="n">unknown</span> <span class="o">=</span> <span class="n">INCLUDE</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate.validate_eventbridge_timed_frequencies" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">validate_eventbridge_timed_frequencies</span><span class="p">(</span><span class="n">in_data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+<a href="#starfleet.worker_ships.ship_schematics.WorkerShipBaseConfigurationTemplate.validate_eventbridge_timed_frequencies" class="headerlink" title="Permanent link">&para;</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This will perform the custom validation where if EVENTBRIDGE_TIMED_EVENT is in the InvocationSources, that an accompanying EventBridgeTimedFrequency is provided.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>starfleet/worker_ships/ship_schematics.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@post_load</span>
+<span class="k">def</span> <span class="nf">validate_eventbridge_timed_frequencies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>  <span class="c1"># pylint: disable=W0613</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This will perform the custom validation where if EVENTBRIDGE_TIMED_EVENT is in the InvocationSources, that an accompanying EventBridgeTimedFrequency is provided.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">InvocationSource</span><span class="o">.</span><span class="n">EVENTBRIDGE_TIMED_EVENT</span> <span class="ow">in</span> <span class="n">in_data</span><span class="p">[</span><span class="s2">&quot;invocation_sources&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">in_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eventbridge_timed_frequency&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;A EventBridgeTimedFrequency is required when specifying an invocation event of EVENTBRIDGE_TIMED_EVENT.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">in_data</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../plugins/github_sync/utils/" class="md-footer__link md-footer__link--prev" aria-label="Previous: utils" rel="prev">
+            <div class="md-footer__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <div class="md-ellipsis">
+                <span class="md-footer__direction">
+                  Previous
+                </span>
+                utils
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2023 - <a href="https://gemini.com/careers">Gemini Trust Company, LLC</a><br/>See the <a href="https://gemini-oss.github.io/starfleet/Attributions">attributions page</a> for additional copyrights.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/gemini-oss" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.sections", "navigation.footer", "navigation.tabs", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.db81ec45.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.4b2c34cd.min.js"></script>
+      
+    
+  </body>
+</html>
