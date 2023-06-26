@@ -86,8 +86,8 @@ def test_ship(
                 f"*Below is a summary of the work performed in 000000000001/{region}:*"
             )
             assert (
-                "> ✅  Updated the Configuration Recorder\n> ✅  Updated the Delivery Channel\n> ✅  Updated the Retention Configuration\n"
-                + "> ✅  Started the Configuration Recorder"
+                "> 📼  Updated the Configuration Recorder. See the logs for details.\n> 🚚  Updated the Delivery Channel. See the logs for details.\n"
+                + "> 🗄  Updated the Retention Configuration. See the logs for details.\n> ⏺️  Started the Configuration Recorder"
                 in mock_slack_api.return_value.chat_postMessage.call_args.kwargs["blocks"][1]["text"]["text"]
             )
 

@@ -57,10 +57,9 @@ def template() -> Dict[str, Any]:
                     ConfigRoleName: MyConfigRole
                     RecordingEnabled: True
                     RecordingGroup:
-                        ResourceTypes:
-                            - ALL
-                        GlobalsInRegions:
-                            - us-west-1
+                        RecordEverything:
+                            RecordGlobalsInTheseRegions:
+                                - us-west-1
                 RetentionPeriodInDays: 30
             -
                 IncludeAccounts:
@@ -75,7 +74,7 @@ def template() -> Dict[str, Any]:
                     ConfigRoleName: MyConfigRole
                     RecordingEnabled: True
                     RecordingGroup:
-                        ResourceTypes:
+                        RecordSpecificResources:
                             - AWS::S3::Bucket
                             - AWS::EC2::SecurityGroup
                 RetentionPeriodInDays: 2557
@@ -87,10 +86,9 @@ def template() -> Dict[str, Any]:
                 ConfigRoleName: MyConfigRole
                 RecordingEnabled: True
                 RecordingGroup:
-                    ResourceTypes:
-                        - ALL
-                    GlobalsInRegions:
-                        - us-east-1
+                    RecordEverything:
+                        RecordGlobalsInTheseRegions:
+                            - us-east-1
             RetentionPeriodInDays: 2557
     """
     )

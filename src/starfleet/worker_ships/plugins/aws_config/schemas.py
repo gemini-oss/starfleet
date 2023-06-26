@@ -42,66 +42,155 @@ class DeliveryFrequency(Enum):
     TwentyFour_Hours = "TwentyFour_Hours"
 
 
-class RecordingGroup(Schema):
+class RecordEverything(Schema):
     """
-    This is the RecordingGroup section of the RecorderConfiguration.
-    This is where you specify the list of resource types or specify that you want all resources.
+    This is the schema for the `RecordEverything` section of the RecorderConfiguration.
 
-    Mostly defined in: https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config/client/put_configuration_recorder.html with some ease of use modifications
+    This is the equivalent of setting `allSupported` to True in the boto3 call and also includes the `includeGlobalResourceTypes` but for the given
+    list of supplied regions.
+
+    This will look like this:
+    ```yaml
+        RecordEverything:
+            RecordGlobalsInTheseRegions:
+                - A LIST OF REGIONS
+                # OR
+                - ALL
+                # OR
+                - NONE
+    ```
+
+    Example for recording everything in us-east-1 and us-west-2:
+    ```yaml
+        RecordEverything:
+            RecordGlobalsInTheseRegions:
+                - us-east-1
+                - us-west-2
+    ```
+
+    Example for recording everything in all regions:
+    ```yaml
+        RecordEverything:
+            RecordGlobalsInTheseRegions:
+                - ALL
+    ```
+
+    Example for recording everything except global resources:
+    ```yaml
+        RecordEverything:
+            RecordGlobalsInTheseRegions:
+                - NONE
+    ```
     """
 
-    resource_types = fields.List(fields.String(), validate=validate.Length(min=1), required=True, data_key="ResourceTypes")
-    globals_in_regions = fields.List(fields.String(), required=False, data_key="GlobalsInRegions")
+    record_globals_in_these_regions = fields.List(fields.String(), required=True, data_key="RecordGlobalsInTheseRegions")
 
     @validates_schema()
     def validate_the_schema(self, data: Dict[str, Any], **kwargs) -> None:  # pylint: disable=unused-argument # noqa
-        """Performs the validation and mutation on the schema. The following is the gist:
-
-        `ResourceTypes` defines the resources to support. This will either be `ALL`, which will set the boto3 `allSupported` flag to True -- OR -- just a list of
-        AWS Config supported resources.
-
-        `GlobalsInRegions` is used in *conjunction* with the `allSupported` flag (or setting `ALL` for `ResourceTypes`). This is the boto3 `includeGlobalResourceTypes`
-        boolean. *This is only relevant if ALL resources are being recorded.* This contains a list of regions that global resources will be recorded in. Here is what
-        this means:
-            If you want to record global resources only in us-east-1, but not the other regions, then you would have a YAML that looks like this:
-
-            ```yaml
-            ResourceTypes:
-              - ALL
-            GlobalsInRegions:
-              - us-east-1
-            ```
-
-            This configuration would set it such that all non-global resources will be recorded. In the above example, us-east-1 would be the only region to *also*
-            record global resource types. The in-regin recorders for all the other regions would not capture global resource types.
-
-            This field is a list, so you can add in as many regions to capture global resource types as you want. Note, that we don't support `ALL` here because
-            it's unnecessary to record global resources in all the regions since that will also jack up your Config bill.
-        """
+        """Validate the schema provided to indicate what is in the docstring above."""
         errors = {}
 
-        all_resources = False
-
-        # Verify the "ALL" in resource types:
-        if "ALL" in data["resource_types"]:
-            all_resources = True
-
+        # Verify the "ALL" in the RecordGlobalsInTheseRegions:
+        if "ALL" in data["record_globals_in_these_regions"]:
             # There should not be anything else:
-            if len(data["resource_types"]) > 1:
-                errors["IncludeRegions"] = ["Can't specify any other resource types when `ALL` is specified in the list."]
+            if len(data["record_globals_in_these_regions"]) > 1:
+                errors["RecordGlobalsInTheseRegions"] = ["Can't list any other regions when `ALL` is specified"]
 
-        # We cannot have both specific resources set and the `GlobalsInRegions` field set:
-        if not all_resources and data.get("globals_in_regions"):
-            errors["GlobalsInRegions"] = ["This field can only be specified with a list of regions if `ResourceTypes` is set to `- ALL`"]
+            # Replace the value with the set of all regions:
+            data["record_globals_in_these_regions"] = supported_regions
 
-        # If we have all regions set, and we also have global regions defined, then verify that the regions defined are legitimate:
+        # Verify the "NONE" in the RecordGlobalsInTheseRegions:
+        elif "NONE" in data["record_globals_in_these_regions"]:
+            # There should not be anything else:
+            if len(data["record_globals_in_these_regions"]) > 1:
+                errors["RecordGlobalsInTheseRegions"] = ["Can't list any other regions when `NONE` is specified"]
+
+            # Replace the value with an empty set:
+            data["record_globals_in_these_regions"] = set()
+
+        # Verify the regions are valid:
         else:
-            region_set = set(data.get("globals_in_regions", []))
+            region_set = set(data["record_globals_in_these_regions"])
             remaining = region_set - supported_regions
             if remaining:
-                errors["GlobalsInRegions"] = [
+                errors["RecordGlobalsInTheseRegions"] = [
                     f"Invalid regions are specified: {', '.join(remaining)}. Regions must be from this list: {', '.join(supported_regions)}"
                 ]
+
+            # Store the value as a set:
+            data["record_globals_in_these_regions"] = region_set
+
+        if errors:
+            raise ValidationError(errors)
+
+
+class RecordingGroup(Schema):
+    """
+    This is the RecordingGroup section of the RecorderConfiguration.
+
+    This is where you will specify one of the following 3 options:
+        1. If you wanted to record everything:
+            ```yaml
+            RecordEverything:
+                RecordGlobalsInTheseRegions:
+                    - ALL
+                    # OR
+                    - NONE
+                    # OR
+                    - A LIST OF REGIONS like:
+                    - us-east-1
+                    - us-west-2
+                    - etc...
+            ```
+
+        2. If you wanted to record only specific resources:
+            ```yaml
+            RecordSpecificResources:
+                - AWS::EC2::Instance
+                - AWS::EC2::VPC
+                - etc...
+            ```
+
+        3. If you wanted to record everything except specific resources:
+            ```yaml
+            RecordEverythingExcept:
+                - AWS::EC2::Instance
+                - AWS::EC2::VPC
+                - etc...
+            ```
+
+    This simplifies the details that would otherwise be supplied to the boto3 call:
+    https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/config/client/put_configuration_recorder.html
+    """
+
+    record_everything = fields.Nested(RecordEverything(), required=False, data_key="RecordEverything")
+    record_specific_resources = fields.List(fields.String(), validate=validate.Length(min=1), required=False, data_key="RecordSpecificResources")
+    record_everything_except = fields.List(fields.String(), validate=validate.Length(min=1), required=False, data_key="RecordEverythingExcept")
+
+    @validates_schema()
+    def validate_the_schema(self, data: Dict[str, Any], **kwargs) -> None:  # pylint: disable=unused-argument # noqa
+        """Performs the validation on the schema. At least one of the 3 options needs to be filled out and correctly."""
+        errors = {}
+
+        # Verify that if we have the `RecordEverything` section, that it is the only section:
+        found_fields = set()
+        field_mapping = [
+            ("record_everything", "RecordEverything"),
+            ("record_specific_resources", "RecordSpecificResources"),
+            ("record_everything_except", "RecordEverythingExcept"),
+        ]
+        for python_field, yaml_field in field_mapping:
+            if data.get(python_field):
+                found_fields.add((python_field, yaml_field))
+
+        # At least 1 needs to be filled out:
+        if not found_fields:
+            errors["RecordingGroup"] = [
+                "At least one of the 3 options needs to be filled out: RecordEverything, RecordSpecificResources, RecordEverythingExcept"
+            ]
+
+        elif len(found_fields) > 1:
+            errors["RecordingGroup"] = ["Only one of the 3 options can be filled out: RecordEverything, RecordSpecificResources, RecordEverythingExcept"]
 
         if errors:
             raise ValidationError(errors)
