@@ -31,6 +31,9 @@ Mappings:
 Globals:
   Function:
     Timeout: 300
+    Environment:
+      Variables:
+        GIT_PYTHON_REFRESH: quiet  # Required for IAMbic in the IAM Role Worker
 
 Resources:
   # The Starbase Components
@@ -281,10 +284,7 @@ Resources:
 #      Policies:
 #        # Grant permissions to read from the inventory S3 bucket:
 #        - S3ReadPolicy:
-#            BucketName: !FindInMap
-#              - EnvMap
-#              - !Ref 'EnvironmentName'
-#              - AccountInventoryBucket
+#             BucketName: !Ref AccountIndexBucket
 
 # Uncomment for the GitHub Repo Sync Worker:
 #  GitHubSyncWorkerDLQ:
@@ -326,6 +326,47 @@ Resources:
 #        - S3CrudPolicy:
 #            BucketName: !Ref StarfleetTemplateBucket
 #        # Add any additional S3 policies here!
+
+# Uncomment for the IAM Role Worker:
+#  IamRoleWorkerWorkerDLQ:
+#    Type: AWS::SQS::Queue
+#    Properties:
+#      QueueName: starfleet-iam-role-worker-worker-dlq
+#      RedriveAllowPolicy:
+#        redrivePermission: allowAll
+#
+#  IamRoleWorkerWorkerQueue:
+#    Type: AWS::SQS::Queue
+#    Properties:
+#      QueueName: starfleet-iam-role-worker-worker
+#      VisibilityTimeout: 300  # This needs to be the same as the Lambda function timeout.
+#      RedrivePolicy:
+#        deadLetterTargetArn: !GetAtt IamRoleWorkerWorkerDLQ.Arn
+#        maxReceiveCount: 4
+#
+#  IamRoleWorker:
+#    Type: AWS::Serverless::Function
+#    Properties:
+#      CodeUri: ./starfleet/src
+#      Handler: starfleet.worker_ships.plugins.iam.role_ship.lambda_handler
+#      Runtime: python3.10
+#      Architectures:
+#        - arm64
+#      MemorySize: 128
+#      Events:
+#        SQSEvent:
+#          Type: SQS
+#          Properties:
+#            Queue: !GetAtt IamRoleWorkerWorkerQueue.Arn
+#            BatchSize: 4
+#      Environment:
+#        Variables:
+#          STARFLEET_COMMIT: False
+#          GIT_PYTHON_REFRESH: quiet  # Iambic
+#      Policies:
+#        # Grant permissions to read from the Account Inventory S3 bucket:
+#        - S3ReadPolicy:
+#              BucketName: !Ref AccountIndexBucket
 
   # Finally, the Starbase Fanout Function:
   StarbaseFanoutFunction:
@@ -381,6 +422,7 @@ Resources:
         - !Ref AccountIndexGeneratorRole  # AccountIndexGeneratorRole is created automatically by SAM and can be referenced
         # - !Ref AWSConfigWorkerRole  # Uncomment for the AWS Config worker
         # - !Ref GitHubSyncWorkerRole # Uncomment for the GitHub Repo Sync Worker
+        # - !Ref IamRoleWorkerRole  # Uncomment for the IAM Role Worker
         # - !Ref YourWorkerRoleHere # Add your worker roles here to get the policy attached
 
 Outputs:
@@ -434,3 +476,13 @@ Outputs:
 #  GitHubSyncWorker:
 #    Description: The GitHub Sync Worker ship function that syncs a GitHub repo with S3
 #    Value: !GetAtt GitHubSyncWorker.Arn
+# Uncomment for the IAM Role worker:
+#  IamRoleWorkerWorkerQueue:
+#    Description: The Queue URL for the IAM Role Worker invocation queue
+#    Value: !GetAtt IamRoleWorkerWorkerQueue.QueueUrl
+#  IamRoleWorkerWorkerDLQ:
+#    Description: The Queue URL for the IAM Role Worker invocation DLQ
+#    Value: !GetAtt IamRoleWorkerWorkerDLQ.QueueUrl
+#  IamRoleWorker:
+#    Description: The IAM Role Worker ship function that uses iambic to sync IAM roles in our infrastructure
+#    Value: !GetAtt IamRoleWorker.Arn
