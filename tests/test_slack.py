@@ -120,6 +120,21 @@ def test_post_slack_problem_message(mock_slack_api: MagicMock) -> None:
         assert "some_channel" in mocked_logger.error.call_args_list[0][0][0]
 
 
+def test_with_slack_exception(mock_slack_api: MagicMock) -> None:
+    """This tests that we can handle an exception raised by Slack itself."""
+    from starfleet.utils.slack import SlackClient
+
+    test_client = SlackClient(token="lolol")
+    test_client._web_client = MagicMock()
+    test_client._web_client.chat_postMessage = MagicMock(side_effect=Exception("some error"))
+
+    with mock.patch("starfleet.utils.slack.LOGGER") as mocked_logger:
+        test_client.post_info("some_channel", "The Title!", "some _markdown_ text!")
+
+        assert "some_channel" in mocked_logger.error.call_args_list[0][0][0]
+        assert mocked_logger.error.call_args_list[1][0][0] == "[🙊] Failed to post informational message to Slack!"
+
+
 def test_disable_slack_config(mock_slack_api: MagicMock, test_configuration: Dict[str, Any]) -> None:
     """This tests that we don't send messages to slack if we set the disabled flag to True."""
     from starfleet.utils.slack import SlackClient

@@ -1,0 +1,8 @@
+IamRoleWorkerShip:
+  Enabled: True
+  TemplatePrefix: IAM/Roles/
+  InvocationQueueUrl: https://sqs.amazonaws.com/replace-me
+  InvocationSources:
+      - EVENTBRIDGE_TIMED_EVENT
+  EventBridgeTimedFrequency: THIRTY_MIN
+  WorkerRoleToAssume: starfleet-worker-basic-test-role

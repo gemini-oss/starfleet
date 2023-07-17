@@ -1,0 +1,39 @@
+TemplateName: BadIamRoleIambicValidationTest
+TemplateDescription: This is a bad IAM role template with a problem that will fail iambic validation
+IncludeAccounts:
+  AllAccounts: True
+IambicVariables:
+  - Key: Some-Key
+    Value: Some-Value
+IambicRoleTemplate:
+  properties:
+    description: 'Starfleet iambic test role with variable {{ var.Some-Key }}'
+    assume_role_policy_document:
+      statement:
+        - action:
+            - sts:AssumeRole
+          effect: Allow
+          principal:
+            service: lambda.amazonaws.com
+      version: '2012-10-17'
+    managed_policies:
+      - policy_arn: arn:aws:iam::aws:policy/ReadOnlyAccess
+    inline_policies:
+      - policy_name: 'SomePolicyIn-{{ var.account_name }}'
+        StarfleetIncludeAccounts:
+          ByOrgUnits:
+            - SomeNestedOU
+        StarfleetExcludeAccounts:
+          ByNames:
+            - Account 10
+        statement:
+          - effect: Deny
+            action:
+              -
+              -
+              -
+            resource: '*'
+    role_name: StarfleetIambicTesting
+    tags:
+      - key: owner
+        value: pewpewpew

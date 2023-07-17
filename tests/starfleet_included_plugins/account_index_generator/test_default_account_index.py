@@ -136,3 +136,10 @@ def test_get_org_roots(index_obj: Dict[str, Any]) -> None:
     index = StarfleetDefaultAccountIndex()
     accounts = index.get_org_roots()
     assert accounts == {"000000000020"}
+
+
+def test_get_account_names(index_obj: Dict[str, Any]) -> None:
+    """This tests getting the set of account names."""
+    index = StarfleetDefaultAccountIndex()
+    name_map = index.get_account_names({"000000000001", "000000000002", "000000000003", "not-an-account"})
+    assert name_map == {"000000000001": "Account 1", "000000000002": "Account 2", "000000000003": "Account 3", "not-an-account": None}

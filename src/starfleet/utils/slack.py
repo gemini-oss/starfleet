@@ -59,11 +59,16 @@ class SlackClient:
         if not self._web_client:
             self._web_client = WebClient(token=SECRETS_MANAGER.secrets["STARFLEET"]["SlackToken"])
 
-        result = self._web_client.chat_postMessage(channel=channel_id, blocks=blocks, text=blocks[0]["text"]["text"])
+        try:
+            result = self._web_client.chat_postMessage(channel=channel_id, blocks=blocks, text=blocks[0]["text"]["text"])
 
-        if not result.data["ok"]:
-            LOGGER.error(f"[💥] Unable to post message to Slack:\nChannel: {channel_id},\nMessage: {blocks}")
-            LOGGER.error(f"[💥] Slack response: {result}")
+            if not result.data["ok"]:
+                LOGGER.error(f"[💥] Unable to post message to Slack:\nChannel: {channel_id},\nMessage: {blocks}")
+                LOGGER.error(f"[💥] Slack response: {result}")
+                return False
+        except Exception as exc:  # pylint: disable=broad-exception-caught
+            LOGGER.error(f"[😱] Unable to post message to Slack:\nChannel: {channel_id},\nMessage: {blocks}")
+            LOGGER.exception(exc)
             return False
 
         return True
