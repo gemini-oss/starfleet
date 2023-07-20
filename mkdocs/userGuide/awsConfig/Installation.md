@@ -303,7 +303,7 @@ The last part of the installation process is to make sure that we have the corre
 AwsConfigWorkerShip:
   Enabled: True
   TemplatePrefix: AwsConfigWorkerShip/
-  InvocationQueueUrl: https://sqs.us-east-2.amazonaws.com/YOUR-ACCOUNT-ID/starfleet-aws-config-worker
+  InvocationQueueUrl: https://sqs.YOUR-REGION.amazonaws.com/YOUR-ACCOUNT-ID/starfleet-aws-config-worker
   InvocationSources:
     - EVENTBRIDGE_TIMED_EVENT
     - S3

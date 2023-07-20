@@ -36,6 +36,7 @@ theme:
 
 plugins:
   - search
+  - blog
   - gen-files:
       scripts:
         - mkdocs/gen_ref_pages.py
@@ -108,6 +109,11 @@ nav:
       - Installation and Configuration: userGuide/GitHubSync/InstallationAndConfiguration.md
       - Payload Templates: userGuide/GitHubSync/Template.md
       - CLI: userGuide/GitHubSync/CLI.md
+    - IAM Role Worker:
+      - Overview: userGuide/IAM/Roles/Overview.md
+      - Installation: userGuide/IAM/Roles/Installation.md
+      - Payload Templates: userGuide/IAM/Roles/Template.md
+      - CLI: userGuide/IAM/Roles/CLI.md
   - Developer Guide:
     - Developer Overview: developerGuide/Overview.md
     - Primary Components:
@@ -124,6 +130,8 @@ nav:
     - AWS SAM Configuration: developerGuide/SAMConfiguration.md
     - Check List: developerGuide/CheckList.md
     - Generating Documentation: developerGuide/GeneratingDocs.md
+  - Blog:
+    - blog/index.md
   - Extras:
     - Overview: Links.md
     - Attributions: Attributions.md

@@ -18,7 +18,7 @@ Options:
 ```
 
 ## The `aws-config sync` command
-Running the sync command requires that you have the required Starfleet AWS credentials exported in the environment. Here is a sample of running it in commit mode on account ID `111111111111` in `us-east-1`:
+Running the sync command requires that you have the required Starfleet AWS credentials exported in the environment. Here is an example of how to run it in commit mode on account ID `111111111111` in `us-east-1`:
 
 ```bash
 starfleet aws-config sync --payload some/path/to/the/payload.yaml --account-id 111111111111 --region us-east-1 --commit
