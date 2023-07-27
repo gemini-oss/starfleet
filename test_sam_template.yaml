@@ -328,20 +328,20 @@ Resources:
 #        # Add any additional S3 policies here!
 
 # Uncomment for the IAM Role Worker:
-#  IamRoleWorkerWorkerDLQ:
+#  IamRoleWorkerDLQ:
 #    Type: AWS::SQS::Queue
 #    Properties:
-#      QueueName: starfleet-iam-role-worker-worker-dlq
+#      QueueName: starfleet-iam-role-worker-dlq
 #      RedriveAllowPolicy:
 #        redrivePermission: allowAll
 #
-#  IamRoleWorkerWorkerQueue:
+#  IamRoleWorkerQueue:
 #    Type: AWS::SQS::Queue
 #    Properties:
-#      QueueName: starfleet-iam-role-worker-worker
+#      QueueName: starfleet-iam-role-worker
 #      VisibilityTimeout: 300  # This needs to be the same as the Lambda function timeout.
 #      RedrivePolicy:
-#        deadLetterTargetArn: !GetAtt IamRoleWorkerWorkerDLQ.Arn
+#        deadLetterTargetArn: !GetAtt IamRoleWorkerDLQ.Arn
 #        maxReceiveCount: 4
 #
 #  IamRoleWorker:
@@ -357,7 +357,7 @@ Resources:
 #        SQSEvent:
 #          Type: SQS
 #          Properties:
-#            Queue: !GetAtt IamRoleWorkerWorkerQueue.Arn
+#            Queue: !GetAtt IamRoleWorkerQueue.Arn
 #            BatchSize: 4
 #      Environment:
 #        Variables:
@@ -477,12 +477,12 @@ Outputs:
 #    Description: The GitHub Sync Worker ship function that syncs a GitHub repo with S3
 #    Value: !GetAtt GitHubSyncWorker.Arn
 # Uncomment for the IAM Role worker:
-#  IamRoleWorkerWorkerQueue:
+#  IamRoleWorkerQueue:
 #    Description: The Queue URL for the IAM Role Worker invocation queue
-#    Value: !GetAtt IamRoleWorkerWorkerQueue.QueueUrl
-#  IamRoleWorkerWorkerDLQ:
+#    Value: !GetAtt IamRoleWorkerQueue.QueueUrl
+#  IamRoleWorkerDLQ:
 #    Description: The Queue URL for the IAM Role Worker invocation DLQ
-#    Value: !GetAtt IamRoleWorkerWorkerDLQ.QueueUrl
+#    Value: !GetAtt IamRoleWorkerDLQ.QueueUrl
 #  IamRoleWorker:
 #    Description: The IAM Role Worker ship function that uses iambic to sync IAM roles in our infrastructure
 #    Value: !GetAtt IamRoleWorker.Arn
