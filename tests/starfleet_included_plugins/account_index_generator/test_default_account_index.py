@@ -143,3 +143,11 @@ def test_get_account_names(index_obj: Dict[str, Any]) -> None:
     index = StarfleetDefaultAccountIndex()
     name_map = index.get_account_names({"000000000001", "000000000002", "000000000003", "not-an-account"})
     assert name_map == {"000000000001": "Account 1", "000000000002": "Account 2", "000000000003": "Account 3", "not-an-account": None}
+
+
+def test_get_account_tags(index_obj: Dict[str, Any]) -> None:
+    """This tests getting the tags of a given account."""
+    index = StarfleetDefaultAccountIndex()
+    name_map = index.get_account_tags({"000000000001", "000000000002", "000000000003", "not-an-account"})
+    tag_value = {"Key1": "Value1", "Key2": "Value2", "Key3": "Value3"}
+    assert name_map == {"000000000001": tag_value, "000000000002": tag_value, "000000000003": tag_value, "not-an-account": {}}
