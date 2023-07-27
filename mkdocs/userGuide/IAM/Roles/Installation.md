@@ -65,20 +65,20 @@ Globals:
 Resources:
   # ...
 
-IamRoleWorkerWorkerDLQ:
+IamRoleWorkerDLQ:
    Type: AWS::SQS::Queue
    Properties:
-     QueueName: starfleet-iam-role-worker-worker-dlq
+     QueueName: starfleet-iam-role-worker-dlq
      RedriveAllowPolicy:
        redrivePermission: allowAll
 
- IamRoleWorkerWorkerQueue:
+ IamRoleWorkerQueue:
    Type: AWS::SQS::Queue
    Properties:
-     QueueName: starfleet-iam-role-worker-worker
+     QueueName: starfleet-iam-role-worker
      VisibilityTimeout: 300  # This needs to be the same as the Lambda function timeout.
      RedrivePolicy:
-       deadLetterTargetArn: !GetAtt IamRoleWorkerWorkerDLQ.Arn
+       deadLetterTargetArn: !GetAtt IamRoleWorkerDLQ.Arn
        maxReceiveCount: 4
 
  IamRoleWorker:
@@ -94,7 +94,7 @@ IamRoleWorkerWorkerDLQ:
        SQSEvent:
          Type: SQS
          Properties:
-           Queue: !GetAtt IamRoleWorkerWorkerQueue.Arn
+           Queue: !GetAtt IamRoleWorkerQueue.Arn
            BatchSize: 4
      Environment:
        Variables:
@@ -117,12 +117,12 @@ IamRoleWorkerWorkerDLQ:
 # ...
 Outputs:
   # ...
- IamRoleWorkerWorkerQueue:
+ IamRoleWorkerQueue:
    Description: The Queue URL for the IAM Role Worker invocation queue
-   Value: !GetAtt IamRoleWorkerWorkerQueue.QueueUrl
- IamRoleWorkerWorkerDLQ:
+   Value: !GetAtt IamRoleWorkerQueue.QueueUrl
+ IamRoleWorkerDLQ:
    Description: The Queue URL for the IAM Role Worker invocation DLQ
-   Value: !GetAtt IamRoleWorkerWorkerDLQ.QueueUrl
+   Value: !GetAtt IamRoleWorkerDLQ.QueueUrl
  IamRoleWorker:
    Description: The IAM Role Worker ship function that uses iambic to sync IAM roles in our infrastructure
    Value: !GetAtt IamRoleWorker.Arn
@@ -138,7 +138,7 @@ The last part of the installation process is to make sure that we have the corre
 IamRoleWorkerShip:
   Enabled: True
   TemplatePrefix: IAM/Roles/  # We recommend this prefix in S3 for your payload templates
-  InvocationQueueUrl: https://sqs.YOUR-REGION.amazonaws.com/YOUR-ACCOUNT-ID/starfleet-iam-role-worker-worker
+  InvocationQueueUrl: https://sqs.YOUR-REGION.amazonaws.com/YOUR-ACCOUNT-ID/starfleet-iam-role-worker
   InvocationSources:
     - EVENTBRIDGE_TIMED_EVENT
     - S3
