@@ -3671,20 +3671,20 @@ We recommend that this be globally as it impacts both the worker and the Starbas
 <span class="nt">Resources</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># ...</span>
 
-<span class="nt">IamRoleWorkerWorkerDLQ</span><span class="p">:</span>
+<span class="nt">IamRoleWorkerDLQ</span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS::SQS::Queue</span>
 <span class="w">   </span><span class="nt">Properties</span><span class="p">:</span>
-<span class="w">     </span><span class="nt">QueueName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">starfleet-iam-role-worker-worker-dlq</span>
+<span class="w">     </span><span class="nt">QueueName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">starfleet-iam-role-worker-dlq</span>
 <span class="w">     </span><span class="nt">RedriveAllowPolicy</span><span class="p">:</span>
 <span class="w">       </span><span class="nt">redrivePermission</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">allowAll</span>
 
-<span class="w w-Error"> </span><span class="nt">IamRoleWorkerWorkerQueue</span><span class="p">:</span>
+<span class="w w-Error"> </span><span class="nt">IamRoleWorkerQueue</span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS::SQS::Queue</span>
 <span class="w">   </span><span class="nt">Properties</span><span class="p">:</span>
-<span class="w">     </span><span class="nt">QueueName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">starfleet-iam-role-worker-worker</span>
+<span class="w">     </span><span class="nt">QueueName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">starfleet-iam-role-worker</span>
 <span class="w">     </span><span class="nt">VisibilityTimeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span><span class="w">  </span><span class="c1"># This needs to be the same as the Lambda function timeout.</span>
 <span class="w">     </span><span class="nt">RedrivePolicy</span><span class="p">:</span>
-<span class="w">       </span><span class="nt">deadLetterTargetArn</span><span class="p">:</span><span class="w"> </span><span class="kt">!GetAtt</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IamRoleWorkerWorkerDLQ.Arn</span>
+<span class="w">       </span><span class="nt">deadLetterTargetArn</span><span class="p">:</span><span class="w"> </span><span class="kt">!GetAtt</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IamRoleWorkerDLQ.Arn</span>
 <span class="w">       </span><span class="nt">maxReceiveCount</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
 
 <span class="w"> </span><span class="nt">IamRoleWorker</span><span class="p">:</span>
@@ -3700,7 +3700,7 @@ We recommend that this be globally as it impacts both the worker and the Starbas
 <span class="w">       </span><span class="nt">SQSEvent</span><span class="p">:</span>
 <span class="w">         </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SQS</span>
 <span class="w">         </span><span class="nt">Properties</span><span class="p">:</span>
-<span class="w">           </span><span class="nt">Queue</span><span class="p">:</span><span class="w"> </span><span class="kt">!GetAtt</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IamRoleWorkerWorkerQueue.Arn</span>
+<span class="w">           </span><span class="nt">Queue</span><span class="p">:</span><span class="w"> </span><span class="kt">!GetAtt</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IamRoleWorkerQueue.Arn</span>
 <span class="w">           </span><span class="nt">BatchSize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
 <span class="w">     </span><span class="nt">Environment</span><span class="p">:</span>
 <span class="w">       </span><span class="nt">Variables</span><span class="p">:</span>
@@ -3723,12 +3723,12 @@ We recommend that this be globally as it impacts both the worker and the Starbas
 <span class="c1"># ...</span>
 <span class="nt">Outputs</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># ...</span>
-<span class="w"> </span><span class="nt">IamRoleWorkerWorkerQueue</span><span class="p">:</span>
+<span class="w"> </span><span class="nt">IamRoleWorkerQueue</span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The Queue URL for the IAM Role Worker invocation queue</span>
-<span class="w">   </span><span class="nt">Value</span><span class="p">:</span><span class="w"> </span><span class="kt">!GetAtt</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IamRoleWorkerWorkerQueue.QueueUrl</span>
-<span class="w"> </span><span class="nt">IamRoleWorkerWorkerDLQ</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">Value</span><span class="p">:</span><span class="w"> </span><span class="kt">!GetAtt</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IamRoleWorkerQueue.QueueUrl</span>
+<span class="w"> </span><span class="nt">IamRoleWorkerDLQ</span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The Queue URL for the IAM Role Worker invocation DLQ</span>
-<span class="w">   </span><span class="nt">Value</span><span class="p">:</span><span class="w"> </span><span class="kt">!GetAtt</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IamRoleWorkerWorkerDLQ.QueueUrl</span>
+<span class="w">   </span><span class="nt">Value</span><span class="p">:</span><span class="w"> </span><span class="kt">!GetAtt</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IamRoleWorkerDLQ.QueueUrl</span>
 <span class="w"> </span><span class="nt">IamRoleWorker</span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The IAM Role Worker ship function that uses iambic to sync IAM roles in our infrastructure</span>
 <span class="w">   </span><span class="nt">Value</span><span class="p">:</span><span class="w"> </span><span class="kt">!GetAtt</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IamRoleWorker.Arn</span>
@@ -3740,7 +3740,7 @@ We recommend that this be globally as it impacts both the worker and the Starbas
 <div class="highlight"><pre><span></span><code><span class="nt">IamRoleWorkerShip</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">Enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span>
 <span class="w">  </span><span class="nt">TemplatePrefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IAM/Roles/</span><span class="w">  </span><span class="c1"># We recommend this prefix in S3 for your payload templates</span>
-<span class="w">  </span><span class="nt">InvocationQueueUrl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://sqs.YOUR-REGION.amazonaws.com/YOUR-ACCOUNT-ID/starfleet-iam-role-worker-worker</span>
+<span class="w">  </span><span class="nt">InvocationQueueUrl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://sqs.YOUR-REGION.amazonaws.com/YOUR-ACCOUNT-ID/starfleet-iam-role-worker</span>
 <span class="w">  </span><span class="nt">InvocationSources</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EVENTBRIDGE_TIMED_EVENT</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">S3</span>
