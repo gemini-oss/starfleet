@@ -26,6 +26,7 @@ class TestingAccountIndexPlugin(StarfleetDefaultAccountIndex):
         self.ou_map: Dict[str, Set[str]] = {}
         self.regions_map: Dict[str, Set[str]] = {}
         self.tag_map: Dict[str, Dict[str, Set[str]]] = {}  # Dict of tag name -> tag value -> accounts
+        self.account_tag_map: Dict[str, Dict[str, str]] = {}  # Dict of account ID -> tag dictionary
 
         path = f"{tests.starfleet_included_plugins.account_index_generator.__path__[0]}/generatedIndex.json"
         with open(path, "r", encoding="utf-8") as file:

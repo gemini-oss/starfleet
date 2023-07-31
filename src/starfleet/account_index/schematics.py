@@ -58,7 +58,11 @@ class AccountIndex:  # pragma: no cover
         raise NotImplementedError("Pew Pew Pew")
 
     def get_account_names(self, account_ids: Set[str]) -> Dict[str, Optional[str]]:
-        """Return back a mapping of account id to account name for the given set of account IDs. If the account ID is not found, it's mapped value is None."""
+        """Return back a mapping of account ID to account name for the given set of account IDs. If the account ID is not found, it's mapped value is None."""
+        raise NotImplementedError("Pew Pew Pew")
+
+    def get_account_tags(self, account_ids: Set[str]) -> Dict[str, Optional[Dict[str, str]]]:
+        """Return back a mapping of account ID to the dictionary of name/value key pairs for the corresponding tags the account has (or doesn't have - empty dict)"""
         raise NotImplementedError("Pew Pew Pew")
 
 

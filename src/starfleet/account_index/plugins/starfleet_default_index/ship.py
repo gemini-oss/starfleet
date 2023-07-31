@@ -53,6 +53,7 @@ class StarfleetDefaultAccountIndex(AccountIndex):
         self.ou_map: Dict[str, Set[str]] = {}
         self.regions_map: Dict[str, Set[str]] = {}
         self.tag_map: Dict[str, Dict[str, Set[str]]] = {}  # Dict of tag name -> tag value -> accounts
+        self.account_tag_map: Dict[str, Dict[str, str]] = {}  # Dict of account ID -> tag dictionary
 
         LOGGER.debug("[⚙️] Loading the StarfleetDefaultAccountIndex...")
         try:
@@ -129,6 +130,9 @@ class StarfleetDefaultAccountIndex(AccountIndex):
                 tag_name_mapping[norm_tag_value] = tag_value_mapping
                 self.tag_map[norm_tag_name] = tag_name_mapping
 
+            # Make the account ID -> tagging mapping
+            self.account_tag_map[intern(account_id)] = account["Tags"]
+
         # This worker operates in one AWS Org. The Organization root is in the ARN for an account in the Org, and looks like this:
         # arn:aws:organizations::ORG-ROOT-ACCOUNT-ID:account/ORG-ID/ACCOUNT-ID
         #                        ^^ We are going to pull this out of the last account in the list.
@@ -186,9 +190,17 @@ class StarfleetDefaultAccountIndex(AccountIndex):
         return {self.org_root}
 
     def get_account_names(self, account_ids: Set[str]) -> Dict[str, Optional[str]]:
-        """Return back a mapping of account id to account name for the given set of account IDs."""
+        """Return back a mapping of account ID to account name for the given set of account IDs."""
         mapping = {}
         for account_id in account_ids:
             mapping[account_id] = self.account_name_map.get(account_id, None)
+
+        return mapping
+
+    def get_account_tags(self, account_ids: Set[str]) -> Dict[str, Optional[Dict[str, str]]]:
+        """Return back a mapping of account ID to the dictionary of name/value key pairs for the corresponding tags the account has (or doesn't have - empty dict)"""
+        mapping = {}
+        for account_id in account_ids:
+            mapping[account_id] = self.account_tag_map.get(account_id, {})
 
         return mapping
