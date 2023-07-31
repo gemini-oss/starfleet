@@ -34,7 +34,7 @@ class MissingConfigurationError(Exception):
     """Exception raised if the configuration for the StarfleetDefaultAccountIndex configuration entry is missing."""
 
 
-class StarfleetDefaultAccountIndex(AccountIndex):
+class StarfleetDefaultAccountIndex(AccountIndex):  # pylint: disable=too-many-instance-attributes
     """
     This is the default account index plugin that uses the generated account index from the AccountIndexGeneratorShip Starfleet Worker Ship.
 
