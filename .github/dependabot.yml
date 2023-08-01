@@ -11,10 +11,24 @@ updates:
       interval: "monthly"
     groups:
       # This is the name of your group, it will be used in PR titles and branch names
-      boto-dependencies:
+      primary-deps:
+        patterns:
+          - "pyjwt"
+          - "cryptography"
+          - "click"
+          - "requests"
+          - "retry"
+          - "slack-sdk"
+      schema-deps:
+        patterns:
+          - "pyyaml"
+          - "marshmallow"
+      aws-dependencies:
         # A pattern can be...
         patterns:
           - "boto*"
+          - "iambic-core"
+          - "cloudaux-lite"
       linters:
         patterns:
           - "black"
@@ -25,3 +39,6 @@ updates:
           - "tox"
           - "mkdocs*"
           - "pytest*"
+          - "moto"
+          - "cfn-lint"
+          - "checkov"
