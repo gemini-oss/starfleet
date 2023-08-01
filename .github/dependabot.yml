@@ -15,3 +15,13 @@ updates:
         # A pattern can be...
         patterns:
           - "boto*"
+      linters:
+        patterns:
+          - "black"
+          - "pylint"
+          - "flake8"
+      primary-dev-dependencies:
+        patterns:
+          - "tox"
+          - "mkdocs*"
+          - "pytest*"
