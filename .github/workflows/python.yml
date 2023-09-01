@@ -21,4 +21,4 @@ jobs:
       - name: Install Tox
         run: pip install tox
       - name: Run Tox Tests and Lint
-        run: tox -e test,cloudformation,mkdocs
+        run: tox -e py,cloudformation,mkdocs
