@@ -164,7 +164,7 @@ def test_sync_existing_role(test_role: None, aws_iam: BaseClient, test_index: Ac
     for call in mocked_logger.info.call_args_list:
         if call[0][0].startswith("[📝] The following changes"):
             text = call[0][0]
-            assert "Resource ID: StarfleetIambicTesting, Update Type: Update, Field: description" in text
+            assert "Resource ID: StarfleetIambicTesting, Update Type: Update, Field: Description" in text
             assert "Resource ID: StarfleetIambicTesting, Update Type: Attach, Field: tags" in text
             assert "pewpewpew" in text
             assert "some_other_key" in text
@@ -189,7 +189,7 @@ def test_bad_templates_sync_exceptions(test_index: AccountIndexInstance, templat
     template["IambicRoleTemplate"]["properties"]["inline_policies"] = [{"effect": "allow", "action": ["", "", ""], "resource": "*"}]
     with pytest.raises(PydanticError) as verr:
         lambda_handler({"Records": [{"body": json.dumps(template)}]}, object())
-    assert "extra fields not permitted" in str(verr)
+    assert "value_error.missing" in str(verr)  # policy_name is missing
 
 
 def test_iambic_exceptions(test_index: AccountIndexInstance, template: Dict[str, Any]) -> None:
