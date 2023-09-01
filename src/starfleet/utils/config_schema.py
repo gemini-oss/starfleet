@@ -10,10 +10,11 @@ has the correct components on it.
 """
 from typing import Any, Dict
 
-import boto3
 from marshmallow import Schema, fields, INCLUDE, validate, validates_schema, ValidationError
 
-aws_regions = set(boto3.session.Session().get_available_regions("ec2"))
+from starfleet.utils.niceties import get_all_regions
+
+aws_regions = get_all_regions()
 
 
 class SecretsManager(Schema):

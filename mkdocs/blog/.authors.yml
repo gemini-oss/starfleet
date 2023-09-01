@@ -1,4 +1,5 @@
-mikegrima:
-  name: Mike Grima
-  description: Creator of Starfleet
-  avatar: https://github.com/mikegrima.png
+authors:
+  mikegrima:
+    name: Mike Grima
+    description: Creator of Starfleet
+    avatar: https://github.com/mikegrima.png

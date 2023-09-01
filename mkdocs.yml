@@ -29,6 +29,7 @@ theme:
         name: Switch to dark mode
 
   features:
+    - navigation.index
     - navigation.sections
     - navigation.footer
     - navigation.tabs
@@ -42,7 +43,6 @@ plugins:
         - mkdocs/gen_ref_pages.py
   - literate-nav:
       nav_file: SUMMARY.md
-  - section-index
   - mkdocstrings
 
 markdown_extensions:

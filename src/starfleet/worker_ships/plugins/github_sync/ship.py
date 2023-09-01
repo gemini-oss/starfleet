@@ -21,6 +21,7 @@ from click import Context
 from marshmallow import fields, validate
 
 from starfleet.utils.logging import LOGGER
+from starfleet.utils.niceties import get_all_regions
 from starfleet.worker_ships.base_payload_schemas import WorkerShipPayloadBaseTemplate
 from starfleet.worker_ships.cli_utils import StarfleetSingleInvokeCommand
 from starfleet.worker_ships.lambda_utils import worker_lambda
@@ -46,7 +47,7 @@ class GitHubSyncPayloadTemplate(WorkerShipPayloadBaseTemplate):
     github_app_id = fields.String(required=True, data_key="GitHubAppId")
     github_installation_id = fields.String(required=True, data_key="GitHubInstallationId")
     bucket_name = fields.String(required=True, data_key="BucketName")
-    bucket_region = fields.String(required=True, validate=validate.OneOf(boto3.session.Session().get_available_regions("s3")), data_key="BucketRegion")
+    bucket_region = fields.String(required=True, validate=validate.OneOf(get_all_regions(service="s3")), data_key="BucketRegion")
     extract_zip_contents = fields.Boolean(required=True, data_key="ExtractZipContents")
 
     # Optionals

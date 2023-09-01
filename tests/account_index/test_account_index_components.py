@@ -9,6 +9,7 @@ Tests for the account index components, like the plugin loader
 """
 # pylint: disable=unused-argument
 from typing import Any, Dict
+from unittest import mock
 
 import pytest
 
@@ -58,3 +59,24 @@ def test_loading_invalid_configuration(test_configuration: Dict[str, Any]) -> No
         _ = index_loader.index
 
     assert str(exc.value) == "FakePlugin"
+
+
+def test_boto_outdated_logic(test_configuration: Dict[str, Any]) -> None:
+    """This tests the logic for detecting updated boto3 regions."""
+    from starfleet.utils.niceties import get_all_regions
+    from starfleet.account_index.loader import StarfleetAccountIndexLoader
+    import tests.account_index.testing_plugins
+
+    all_regions = get_all_regions()
+    all_regions.add("some-new-region")
+
+    with mock.patch("tests.account_index.testing_plugins.basic_plugin.get_all_regions", return_value=all_regions):
+        with pytest.warns(UserWarning) as warning:
+            account_indexer = StarfleetAccountIndexLoader()
+            account_indexer._index_ship_path = tests.account_index.testing_plugins.__path__
+            account_indexer._index_ship_prefix = tests.account_index.testing_plugins.__name__ + "."
+            index = account_indexer.index
+
+            assert index.regions_map["some-new-region"] == index.account_ids
+
+        assert "boto3 was updated" in str(warning.list[0].message)

@@ -10,10 +10,10 @@ This tests the account resolution logic where based on the template provided, it
 # pylint: disable=unused-argument
 from typing import Any, Dict
 
-import boto3
 import yaml
 
 from starfleet.account_index.schematics import AccountIndexInstance
+from starfleet.utils.niceties import get_all_regions
 
 
 def test_resolve_include_account_specification(test_index: AccountIndexInstance) -> None:
@@ -173,7 +173,7 @@ def test_resolve_worker_templates_disabled_regions(test_index: AccountIndexInsta
     from starfleet.worker_ships.base_payload_schemas import BaseAccountRegionPayloadTemplate
     from starfleet.account_index.resolvers import resolve_worker_template_account_regions
 
-    all_regions = set(boto3.session.Session().get_available_regions("ec2"))
+    all_regions = get_all_regions()
 
     # Disable in 2 accounts:
     test_index.regions_map["ap-east-1"].remove("000000000001")
@@ -193,7 +193,7 @@ def test_resolve_worker_templates_disabled_regions(test_index: AccountIndexInsta
     """
     template = BaseAccountRegionPayloadTemplate().load(yaml.safe_load(payload))
     result = resolve_worker_template_account_regions(template)
-    sans_ap_east_1 = set(boto3.session.Session().get_available_regions("ec2"))
+    sans_ap_east_1 = set(all_regions)
     sans_ap_east_1.remove("ap-east-1")
     assert all_regions - sans_ap_east_1 == {"ap-east-1"}
     assert result == {"000000000001": sans_ap_east_1, "000000000002": sans_ap_east_1, "000000000003": all_regions, "000000000004": all_regions}
@@ -204,7 +204,7 @@ def test_resolve_worker_templates_account_regions(test_index: AccountIndexInstan
     from starfleet.worker_ships.base_payload_schemas import BaseAccountRegionPayloadTemplate
     from starfleet.account_index.resolvers import resolve_worker_template_account_regions
 
-    all_regions = set(boto3.session.Session().get_available_regions("ec2"))
+    all_regions = get_all_regions()
 
     # This will test the "all regions" logic and some account exclusion and org root support:
     payload = """
