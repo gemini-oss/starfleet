@@ -9,8 +9,9 @@ This defines the base payload schemas that worker ship need to use.
 """
 from typing import List, Any, Dict, TypeVar
 
-import boto3
 from marshmallow import Schema, fields, INCLUDE, validates, ValidationError, validate, validates_schema
+
+from starfleet.utils.niceties import get_all_regions
 
 
 class WorkerShipPayloadBaseTemplate(Schema):
@@ -188,7 +189,7 @@ class BaseAccountRegionPayloadTemplate(BaseAccountPayloadTemplate):
         """
         errors = {}
 
-        supported_regions = set(boto3.session.Session().get_available_regions("ec2"))
+        supported_regions = get_all_regions()
 
         # Verify the "ALL" in include regions:
         if "ALL" in data["include_regions"]:

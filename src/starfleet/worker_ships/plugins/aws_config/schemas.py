@@ -10,14 +10,14 @@ All of the schemas and schema components for the configuration and the payloads.
 from enum import Enum
 from typing import Any, Dict
 
-import boto3
 from marshmallow import fields, Schema, validates_schema, validate, ValidationError
 
+from starfleet.utils.niceties import get_all_regions
 from starfleet.worker_ships.base_payload_schemas import BaseAccountRegionPayloadTemplate, AccountsSpecificationSchema, IncludeAccountsSpecificationSchema
 from starfleet.worker_ships.ship_schematics import WorkerShipBaseConfigurationTemplate
 
 
-supported_regions = set(boto3.session.Session().get_available_regions("config"))
+supported_regions = get_all_regions(service="config")
 
 
 class AwsConfigWorkerShipConfigurationTemplate(WorkerShipBaseConfigurationTemplate):

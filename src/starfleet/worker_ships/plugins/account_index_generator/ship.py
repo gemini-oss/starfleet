@@ -105,10 +105,13 @@ class AccountIndexGeneratorShip(StarfleetWorkerShip):
         else:
             LOGGER.info(f"[🍣] Raw Inventory:\n{json.dumps(account_map, sort_keys=True, indent=4)}")
 
-        # If you need to update the index JSON for unit tests, then run the tests and uncomment the code below. That will generate a new index JSON.
-        # Simply copy and paste this `generatedIndex.json` file to `tests/starfleet_included_plugins/account_index_generator/generatedIndex.json`:
-        # with open("generatedIndex.json", "w") as file:
+        # Instructions for updating the testing account index:
+        # If you need to update the index JSON for unit tests, uncomment the code below and run the tests for this plugin:
+        # with open("generatedIndex.json", "w") as file:  # Uncomment this and the next line
         #     file.write(json.dumps({"accounts": account_map, "generated": datetime.utcnow().replace(tzinfo=None, microsecond=0).isoformat() + "Z"}, indent=4, sort_keys=True))
+        # Then run the tests: `pytest tests/starfleet_included_plugins/account_index_generator`. That will generate a new index JSON.
+        # Simply copy and paste this `generatedIndex.json` file to `tests/starfleet_included_plugins/account_index_generator/generatedIndex.json`
+        # ‼️ Don't forget to re-comment the 2 lines above when done ‼️
 
 
 @click.group()

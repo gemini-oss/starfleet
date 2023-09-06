@@ -9,11 +9,11 @@ This tests all schema things related to worker ships.
 """
 from typing import Any, Dict
 
-import boto3
 import pytest
 import yaml
 from marshmallow import ValidationError
 
+from starfleet.utils.niceties import get_all_regions
 from starfleet.worker_ships.ship_schematics import WorkerShipBaseConfigurationTemplate
 from starfleet.worker_ships.base_payload_schemas import (
     AccountsSpecificationSchema,
@@ -211,7 +211,7 @@ def test_base_account_region_payload_template() -> None:
     """This tests the schema for the BaseAccountRegionPayloadTemplate."""
     schema = BaseAccountRegionPayloadTemplate()
 
-    all_regions = set(boto3.session.Session().get_available_regions("ec2"))
+    all_regions = get_all_regions()
     assert len(all_regions) > 26  # As of March 2023
 
     good_payload_all_regions = """

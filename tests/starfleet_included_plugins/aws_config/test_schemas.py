@@ -8,11 +8,11 @@ Tests out the schemas for configuration and payload to make sure they are correc
 :Author: Mike Grima <michael.grima@gemini.com>
 """
 # pylint: disable=unused-argument
-import boto3
-
 import pytest
 import yaml
 from marshmallow import ValidationError
+
+from starfleet.utils.niceties import get_all_regions
 
 
 def test_delivery_channel_details_schema() -> None:
@@ -301,7 +301,7 @@ def test_account_override_configuration() -> None:
     # Just verify that some of the fields are good:
     loaded = AccountOverrideConfiguration().load(yaml.safe_load(payload))
     assert loaded["include_accounts"]["by_names"] == ["Some Enabled Account"]
-    assert loaded["include_regions"] == set(boto3.session.Session().get_available_regions("config"))
+    assert loaded["include_regions"] == get_all_regions(service="config")
     assert loaded["exclude_regions"] == {"us-west-1"}
     assert loaded["exclude_accounts"]["by_names"] == ["Some Disabled Account"]
     assert loaded["delivery_channel_details"]["bucket_name"] == "some-bucket"
