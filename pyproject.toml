@@ -17,6 +17,9 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+"starfleet.configuration_files" = ["*.yaml"]
+
 [tool.setuptools.dynamic]
 dependencies = {file = ["src/requirements.txt"]}
 
@@ -32,7 +35,7 @@ tests = [
     "flake8==6.1.0",
     "pylint==3.0.2",
     "tox==4.11.3",
-    "moto==4.1.12",
+    "moto==4.2.9",
     "mkdocs==1.5.3",
     "mkdocstrings[python]==0.23.0",
     "mkdocs-gen-files==0.5.0",

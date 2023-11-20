@@ -58,7 +58,7 @@ def template() -> Dict[str, Any]:
             Value: some_other_value
         IambicRoleTemplate:
           properties:
-            description: 'Starfleet iambic test role with variable {{ var.some_key }}'
+            description: 'Starfleet iambic test role with variable {{var.some_key}}'
             assume_role_policy_document:
               statement:
                 - action: sts:AssumeRole
@@ -69,7 +69,7 @@ def template() -> Dict[str, Any]:
             managed_policies:
               - policy_arn: arn:aws:iam::aws:policy/ReadOnlyAccess
             inline_policies:
-              - policy_name: 'SomePolicyIn-{{ var.account_name }}'
+              - policy_name: 'SomePolicyIn-{{var.account_name}}'
                 StarfleetIncludeAccounts:
                   ByOrgUnits:
                     - SomeNestedOU
@@ -86,6 +86,6 @@ def template() -> Dict[str, Any]:
               - key: owner
                 value: pewpewpew
               - key: some_other_key
-                value: '{{ var.some_other_key }}'
+                value: '{{var.some_other_key}}'
     """
     )

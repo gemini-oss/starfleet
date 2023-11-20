@@ -9,7 +9,7 @@ IambicVariables:
     Value: some_other_value
 IambicRoleTemplate:
   properties:
-    description: 'Starfleet iambic test role with variable {{ var.some_key }}'
+    description: 'Starfleet iambic test role with variable {{var.some_key}}'
     assume_role_policy_document:
       statement:
         - action: sts:AssumeRole
@@ -20,7 +20,7 @@ IambicRoleTemplate:
     managed_policies:
       - policy_arn: arn:aws:iam::aws:policy/ReadOnlyAccess
     inline_policies:
-      - policy_name: 'SomePolicyIn-{{ var.account_name }}'
+      - policy_name: 'SomePolicyIn-{{var.account_name}}'
         StarfleetIncludeAccounts:
           ByOrgUnits:
             - SomeNestedOU
@@ -37,4 +37,4 @@ IambicRoleTemplate:
       - key: owner
         value: pewpewpew
       - key: some_other_key
-        value: '{{ var.some_other_key }}'
+        value: '{{var.some_other_key}}'
