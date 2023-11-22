@@ -19,15 +19,14 @@ from typing import Dict, Any, TypeVar
 import click
 import yaml
 from click import Context
-from iambic.core.context import ctx as iambic_ctx
-from iambic.plugins.v0_1_0.aws.iam.role.models import AwsIamRoleTemplate
-from iambic.plugins.v0_1_0.aws.models import AWSAccount
+
 from marshmallow import ValidationError as MarshmallowError
 from pydantic import ValidationError as PydanticError
 
 from starfleet.account_index.loader import ACCOUNT_INDEX
 from starfleet.utils.configuration import STARFLEET_CONFIGURATION
 from starfleet.utils.logging import LOGGER
+
 from starfleet.worker_ships.cli_utils import StarfleetAccountCommand, StarfleetSingleInvokeCommand
 from starfleet.worker_ships.lambda_utils import worker_lambda
 from starfleet.worker_ships.plugins.iam.schemas import (
@@ -38,6 +37,7 @@ from starfleet.worker_ships.plugins.iam.schemas import (
     make_iambic_variables,
 )
 from starfleet.worker_ships.ship_schematics import StarfleetWorkerShip, FanOutStrategy, AlertPriority
+from starfleet.worker_ships.plugins.iam.iambic_imports import AWSAccount, AwsIamRoleTemplate, iambic_ctx
 
 
 class IambicFailedError(Exception):

@@ -9,13 +9,13 @@ import copy
 from enum import Enum
 from typing import Any, Dict, List
 
-from iambic.core.models import Variable
 from marshmallow import ValidationError, fields, Schema, validate
 
 from starfleet.account_index.resolvers import resolve_account_specification, resolve_include_account_specification
 from starfleet.utils.logging import LOGGER
 from starfleet.worker_ships.base_payload_schemas import IncludeAccountsSpecificationSchema, AccountsSpecificationSchema, BaseAccountPayloadTemplate
 from starfleet.worker_ships.ship_schematics import WorkerShipBaseConfigurationTemplate
+from starfleet.worker_ships.plugins.iam.iambic_imports import Variable
 
 
 class IambicTemplateTypes(Enum):
