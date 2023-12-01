@@ -19,21 +19,13 @@ updates:
           - "requests"
           - "retry"
           - "slack-sdk"
-      schema-deps:
-        patterns:
           - "pyyaml"
           - "marshmallow"
-      aws-dependencies:
-        # A pattern can be...
-        patterns:
           - "boto*"
-          - "iambic-core"
           - "cloudaux-lite"
-      linters:
+      iambic-dependencies:
         patterns:
-          - "black"
-          - "pylint"
-          - "flake8"
+          - "iambic-core"
       primary-dev-dependencies:
         patterns:
           - "tox"
@@ -42,3 +34,6 @@ updates:
           - "moto"
           - "cfn-lint"
           - "checkov"
+          - "black"
+          - "pylint"
+          - "flake8"
