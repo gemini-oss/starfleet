@@ -227,3 +227,19 @@ def test_iambic_exceptions(test_index: AccountIndexInstance, template: Dict[str,
         assert mocked_logger.error.call_args[0][0].startswith("[❌] Iambic encountered the following exceptions:")
         assert "Some Exception" in mocked_logger.error.call_args[0][0]
         assert "Some Other Exception" in mocked_logger.error.call_args[0][0]
+
+
+def test_iambic_logger() -> None:
+    """This tests that the IAMbic logger overrider works as expected. This tests all the entry points to the formatter."""
+    with mock.patch("starfleet.worker_ships.plugins.iam.iambic_imports.LOGGER") as mocked_logger:
+        from iambic.core.logger import log
+
+        some_kwargs = {"some": "value", "some_other": "value"}
+
+        log.debug("some debug message", an="arg", **some_kwargs)
+        log.info("some info message", an="arg", **some_kwargs)
+        log.error("some error message", an="arg", **some_kwargs)
+
+    mocked_logger.debug.assert_called_once_with("some debug message - logger_kwargs: {'an': 'arg', 'some': 'value', 'some_other': 'value'}")
+    mocked_logger.info.assert_called_once_with("some info message - logger_kwargs: {'an': 'arg', 'some': 'value', 'some_other': 'value'}")
+    mocked_logger.error.assert_called_once_with("some error message - logger_kwargs: {'an': 'arg', 'some': 'value', 'some_other': 'value'}")
