@@ -15,7 +15,6 @@ from starfleet.account_index.resolvers import resolve_account_specification, res
 from starfleet.utils.logging import LOGGER
 from starfleet.worker_ships.base_payload_schemas import IncludeAccountsSpecificationSchema, AccountsSpecificationSchema, BaseAccountPayloadTemplate
 from starfleet.worker_ships.ship_schematics import WorkerShipBaseConfigurationTemplate
-from starfleet.worker_ships.plugins.iam.iambic_imports import Variable
 
 
 class IambicTemplateTypes(Enum):
@@ -69,8 +68,9 @@ def render_iambic_template(template: Dict[str, Any], template_type: IambicTempla
     return rendered_template
 
 
-def make_iambic_variables(template_variables: List[Dict[str, str]]) -> List[Variable]:
+def make_iambic_variables(template_variables: List[Dict[str, str]]) -> List["Variable"]:
     """This will make the iambic variable objects from the Starfleet template variables."""
+    from starfleet.worker_ships.plugins.iam.iambic_imports import Variable
 
     iambic_variables = []
     for variable in template_variables:
