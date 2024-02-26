@@ -121,7 +121,7 @@ def account_inventory(ctx: Context) -> None:
     ctx.obj = AccountIndexGeneratorShip()
 
 
-@account_inventory.command(cls=StarfleetSingleInvokeCommand)
+@account_inventory.command(cls=StarfleetSingleInvokeCommand, short_help="This will generate an AWS account inventory from the organizations API")
 @click.pass_context
 def generate(ctx: Context, commit: bool, **kwargs) -> None:  # noqa # pylint: disable=unused-argument
     """This will generate an AWS account inventory from the organizations API"""
