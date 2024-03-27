@@ -10,6 +10,7 @@ This is primarily used for syncing Starfleet templates to S3 for CI/CD, but can 
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from starfleet.worker_ships.plugins.github_sync.ship import GitHubSyncWorkerShip, sync_github
 
 WORKER_SHIP_PLUGINS = [GitHubSyncWorkerShip]

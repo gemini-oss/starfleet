@@ -7,6 +7,7 @@ This holds the Starfleet logger, which is to be used throughout the application 
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import logging
 
 LOGGER = logging.getLogger("starfleet")

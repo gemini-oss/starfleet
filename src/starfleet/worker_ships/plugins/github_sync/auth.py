@@ -7,6 +7,7 @@ Common utilities for GitHub authentication related work is here.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from datetime import datetime, timezone
 from functools import wraps
 from typing import Dict, Any, Callable

@@ -7,6 +7,7 @@ This defines all the tests used by the Account Indexer ship
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument,too-many-locals
 import os
 

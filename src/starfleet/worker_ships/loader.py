@@ -7,6 +7,7 @@ This does all the logic required to load Starfleet workers (which we call plugin
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from typing import Dict
 
 import starfleet.worker_ships.plugins
@@ -53,7 +54,9 @@ class StarfleetWorkerShipLoader:
                         # If there is a configuration entry, then we need to validate the correct configuration:
                         errors = plugin.configuration_template_class().validate(worker_ship_config)  # noqa
                         if errors:
-                            raise BadConfigurationError(f"[💥] Worker ship: {plugin.get_worker_ship_name()} has an invalid configuration. {str(errors)}")  # noqa
+                            raise BadConfigurationError(
+                                f"[💥] Worker ship: {plugin.get_worker_ship_name()} has an invalid configuration. {str(errors)}"
+                            )  # noqa
 
                         # Check that the worker ship is enabled:
                         if not worker_ship_config["Enabled"]:

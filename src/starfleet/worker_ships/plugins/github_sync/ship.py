@@ -10,6 +10,7 @@ This is primarily used for syncing Starfleet templates to S3 for CI/CD, but can 
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=too-many-locals,too-many-statements
 import json
 import tempfile

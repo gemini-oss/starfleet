@@ -7,6 +7,7 @@ This defines the account resolution logic for account and account/region templat
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from typing import Any, Dict, Set
 
 from starfleet.account_index.loader import ACCOUNT_INDEX

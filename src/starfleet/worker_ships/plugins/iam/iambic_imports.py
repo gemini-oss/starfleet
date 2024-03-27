@@ -5,6 +5,7 @@
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-import,wrong-import-position,wrong-import-order
 from unittest import mock
 

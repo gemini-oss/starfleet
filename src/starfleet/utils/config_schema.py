@@ -8,6 +8,7 @@ has the correct components on it.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from typing import Any, Dict
 
 from marshmallow import Schema, fields, INCLUDE, validate, validates_schema, ValidationError

@@ -7,6 +7,7 @@ This project is using the modern pyproject.toml format and this file is only req
 :Module: setup
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from setuptools import setup
 
 setup()

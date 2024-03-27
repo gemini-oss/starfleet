@@ -7,6 +7,7 @@ This tests the account resolution logic where based on the template provided, it
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument
 from typing import Any, Dict
 

@@ -7,6 +7,7 @@ All of the Lambda entrypoints for the Starbase are here.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import json
 from typing import Any, Dict
 

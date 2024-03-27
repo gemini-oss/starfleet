@@ -7,6 +7,7 @@ Tests for the account index components, like the plugin loader
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument
 from typing import Any, Dict
 from unittest import mock

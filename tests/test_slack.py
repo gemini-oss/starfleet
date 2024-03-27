@@ -7,6 +7,7 @@ Tests for the Starfleet Slack logic.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument,no-member
 from typing import Any, Dict
 from unittest import mock

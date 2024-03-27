@@ -7,6 +7,7 @@ This defines the base payload schemas that worker ship need to use.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from typing import List, Any, Dict, TypeVar
 
 from marshmallow import Schema, fields, INCLUDE, validates, ValidationError, validate, validates_schema

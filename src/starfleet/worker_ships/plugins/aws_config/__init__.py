@@ -9,6 +9,7 @@ AWS Config recording in place such that you are able to make use of the organiza
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from starfleet.worker_ships.plugins.aws_config.ship import AwsConfigWorkerShip, aws_config
 
 WORKER_SHIP_PLUGINS = [AwsConfigWorkerShip]

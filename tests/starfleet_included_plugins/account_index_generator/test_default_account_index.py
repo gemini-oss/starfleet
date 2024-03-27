@@ -7,6 +7,7 @@ This defines all the tests used by the Default Account Index
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument,too-many-locals
 from datetime import datetime
 from typing import Any, Dict

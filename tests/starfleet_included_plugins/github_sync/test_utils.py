@@ -7,6 +7,7 @@ This tests the backend logic that the worker relies upon.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument
 import os
 from typing import Any, Dict, Set

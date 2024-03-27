@@ -8,6 +8,7 @@ file to S3, and this plugin uses that generated file as the basis for the accoun
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=too-many-locals,too-many-statements
 import json
 from typing import Any, Dict, Optional, Set

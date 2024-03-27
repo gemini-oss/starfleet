@@ -7,6 +7,7 @@ This defines the PyTest fixtures that can be used by all worker ship tests.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument
 
 from typing import Any, Dict, Generator

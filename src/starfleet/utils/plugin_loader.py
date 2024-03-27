@@ -7,6 +7,7 @@ This does all the logic required to load Starfleet plugins.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # from importlib.metadata import entry_points
 import importlib
 from pkgutil import iter_modules

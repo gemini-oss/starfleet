@@ -5,6 +5,7 @@
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import copy
 from enum import Enum
 from typing import Any, Dict, List
@@ -68,7 +69,7 @@ def render_iambic_template(template: Dict[str, Any], template_type: IambicTempla
     return rendered_template
 
 
-def make_iambic_variables(template_variables: List[Dict[str, str]]) -> List["Variable"]:
+def make_iambic_variables(template_variables: List[Dict[str, str]]) -> List["Variable"]:  # noqa
     """This will make the iambic variable objects from the Starfleet template variables."""
     from starfleet.worker_ships.plugins.iam.iambic_imports import Variable
 
@@ -79,7 +80,7 @@ def make_iambic_variables(template_variables: List[Dict[str, str]]) -> List["Var
     return iambic_variables
 
 
-def render_iambic_stanza(template_stanza: Any) -> Any:  # pylint: disable=too-many-branches
+def render_iambic_stanza(template_stanza: Any) -> Any:  # noqa  # pylint: disable=too-many-branches
     """This is going to recursively iterate over the iambic template and render out the stanzas as appropriate."""
     # Is this a dictionary?
     if isinstance(template_stanza, dict):

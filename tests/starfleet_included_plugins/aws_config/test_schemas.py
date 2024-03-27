@@ -7,6 +7,7 @@ Tests out the schemas for configuration and payload to make sure they are correc
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument
 import pytest
 import yaml

@@ -7,6 +7,7 @@ This defines all the major components and logic of the starbase
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import json
 from typing import Any, Dict, Tuple, Optional
 from urllib.parse import unquote_plus

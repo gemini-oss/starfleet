@@ -7,6 +7,7 @@ Sample account index plugin for unit testing purposes.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import json
 import warnings
 from typing import Dict, Set

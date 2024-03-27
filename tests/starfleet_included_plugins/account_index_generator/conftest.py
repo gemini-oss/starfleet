@@ -7,6 +7,7 @@ This defines the PyTest fixtures exclusively for the Account Indexer worker
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=redefined-outer-name,unused-argument,duplicate-code
 import json
 from datetime import datetime
