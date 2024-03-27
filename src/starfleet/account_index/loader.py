@@ -9,6 +9,7 @@ That plugin must exist. Once instantiated, then it is accessible by the loader a
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import starfleet.account_index.plugins
 from starfleet.account_index.schematics import AccountIndex, AccountIndexInstance
 from starfleet.utils.configuration import STARFLEET_CONFIGURATION

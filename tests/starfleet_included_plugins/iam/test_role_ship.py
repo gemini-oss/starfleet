@@ -7,6 +7,7 @@ All the tests for the IAM Role worker ship entrypoints.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument,unused-import,redefined-outer-name,too-many-locals,no-value-for-parameter,too-many-statements
 import json
 import os

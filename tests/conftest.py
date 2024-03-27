@@ -7,6 +7,7 @@ This defines the PyTest fixtures that can be used by all starfleet tests.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=redefined-outer-name,unused-argument
 import os
 

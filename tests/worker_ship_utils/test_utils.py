@@ -7,6 +7,7 @@ Tests that the CLI utilities are working properly and lambda function utilities 
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument,unused-import,too-many-locals
 import json
 

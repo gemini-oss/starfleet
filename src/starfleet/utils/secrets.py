@@ -7,6 +7,7 @@ Starfleet's manager for secrets are here. This consists of a singleton class to 
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import json
 from typing import Any, Dict
 

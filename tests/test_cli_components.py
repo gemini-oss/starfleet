@@ -7,6 +7,7 @@ Verifies that the CLI components are functioning properly.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from typing import Any, Dict
 
 # pylint: disable=unused-argument

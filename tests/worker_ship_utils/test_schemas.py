@@ -7,6 +7,7 @@ This tests all schema things related to worker ships.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from typing import Any, Dict
 
 import pytest

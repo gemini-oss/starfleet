@@ -7,6 +7,7 @@ This contains utility functions for CLIs that make it easier to do things that n
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from io import TextIOWrapper
 from typing import Dict, Any
 

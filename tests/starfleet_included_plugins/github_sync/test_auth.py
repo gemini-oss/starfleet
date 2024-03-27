@@ -7,6 +7,7 @@ Tests out the authentication code for GitHub.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument,too-many-arguments,too-many-locals
 from datetime import datetime, timezone
 from typing import Any, Dict

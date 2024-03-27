@@ -7,6 +7,7 @@ All of the schemas and schema components for the configuration and the payloads.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from enum import Enum
 from typing import Any, Dict
 

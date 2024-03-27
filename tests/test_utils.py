@@ -7,6 +7,7 @@ This is where tests go for Starfleet's utility components, like loggers and the 
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument
 import json
 import logging

@@ -7,6 +7,7 @@ This defines the PyTest fixtures for the Starbase tests
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import json
 
 # pylint: disable=unused-argument,redefined-outer-name

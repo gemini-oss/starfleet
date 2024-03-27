@@ -7,6 +7,7 @@ All the Pytest fixtures unique to the AWS IAM workers
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument,unused-import,redefined-outer-name
 import os
 from typing import Any, Dict, Generator

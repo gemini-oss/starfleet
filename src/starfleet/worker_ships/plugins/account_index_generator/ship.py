@@ -8,6 +8,7 @@ This contians the entrypoints for both the CLI and Lambda as well.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from datetime import datetime
 import json
 from typing import Dict, Any, TypeVar

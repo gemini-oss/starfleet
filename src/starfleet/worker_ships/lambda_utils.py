@@ -7,6 +7,7 @@ This module contains a number of utility functions for worker ships, like decora
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import os
 from functools import wraps
 from typing import Callable, Dict, Type, Any

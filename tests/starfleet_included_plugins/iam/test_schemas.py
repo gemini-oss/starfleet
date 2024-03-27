@@ -7,6 +7,7 @@ All the tests for schemas on the IAM workers.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from unittest import mock
 
 import pytest

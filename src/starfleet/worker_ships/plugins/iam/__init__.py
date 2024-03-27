@@ -7,6 +7,7 @@ These are worker ships for IAM related things, like roles.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import click
 
 from starfleet.worker_ships.plugins.iam.role_ship import IamRoleWorkerShip, role

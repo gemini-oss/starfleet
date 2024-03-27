@@ -7,6 +7,7 @@ This tests all the Starbase utility functions
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument
 from unittest import mock
 

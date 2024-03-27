@@ -8,6 +8,7 @@ to easily specify per-account/region configuration details for each recorder.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import json
 import traceback
 from typing import Dict, Any, TypeVar

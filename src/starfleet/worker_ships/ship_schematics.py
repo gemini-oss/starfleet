@@ -11,6 +11,7 @@ to see existing ship plugins to get ideas on how to make your own.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from enum import Enum
 from typing import Any, Dict, Type, TypeVar
 

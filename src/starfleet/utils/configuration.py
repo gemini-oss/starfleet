@@ -7,6 +7,7 @@ This makes use of YAML files in a very simple, but naive manner. This will simpl
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import logging
 import os
 from typing import Any, Dict

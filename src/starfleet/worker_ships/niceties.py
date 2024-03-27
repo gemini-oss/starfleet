@@ -7,6 +7,7 @@ This mostly defines some shortcut code utilities that workers can use for a vari
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import datetime
 import json
 from typing import Any

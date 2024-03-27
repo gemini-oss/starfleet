@@ -7,6 +7,7 @@ These are pulled out here to make it easy to test and avoid circular dependencie
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from typing import Any, List
 
 import click

@@ -7,6 +7,7 @@ All the Pytest fixtures unique to the GitHub Sync worker
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument,unused-import,redefined-outer-name
 import base64
 from io import BytesIO

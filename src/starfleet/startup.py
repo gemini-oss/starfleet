@@ -7,6 +7,7 @@ This contains the basic code for startup in Starfleet. All Lambda and CLI invoca
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from starfleet.utils.logging import LOGGER  # noqa pylint: disable=W0611
 from starfleet.utils.configuration import STARFLEET_CONFIGURATION
 from starfleet.account_index.loader import ACCOUNT_INDEX

@@ -5,6 +5,7 @@
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument
 
 from typing import Any, Dict

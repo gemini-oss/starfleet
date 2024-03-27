@@ -8,6 +8,7 @@ mostly just does what iambic does.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=too-many-locals,too-many-statements,too-many-branches
 import asyncio
 import json
@@ -64,7 +65,7 @@ class IamRoleWorkerShip(StarfleetWorkerShip):
         """This will render the iambic template and return it back out."""
         return render_iambic_template(self.payload, IambicTemplateTypes.IAM_ROLE, commit)
 
-    def prepare_iambic_template(self, rendered_template: Dict[str, Any]) -> "AwsIamRoleTemplate":
+    def prepare_iambic_template(self, rendered_template: Dict[str, Any]) -> "AwsIamRoleTemplate":  # noqa
         """This will perform the additional validation that is needed to load and generate the iambic template."""
         from starfleet.worker_ships.plugins.iam.iambic_imports import AwsIamRoleTemplate
 

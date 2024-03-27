@@ -7,6 +7,7 @@ This defines utility functions for the Starbase
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import json
 from typing import Any, Dict, List, Type, Generator
 

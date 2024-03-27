@@ -7,6 +7,7 @@ This is a worker ship that will periodically save an inventory of AWS accounts f
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import asyncio
 from asyncio import AbstractEventLoop
 from concurrent.futures import ThreadPoolExecutor

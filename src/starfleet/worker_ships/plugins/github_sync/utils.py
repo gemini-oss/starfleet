@@ -7,6 +7,7 @@ Logic and utilities for the GitHubSyncWorker is here.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import hashlib
 import os
 import re

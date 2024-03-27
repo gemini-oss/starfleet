@@ -7,6 +7,7 @@ This module contains functions that make it easy to provide notifications to Sla
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 from typing import Any, Dict, List
 
 from slack_sdk import WebClient

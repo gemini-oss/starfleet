@@ -7,6 +7,7 @@ This is where all the logic exists for the Config worker.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 import json
 from difflib import Differ
 from enum import Enum

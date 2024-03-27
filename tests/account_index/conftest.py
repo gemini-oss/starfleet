@@ -7,6 +7,7 @@ This defines the PyTest fixtures for the Account Indexer tests
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument
 from typing import Generator, Any, Dict
 

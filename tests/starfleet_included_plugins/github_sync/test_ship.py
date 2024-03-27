@@ -7,6 +7,7 @@ Tests out that the worker and CLIs are all working properly.
 :License: See the LICENSE file for details
 :Author: Mike Grima <michael.grima@gemini.com>
 """
+
 # pylint: disable=unused-argument,too-many-arguments,too-many-locals
 import json
 import os
