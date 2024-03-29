@@ -15,7 +15,7 @@ import boto3
 import pytest
 import yaml
 from botocore.client import BaseClient
-from moto import mock_config
+from moto import mock_aws
 
 from tests.account_index.conftest import test_index  # noqa
 
@@ -23,7 +23,7 @@ from tests.account_index.conftest import test_index  # noqa
 @pytest.fixture
 def aws_config(aws_sts: BaseClient) -> Generator[BaseClient, None, None]:
     """This is a fixture for a Moto wrapped AWS Config mock for the entire unit test. This also imports the STS mock."""
-    with mock_config():
+    with mock_aws():
         yield boto3.client("config", region_name="us-east-2")  # Assuming that our deployment region for everything is us-east-2.
 
 

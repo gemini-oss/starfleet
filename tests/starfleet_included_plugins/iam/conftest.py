@@ -16,7 +16,7 @@ import boto3
 import pytest
 import yaml
 from botocore.client import BaseClient
-from moto import mock_iam
+from moto import mock_aws
 
 from tests.account_index.conftest import test_index  # noqa
 
@@ -25,11 +25,13 @@ from tests.account_index.conftest import test_index  # noqa
 def aws_iam(aws_credentials: None) -> Generator[BaseClient, None, None]:
     """This is a fixture for a Moto wrapped AWS IAM mock for the entire unit test."""
     os.environ["MOTO_ACCOUNT_ID"] = "000000000001"
+    os.environ["MOTO_IAM_LOAD_MANAGED_POLICIES"] = "true"
 
-    with mock_iam():
+    with mock_aws():
         yield boto3.client("iam", region_name="us-east-1")
 
     del os.environ["MOTO_ACCOUNT_ID"]
+    del os.environ["MOTO_IAM_LOAD_MANAGED_POLICIES"]
 
 
 @pytest.fixture

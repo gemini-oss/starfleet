@@ -25,7 +25,7 @@ import boto3
 import pytest
 import yaml
 from botocore.client import BaseClient
-from moto import mock_s3
+from moto import mock_aws
 
 # NOTE: This is only for unit testing. This key is not used anywhere.
 # This is a P Key that is only used for unit testing (not used anywhere else), and it's base64'd so that code scanning tools won't flip a table:
@@ -197,7 +197,7 @@ def downloaded_repo(temp_directory: str, mock_github: MagicMock, mock_installati
 @pytest.fixture
 def aws_s3(aws_credentials: None) -> Generator[BaseClient, None, None]:
     """This is a fixture for a Moto wrapped AWS S3 mock for the entire unit test."""
-    with mock_s3():
+    with mock_aws():
         client = boto3.client("s3", region_name="us-east-2")  # Assuming that our deployment region for everything is us-east-2.
 
         # Make the bucket:

@@ -35,7 +35,7 @@ tests = [
     "flake8==7.0.0",
     "pylint==3.1.0",
     "tox==4.14.2",
-    "moto==4.2.9",
+    "moto==5.0.4",
     "mkdocs==1.5.3",
     "mkdocstrings[python]==0.24.1",
     "mkdocs-gen-files==0.5.0",
