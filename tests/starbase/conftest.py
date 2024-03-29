@@ -17,7 +17,7 @@ from unittest import mock
 import boto3
 import pytest
 from botocore.client import BaseClient
-from moto import mock_s3, mock_sqs
+from moto import mock_aws
 
 from starfleet.account_index.schematics import AccountIndexInstance
 from starfleet.worker_ships.base_payload_schemas import BaseAccountPayloadTemplate, BaseAccountRegionPayloadTemplate
@@ -27,7 +27,7 @@ from starfleet.worker_ships.loader import StarfleetWorkerShipLoader
 @pytest.fixture
 def aws_s3(aws_credentials: None) -> Generator[BaseClient, None, None]:
     """This is a fixture for a Moto wrapped AWS S3 mock for the entire unit test."""
-    with mock_s3():
+    with mock_aws():
         client = boto3.client("s3", "us-east-2")  # Assuming that our deployment region for everything is us-east-2.
         yield client
 
@@ -35,7 +35,7 @@ def aws_s3(aws_credentials: None) -> Generator[BaseClient, None, None]:
 @pytest.fixture
 def aws_sqs(aws_credentials: None) -> Generator[BaseClient, None, None]:
     """This is a fixture for a Moto wrapped AWS SQS mock for the entire unit test."""
-    with mock_sqs():
+    with mock_aws():
         client = boto3.client("sqs", "us-east-2")
         yield client
 

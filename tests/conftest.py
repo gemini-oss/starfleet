@@ -18,7 +18,7 @@ from unittest.mock import MagicMock
 import boto3
 import pytest
 from botocore.client import BaseClient
-from moto import mock_sts, mock_secretsmanager
+from moto import mock_aws
 
 import tests
 import tests.worker_ship_utils.testing_plugins
@@ -78,14 +78,14 @@ def aws_credentials() -> None:
 @pytest.fixture
 def aws_sts(aws_credentials: None) -> BaseClient:
     """This is a fixture for a Moto wrapped AWS STS mock for the entire unit test."""
-    with mock_sts():
+    with mock_aws():
         yield boto3.client("sts", region_name="us-east-2")
 
 
 @pytest.fixture
 def aws_secretsmanager(aws_credentials: None) -> BaseClient:
     """This is a fixture for a Moto wrapped AWS SecretsManager mock for the entire unit test."""
-    with mock_secretsmanager():
+    with mock_aws():
         yield boto3.client("secretsmanager", region_name="us-east-2")
 
 

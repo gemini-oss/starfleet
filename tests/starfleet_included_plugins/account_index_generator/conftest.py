@@ -19,20 +19,20 @@ import boto3
 import pytest
 import yaml
 from botocore.client import BaseClient
-from moto import mock_ec2, mock_s3
+from moto import mock_aws
 
 
 @pytest.fixture
 def aws_s3(aws_credentials: None) -> Generator[BaseClient, None, None]:
     """This is a fixture for a Moto wrapped AWS S3 mock for the entire unit test."""
-    with mock_s3():
+    with mock_aws():
         yield boto3.client("s3", region_name="us-east-2")  # Assuming that our deployment region for everything is us-east-2.
 
 
 @pytest.fixture
 def aws_ec2(aws_credentials: None) -> Generator[BaseClient, None, None]:
     """This is a fixture for a Moto wrapped AWS EC2 mock for the entire unit test."""
-    with mock_ec2():
+    with mock_aws():
         yield boto3.client("ec2", region_name="us-east-2")  # Assuming that our deployment region for everything is us-east-2.
 
 
