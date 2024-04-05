@@ -213,6 +213,7 @@ def test_nested_forbidden_fields() -> None:
 
 def test_include_exclude_account_logic(test_index: AccountIndexInstance) -> None:
     """This tests that the nested include/exclude account logic is working properly."""
+    # pylint: disable=no-member
     from starfleet.worker_ships.plugins.iam.schemas import IambicTemplateTypes, IamRoleWorkerShipPayloadTemplate, render_iambic_template
 
     payload = """
