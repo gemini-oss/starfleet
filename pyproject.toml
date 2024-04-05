@@ -43,6 +43,7 @@ tests = [
     "mkdocs-material==9.5.16",
     "cfn-lint>=0.77",
     "checkov>=2.3",
+    "setuptools==69.2.0"
 ]
 
 [tool.pytest.ini_options]
