@@ -129,7 +129,7 @@ def test_unwrap_json() -> None:
     assert un_wrap_json(test_nested) == should_equal
 
     # And values that are non-JSON:
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.UTC)
     assert un_wrap_json(now) == str(now)
     assert un_wrap_json(19) == 19
     assert un_wrap_json(3.14) == 3.14

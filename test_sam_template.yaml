@@ -129,7 +129,7 @@ Resources:
     Properties:
       CodeUri: ./src
       Handler: starfleet.starbase.entrypoints.eventbridge_timed_lambda_handler
-      Runtime: python3.10
+      Runtime: python3.12
       Architectures:
         - arm64
       Events:
@@ -226,7 +226,7 @@ Resources:
     Properties:
       CodeUri: ./src
       Handler: starfleet.worker_ships.plugins.account_index_generator.ship.lambda_handler
-      Runtime: python3.10
+      Runtime: python3.12
       Architectures:
         - arm64
       MemorySize: 256
@@ -268,7 +268,7 @@ Resources:
 #    Properties:
 #      CodeUri: ./src
 #      Handler: starfleet.worker_ships.plugins.aws_config.ship.lambda_handler
-#      Runtime: python3.10
+#      Runtime: python3.12
 #      Architectures:
 #        - arm64
 #      MemorySize: 128
@@ -308,7 +308,7 @@ Resources:
 #    Properties:
 #      CodeUri: ./src
 #      Handler: starfleet.worker_ships.plugins.github_sync.ship.lambda_handler
-#      Runtime: python3.10
+#      Runtime: python3.12
 #      Architectures:
 #        - arm64
 #      MemorySize: 128
@@ -349,7 +349,7 @@ Resources:
 #    Properties:
 #      CodeUri: ./starfleet/src
 #      Handler: starfleet.worker_ships.plugins.iam.role_ship.lambda_handler
-#      Runtime: python3.10
+#      Runtime: python3.12
 #      Architectures:
 #        - arm64
 #      MemorySize: 128
@@ -376,7 +376,7 @@ Resources:
     Properties:
       CodeUri: ./src
       Handler: starfleet.starbase.entrypoints.fanout_payload_lambda_handler
-      Runtime: python3.10
+      Runtime: python3.12
       Architectures:
         - arm64
       Events:

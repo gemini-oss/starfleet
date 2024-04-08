@@ -9,7 +9,7 @@ Tests out the authentication code for GitHub.
 """
 
 # pylint: disable=unused-argument,too-many-arguments,too-many-locals
-from datetime import datetime, timezone
+from datetime import datetime, timezone, UTC
 from typing import Any, Dict
 from unittest import mock
 from unittest.mock import MagicMock
@@ -47,7 +47,7 @@ def test_make_installation_token(mock_installation_token: MagicMock) -> None:
     auth_manager._make_installation_token("fakeorg", "987654")
 
     assert auth_manager._installation_tokens["fakeorg"]["token"] == "lolsometoken"
-    assert auth_manager._installation_tokens["fakeorg"]["expiration"] > int(datetime.utcnow().timestamp())
+    assert auth_manager._installation_tokens["fakeorg"]["expiration"] > int(datetime.now(UTC).timestamp())
 
     # Test with an invalid status code:
     mock_installation_token.post.return_value.status_code = 401

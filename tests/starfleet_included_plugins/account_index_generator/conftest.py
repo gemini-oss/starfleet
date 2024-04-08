@@ -10,7 +10,7 @@ This defines the PyTest fixtures exclusively for the Account Indexer worker
 
 # pylint: disable=redefined-outer-name,unused-argument,duplicate-code
 import json
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any, Dict, Generator, Optional
 from unittest import mock
 from unittest.mock import MagicMock
@@ -96,7 +96,7 @@ def account_generator(paginator: Optional[str] = None) -> Dict[str, Any]:
                 "Name": f"Account {count + 1}",
                 "Status": "ACTIVE",
                 "JoinedMethod": "INVITED",
-                "JoinedTimestamp": datetime.utcnow(),
+                "JoinedTimestamp": datetime.now(UTC),
             }
         )
 
