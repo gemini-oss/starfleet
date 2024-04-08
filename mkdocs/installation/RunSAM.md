@@ -6,11 +6,17 @@ Now you are ready to run AWS SAM and get the infrastructure components deployed!
     This section could use some assistance from the community for simplifying the installation process and documentation. We would love for assistance on the creation of things like an installation script, for example that would set all of this up for you.
 
 ## The Test Template
-We include a file called `test_sam_template.yaml`, so you can later clone it for production with production specific values in. The commands below will assume that the template is named `test_sam_template.yaml`.
+We include a file called `test_sam_template.yaml` (for ECR) and `test_sam_template_NO_ECR.yaml`(for non-ECR), so you can later clone it for production with production specific values in. The commands below will assume that the template is named `test_sam_template.yaml`.
 
 ## Build Starfleet
 To build the code, in the main checked out directory you will run:
 
+If you are using ECR:
+```bash
+sam build --template-file test_sam_template.yaml --parameter-overrides ParameterKey=EnvironmentName,ParameterValue=TEST
+```
+
+If you are not using ECR:
 ```bash
 sam build --use-container --template-file test_sam_template.yaml --parameter-overrides ParameterKey=EnvironmentName,ParameterValue=TEST
 ```
@@ -59,6 +65,7 @@ We need to update the SAM configuration, _manually_, to allow it to create IAM r
 [TEST.deploy.parameters]
 # ...
 capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]
+image_repository = "YOUR_ACCOUNT_ID.dkr.ecr.YOUR_REGION.amazonaws.com/REPO_NAME -- if you are using ECR"
 
 [TEST.validate.parameters]
 region = "YOUR_REGION_HERE"
@@ -137,6 +144,7 @@ At this point you will have the following:
 - [x] Starfleet worker IAM roles deployed everywhere
 - [x] The `configuration.yaml` file in `src/starfleet/configuration_files` modified with values unique to your environment
 - [x] A payload template (not stored as a configuration file) in a different place than your configuration that describes what the Starfleet Account Index Generator is supposed to do
+- [x] An optional ECR Repository set up to make dockerized Lambda builds
 - [x] And Now: AWS SAM:
     - [x] SAM's administrative resources deployed
     - [x] SAM's TEST deployment configuration all set up

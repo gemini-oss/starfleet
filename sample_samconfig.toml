@@ -9,7 +9,7 @@ region = "REPLACEME"
 confirm_changeset = true
 capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]  # Important -- you need these capabilities defined since this creates IAM roles
 parameter_overrides = "EnvironmentName=\"TEST\""
-image_repositories = []
+image_repository = "REPLACE ME - IF YOU ARE  NOT USING ECR DELETE THIS LINE"
 
 [TEST.validate.parameters]
 region = "REPLACEME"
@@ -31,7 +31,7 @@ region = "REPLACEME"
 confirm_changeset = true
 capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]  # Important -- you need these capabilities defined since this creates IAM roles
 parameter_overrides = "EnvironmentName=\"PROD\""
-image_repositories = []
+image_repository = "REPLACE ME - IF YOU ARE  NOT USING ECR DELETE THIS LINE"
 
 [PROD.validate.parameters]
 region = "REPLACEME"
