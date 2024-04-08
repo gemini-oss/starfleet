@@ -1,6 +1,6 @@
 # AWS SAM Configuration
 
-Last but certainly not least is the AWS SAM specification. We provide a sample AWS SAM template to make things easy to deploy.
+Last but certainly not least is the AWS SAM specification. We provide a sample AWS SAM template to make things easy to deploy. We recommend setting up ECR to have a Dockerized Lambda function since the Starfleet dependencies may blow past the Lambda filesize limit. All examples below assume we are using ECR.
 
 At a minimum, you'll need to have a defined Lambda function, IAM permissions (typically to assume a role -- with a target role that permits the access), and that's basically it.
 
@@ -28,10 +28,15 @@ AccountIndexGeneratorQueue:
 # The Lambda function:
 AccountIndexGenerator:
   Type: AWS::Serverless::Function
+  Metadata:
+    DockerTag: starfleet
+    DockerContext: ./
+    Dockerfile: Dockerfile
   Properties:
-    CodeUri: ./src
-    Handler: starfleet.worker_ships.plugins.account_index_generator.ship.lambda_handler
-    Runtime: python3.10
+    PackageType: Image
+    ImageConfig:
+      Command:
+        - starfleet.worker_ships.plugins.account_index_generator.ship.lambda_handler
     Architectures:
       - arm64
     MemorySize: 256
@@ -64,10 +69,15 @@ StarbaseFanoutFunction:
   Type: AWS::Serverless::Function
   DependsOn:
     - AccountIndexGeneratorQueue
+  Metadata:
+    DockerTag: starfleet
+    DockerContext: ./
+    Dockerfile: Dockerfile
   Properties:
-    CodeUri: ./src
-    Handler: starfleet.starbase.entrypoints.fanout_payload_lambda_handler
-    Runtime: python3.10
+    PackageType: Image
+    ImageConfig:
+      Command:
+        - starfleet.starbase.entrypoints.fanout_payload_lambda_handler
     Architectures:
       - arm64
     Events:
@@ -134,7 +144,7 @@ region = "REPLACEME"
 confirm_changeset = true
 capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]  # Important -- you need these capabilities defined since this creates IAM roles
 parameter_overrides = "EnvironmentName=\"TEST\""
-image_repositories = []
+image_repository = "REPLACE ME - IF YOU ARE  NOT USING ECR DELETE THIS LINE"
 
 [TEST.validate.parameters]
 region = "REPLACEME"
@@ -155,7 +165,7 @@ region = "REPLACEME"
 confirm_changeset = true
 capabilities = ["CAPABILITY_IAM", "CAPABILITY_NAMED_IAM"]  # Important -- you need these capabilities defined since this creates IAM roles
 parameter_overrides = "EnvironmentName=\"PROD\""
-image_repositories = []
+image_repository = "REPLACE ME - IF YOU ARE  NOT USING ECR DELETE THIS LINE"
 
 [PROD.validate.parameters]
 region = "REPLACEME"

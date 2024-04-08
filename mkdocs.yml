@@ -38,9 +38,6 @@ theme:
 plugins:
   - search
   - blog
-  - gen-files:
-      scripts:
-        - mkdocs/gen_ref_pages.py
   - literate-nav:
       nav_file: SUMMARY.md
   - mkdocstrings
@@ -87,6 +84,7 @@ nav:
     - Set up IAM: installation/IAM.md
     - Prepare Configuration: installation/PrepareConfiguration.md
     - Prepare Payload Templates: installation/PreparePayload.md
+    - Set up ECR: installation/SetupECR.md
     - Run AWS SAM: installation/RunSAM.md
     - Make the Account Index: installation/MakeAccountIndex.md
     - Wrapping Up: installation/WrapUp.md
@@ -135,4 +133,3 @@ nav:
   - Extras:
     - Overview: Links.md
     - Attributions: Attributions.md
-    - Code Reference: reference/

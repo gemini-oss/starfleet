@@ -1,4 +1,4 @@
-# This is the ECR version of the SAM template:
+# This is the NON-ECR version of the SAM template
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
@@ -127,15 +127,10 @@ Resources:
   # The Starbase EventBridge listener:
   StarbaseEventBridgeFunction:
     Type: AWS::Serverless::Function
-    Metadata:
-      DockerTag: starfleet
-      DockerContext: ./
-      Dockerfile: Dockerfile
     Properties:
-      PackageType: Image
-      ImageConfig:
-        Command:
-          - starfleet.starbase.entrypoints.eventbridge_timed_lambda_handler
+      CodeUri: ./src
+      Handler: starfleet.starbase.entrypoints.eventbridge_timed_lambda_handler
+      Runtime: python3.12
       Architectures:
         - arm64
       Events:
@@ -229,15 +224,10 @@ Resources:
 
   AccountIndexGenerator:
     Type: AWS::Serverless::Function
-    Metadata:
-      DockerTag: starfleet
-      DockerContext: ./
-      Dockerfile: Dockerfile
     Properties:
-      PackageType: Image
-      ImageConfig:
-        Command:
-          - starfleet.worker_ships.plugins.account_index_generator.ship.lambda_handler
+      CodeUri: ./src
+      Handler: starfleet.worker_ships.plugins.account_index_generator.ship.lambda_handler
+      Runtime: python3.12
       Architectures:
         - arm64
       MemorySize: 256
@@ -276,15 +266,10 @@ Resources:
 #
 #  AWSConfigWorker:
 #    Type: AWS::Serverless::Function
-#    Metadata:
-#      DockerTag: starfleet
-#      DockerContext: ./
-#      Dockerfile: Dockerfile
 #    Properties:
-#      PackageType: Image
-#      ImageConfig:
-#        Command:
-#          - starfleet.worker_ships.plugins.aws_config.ship.lambda_handler
+#      CodeUri: ./src
+#      Handler: starfleet.worker_ships.plugins.aws_config.ship.lambda_handler
+#      Runtime: python3.12
 #      Architectures:
 #        - arm64
 #      MemorySize: 128
@@ -321,15 +306,10 @@ Resources:
 #
 #  GitHubSyncWorker:
 #    Type: AWS::Serverless::Function
-#    Metadata:
-#      DockerTag: starfleet
-#      DockerContext: ./
-#      Dockerfile: Dockerfile
 #    Properties:
-#      PackageType: Image
-#      ImageConfig:
-#        Command:
-#          - starfleet.worker_ships.plugins.github_sync.ship.lambda_handler
+#      CodeUri: ./src
+#      Handler: starfleet.worker_ships.plugins.github_sync.ship.lambda_handler
+#      Runtime: python3.12
 #      Architectures:
 #        - arm64
 #      MemorySize: 128
@@ -367,15 +347,10 @@ Resources:
 #
 #  IamRoleWorker:
 #    Type: AWS::Serverless::Function
-#    Metadata:
-#      DockerTag: starfleet
-#      DockerContext: ./
-#      Dockerfile: Dockerfile
 #    Properties:
-#      PackageType: Image
-#      ImageConfig:
-#        Command:
-#          - starfleet.worker_ships.plugins.iam.role_ship.lambda_handler
+#      CodeUri: ./starfleet/src
+#      Handler: starfleet.worker_ships.plugins.iam.role_ship.lambda_handler
+#      Runtime: python3.12
 #      Architectures:
 #        - arm64
 #      MemorySize: 128
@@ -399,15 +374,10 @@ Resources:
     Type: AWS::Serverless::Function
     DependsOn:
       - AccountIndexGeneratorQueue
-    Metadata:
-      DockerTag: starfleet
-      DockerContext: ./
-      Dockerfile: Dockerfile
     Properties:
-      PackageType: Image
-      ImageConfig:
-        Command:
-          - starfleet.starbase.entrypoints.fanout_payload_lambda_handler
+      CodeUri: ./src
+      Handler: starfleet.starbase.entrypoints.fanout_payload_lambda_handler
+      Runtime: python3.12
       Architectures:
         - arm64
       Events:
