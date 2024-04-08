@@ -12,7 +12,7 @@ All the Pytest fixtures unique to the GitHub Sync worker
 import base64
 from io import BytesIO
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 import tempfile
 import random
 import string
@@ -102,7 +102,7 @@ def mock_installation_token(unit_test_secrets: Dict[str, Any]) -> Generator[Magi
         def json(self) -> Dict[str, Any]:
             """Mocked out the JSON function to return a fake token back out."""
             # Make expiration 1 hour from now:
-            time_stamp = (datetime.utcnow().replace(tzinfo=None, microsecond=0) + timedelta(minutes=60)).isoformat() + "Z"
+            time_stamp = (datetime.now(UTC).replace(tzinfo=None, microsecond=0) + timedelta(minutes=60)).isoformat() + "Z"
             return {"expires_at": time_stamp, "token": "lolsometoken"}
 
     mocked_requests = MagicMock()

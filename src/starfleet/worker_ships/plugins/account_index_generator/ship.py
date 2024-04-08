@@ -9,7 +9,7 @@ This contians the entrypoints for both the CLI and Lambda as well.
 :Author: Mike Grima <michael.grima@gemini.com>
 """
 
-from datetime import datetime
+from datetime import datetime, UTC
 import json
 from typing import Dict, Any, TypeVar
 
@@ -91,7 +91,7 @@ class AccountIndexGeneratorShip(StarfleetWorkerShip):
 
         # Save it to S3:
         if commit:
-            dump_accounts = {"accounts": account_map, "generated": datetime.utcnow().replace(tzinfo=None, microsecond=0).isoformat() + "Z"}
+            dump_accounts = {"accounts": account_map, "generated": datetime.now(UTC).replace(tzinfo=None, microsecond=0).isoformat() + "Z"}
             LOGGER.info(f"[🪣] Saving the report as {self.payload['inventory_object_prefix']} in {self.payload['account_inventory_bucket']}")
             client = boto3.client("s3", region_name=self.payload["inventory_bucket_region"])
             client.put_object(
