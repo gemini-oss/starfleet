@@ -1,0 +1,17 @@
+/* Make the content area expand to 88% of the width */
+.md-grid {
+    max-width: 88%;
+  }
+
+
+.md-typeset h1 {
+    font-weight: 700;
+}
+
+.md-typeset h2 {
+    font-weight: 500;
+}
+
+.md-header {
+    background-image: url();
+}
